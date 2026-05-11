@@ -3917,7 +3917,7 @@ html {
    Runs once on every page load; idempotent after first run.
    Backs up old data under 'legacy-backup'. Never deletes it.
    ============================================================ */
-(function migrateToPortfolios() {
+try { (function migrateToPortfolios() {
   const PF_KEY  = 'roadmap-builder.portfolios';
   const RM_KEY  = 'roadmap-builder.roadmaps';
   const BAK_KEY = 'roadmap-builder.legacy-backup';
@@ -3978,7 +3978,7 @@ html {
       }))
     };
   })));
-})();
+})(); } catch(e) { console.warn('[migration] skipped:', e); }
 
 /* ============================================================
    STORAGE
