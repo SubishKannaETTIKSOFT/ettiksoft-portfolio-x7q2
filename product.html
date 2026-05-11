@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Assessment · Roadmap Builder</title>
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TIDELAND DESIGN TOKENS
+   ============================================================ */
+:root {
+  --base-bg:       #F7F4ED;
+  --primary:       #5E8A7B;
+  --primary-dark:  #2C4A52;
+  --secondary:     #B5A491;
+  --anchor:        #2C4A52;
+  --highlight:     #C99B6B;
+  --text:          #1F2937;
+  --text-muted:    #6B7280;
+  --glass-bg-t:    rgba(255,255,252,0.72);
+  --glass-border-t:rgba(46,74,82,0.10);
+  --shadow-sm:     0 1px 3px rgba(44,74,82,0.08),0 4px 12px rgba(44,74,82,0.06);
+  --shadow-md:     0 2px 8px rgba(44,74,82,0.10),0 8px 24px rgba(44,74,82,0.08);
+  --radius-sm:     10px;
+  --radius-md:     16px;
+  --radius-lg:     20px;
+  --radius-pill:   999px;
+  --mono:          'Geist Mono',ui-monospace,monospace;
+  --sans:          'Geist',-apple-system,sans-serif;
+  --ease:          cubic-bezier(0.16,1,0.3,1);
+  --t-fast:        120ms;
+  --t-base:        220ms;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:15px; scroll-behavior:smooth; }
+body {
+  font-family:var(--sans);
+  background:var(--base-bg);
+  color:var(--text);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ============================================================
+   BACKGROUND — schematic + orbs
+   ============================================================ */
+.schematic-bg {
+  position:fixed; inset:0; width:100%; height:100%;
+  pointer-events:none; z-index:0;
+  opacity:0.11; filter:blur(0.5px) saturate(0.8);
+}
+.depth-orbs { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.depth-orb  { position:absolute; border-radius:50%; filter:blur(85px); }
+.depth-orb.o1 { width:600px;height:600px;top:-160px;left:-100px;
+  background:radial-gradient(circle at 40% 40%,#5E8A7B 0%,transparent 70%);
+  opacity:0.20; animation:od1 100s ease-in-out infinite; }
+.depth-orb.o2 { width:500px;height:500px;bottom:-80px;right:-60px;
+  background:radial-gradient(circle at 60% 60%,#B5A491 0%,transparent 70%);
+  opacity:0.18; animation:od2 120s ease-in-out infinite; }
+.depth-orb.o3 { width:400px;height:400px;top:38%;left:50%;
+  background:radial-gradient(circle at 50% 50%,#C99B6B 0%,transparent 70%);
+  opacity:0.11; animation:od3 100s ease-in-out infinite; }
+@keyframes od1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(50px,-35px)} 66%{transform:translate(-25px,40px)} }
+@keyframes od2 { 0%,100%{transform:translate(0,0)} 40%{transform:translate(-40px,25px)} 70%{transform:translate(30px,-18px)} }
+@keyframes od3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-52%,-48%) scale(1.05)} }
+
+/* ============================================================
+   PAGE STRUCTURE
+   ============================================================ */
+.page { position:relative; z-index:1; max-width:1060px; margin:0 auto; padding:0 24px 80px; }
+
+/* TOP BAR */
+.topbar {
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; gap:10px;
+  padding:10px 24px;
+  background:rgba(247,244,237,0.90);
+  backdrop-filter:blur(16px) saturate(140%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--glass-border-t);
+  margin:0 -24px;
+}
+.topbar-breadcrumb {
+  flex:1; min-width:0;
+  font-size:13px; color:var(--text-muted);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.topbar-breadcrumb a { color:var(--primary); text-decoration:none; font-weight:500; }
+.topbar-breadcrumb a:hover { text-decoration:underline; }
+.topbar-breadcrumb .sep { margin:0 6px; opacity:0.5; }
+.topbar-product-name { font-weight:600; color:var(--text); }
+.save-pill {
+  font-size:11px; font-family:var(--mono); padding:3px 10px; border-radius:var(--radius-pill);
+  transition:opacity var(--t-fast),background var(--t-fast);
+  opacity:0; background:transparent; color:var(--text-muted);
+}
+.save-pill.saving { opacity:1; background:rgba(201,155,107,0.15); color:#8B6B35; }
+.save-pill.saved  { opacity:1; background:rgba(94,138,123,0.15);  color:var(--primary); }
+
+/* LAYOUT */
+.product-layout {
+  display:grid;
+  grid-template-columns:1fr 200px;
+  gap:32px;
+  align-items:start;
+  margin-top:24px;
+}
+.form-content { min-width:0; display:flex; flex-direction:column; gap:16px; }
+
+/* SCROLLSPY NAV */
+.scrollspy-nav {
+  position:sticky; top:58px;
+  padding:16px 0;
+  max-height:calc(100vh - 80px);
+  overflow-y:auto;
+}
+.spy-item {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 10px; border-radius:var(--radius-sm);
+  font-size:12px; color:var(--text-muted);
+  cursor:pointer; text-decoration:none;
+  transition:color var(--t-fast),background var(--t-fast);
+  line-height:1.3;
+}
+.spy-item:hover { color:var(--text); background:rgba(94,138,123,0.08); }
+.spy-item.active { color:var(--primary); background:rgba(94,138,123,0.10); font-weight:600; }
+.spy-dot {
+  width:6px; height:6px; border-radius:50%; flex-shrink:0;
+  background:var(--glass-border-t);
+  transition:background var(--t-fast);
+}
+.spy-item.active .spy-dot { background:var(--primary); }
+
+/* FORM SECTION CARD */
+.form-section {
+  background:var(--glass-bg-t);
+  border:1px solid var(--glass-border-t);
+  border-radius:var(--radius-lg);
+  backdrop-filter:blur(22px) saturate(160%);
+  -webkit-backdrop-filter:blur(22px) saturate(160%);
+  box-shadow:var(--shadow-md);
+  overflow:hidden;
+}
+.section-header {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:20px 24px 16px;
+  border-bottom:1px solid var(--glass-border-t);
+}
+.section-num-badge {
+  width:28px; height:28px; border-radius:8px; flex-shrink:0;
+  background:rgba(94,138,123,0.12); border:1px solid rgba(94,138,123,0.20);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; font-family:var(--mono); color:var(--primary);
+}
+.section-title { font-size:15px; font-weight:700; color:var(--text); line-height:1.2; }
+.section-hint  { font-size:12px; color:var(--text-muted); margin-top:2px; }
+.section-body  { padding:20px 24px; display:flex; flex-direction:column; gap:16px; }
+
+/* FORM FIELDS */
+.field-group { display:flex; flex-direction:column; gap:5px; }
+.field-row   { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.field-row.thirds { grid-template-columns:1fr 1fr 1fr; }
+label {
+  font-size:12px; font-weight:600; color:var(--text-muted);
+  text-transform:uppercase; letter-spacing:0.06em; font-family:var(--mono);
+}
+input[type="text"], input[type="number"], input[type="date"],
+textarea, select {
+  width:100%; padding:8px 12px;
+  border-radius:var(--radius-sm);
+  border:1px solid var(--glass-border-t);
+  background:rgba(255,255,252,0.60);
+  color:var(--text); font-family:var(--sans); font-size:14px;
+  transition:border-color var(--t-fast),box-shadow var(--t-fast);
+  outline:none;
+}
+input[type="text"]:focus, input[type="number"]:focus,
+input[type="date"]:focus, textarea:focus, select:focus {
+  border-color:rgba(94,138,123,0.45);
+  box-shadow:0 0 0 3px rgba(94,138,123,0.12);
+}
+textarea { resize:vertical; min-height:72px; line-height:1.5; }
+select { cursor:pointer; }
+
+/* LADDER (TRL/MRL) */
+.ladder-wrap { display:flex; flex-direction:column; gap:6px; }
+.ladder-label { font-size:12px; font-weight:600; color:var(--text-muted); font-family:var(--mono); letter-spacing:0.06em; text-transform:uppercase; }
+.ladder {
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+.ladder-dot {
+  width:36px; height:36px; border-radius:var(--radius-sm);
+  border:1px solid var(--glass-border-t);
+  background:rgba(255,255,252,0.50);
+  font-size:12px; font-weight:700; font-family:var(--mono);
+  color:var(--text-muted); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all var(--t-fast) var(--ease);
+  position:relative;
+}
+.ladder-dot:hover { border-color:rgba(94,138,123,0.35); color:var(--primary); background:rgba(94,138,123,0.08); }
+.ladder-dot.filled { background:rgba(94,138,123,0.15); border-color:rgba(94,138,123,0.30); color:var(--primary); }
+.ladder-dot.selected { background:var(--primary) !important; border-color:var(--primary) !important; color:#fff !important; box-shadow:0 2px 8px rgba(94,138,123,0.40); }
+.ladder-dot.target-mark::after {
+  content:'▲'; position:absolute; bottom:-14px; left:50%; transform:translateX(-50%);
+  font-size:8px; color:var(--highlight);
+}
+.ladder-sublabels { display:flex; flex-wrap:wrap; gap:6px; }
+.ladder-sublabel  { width:36px; font-size:9px; text-align:center; color:var(--text-muted); font-family:var(--mono); line-height:1.2; }
+
+/* OR LADDER (5-step with labels) */
+.or-ladder { display:flex; gap:8px; flex-wrap:wrap; }
+.or-dot {
+  flex:1; min-width:80px; padding:8px 10px; border-radius:var(--radius-sm);
+  border:1px solid var(--glass-border-t); background:rgba(255,255,252,0.50);
+  cursor:pointer; text-align:center;
+  transition:all var(--t-fast) var(--ease);
+}
+.or-dot:hover { border-color:rgba(94,138,123,0.35); background:rgba(94,138,123,0.08); }
+.or-dot.selected { background:var(--primary); border-color:var(--primary); }
+.or-dot .or-num  { font-size:16px; font-weight:700; font-family:var(--mono); color:var(--text-muted); }
+.or-dot .or-label{ font-size:10px; color:var(--text-muted); margin-top:2px; }
+.or-dot.selected .or-num,
+.or-dot.selected .or-label { color:#fff; }
+
+/* SEGMENTED CONTROL */
+.seg-group {
+  display:inline-flex; border-radius:var(--radius-sm);
+  border:1px solid var(--glass-border-t); overflow:hidden;
+  background:rgba(255,255,252,0.50);
+}
+.seg-group.full-width { display:flex; }
+.seg-btn {
+  flex:1; padding:7px 14px; font-size:13px; font-weight:500;
+  font-family:var(--sans); cursor:pointer; border:none;
+  background:transparent; color:var(--text-muted);
+  transition:background var(--t-fast),color var(--t-fast);
+  border-right:1px solid var(--glass-border-t); white-space:nowrap;
+}
+.seg-btn:last-child { border-right:none; }
+.seg-btn:hover:not(.active) { background:rgba(94,138,123,0.08); color:var(--text); }
+.seg-btn.active { background:var(--primary); color:#fff; font-weight:600; }
+.seg-btn.active.rag-g { background:#16A34A; }
+.seg-btn.active.rag-a { background:#D97706; }
+.seg-btn.active.rag-r { background:#DC2626; }
+
+/* COMPLIANCE GRID */
+.compliance-grid { display:flex; flex-direction:column; gap:10px; }
+.compliance-row {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 12px; border-radius:var(--radius-sm);
+  background:rgba(255,255,252,0.50); border:1px solid var(--glass-border-t);
+}
+.compliance-name { font-size:13px; font-weight:600; color:var(--text); flex:1; min-width:0; }
+.compliance-name .compliance-sub { font-size:11px; font-weight:400; color:var(--text-muted); display:block; }
+.compliance-select { width:140px; flex-shrink:0; font-size:12px; padding:5px 8px; }
+
+/* DYNAMIC LIST */
+.dyn-list { display:flex; flex-direction:column; gap:10px; }
+.dyn-row {
+  padding:14px; border-radius:var(--radius-sm);
+  background:rgba(255,255,252,0.50); border:1px solid var(--glass-border-t);
+  display:flex; flex-direction:column; gap:10px; position:relative;
+}
+.dyn-row-header { display:flex; align-items:center; gap:8px; }
+.dyn-row-num {
+  font-size:10px; font-weight:700; font-family:var(--mono); color:var(--text-muted);
+  background:rgba(107,114,128,0.10); border-radius:5px; padding:2px 6px;
+}
+.dyn-row-delete {
+  margin-left:auto; padding:4px 8px; border-radius:var(--radius-sm);
+  border:1px solid rgba(220,38,38,0.20); background:rgba(220,38,38,0.06);
+  color:#DC2626; font-size:11px; font-weight:600; cursor:pointer;
+  transition:background var(--t-fast);
+}
+.dyn-row-delete:hover { background:rgba(220,38,38,0.12); }
+.add-row-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:9px 16px; border-radius:var(--radius-sm);
+  border:1px dashed rgba(94,138,123,0.30);
+  background:rgba(94,138,123,0.04); color:var(--primary);
+  font-size:13px; font-weight:600; cursor:pointer;
+  transition:background var(--t-fast),border-color var(--t-fast);
+}
+.add-row-btn:hover { background:rgba(94,138,123,0.08); border-color:rgba(94,138,123,0.45); }
+.empty-list { font-size:13px; color:var(--text-muted); text-align:center; padding:16px 0; font-style:italic; }
+
+/* BUTTONS */
+.btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 16px; border-radius:var(--radius-sm);
+  font-size:13px; font-weight:500; font-family:var(--sans);
+  cursor:pointer; border:1px solid var(--glass-border-t);
+  background:var(--glass-bg-t); color:var(--text);
+  text-decoration:none; transition:all var(--t-fast) var(--ease);
+  white-space:nowrap;
+}
+.btn:hover  { background:rgba(255,255,252,0.92); box-shadow:var(--shadow-sm); }
+.btn.danger { border-color:rgba(220,38,38,0.25); color:#DC2626; background:rgba(220,38,38,0.06); }
+.btn.danger:hover { background:rgba(220,38,38,0.12); }
+.btn .icn   { display:inline-flex; align-items:center; }
+
+/* PRODUCT FOOTER */
+.product-footer {
+  position:relative; z-index:1;
+  display:flex; align-items:center; gap:12px;
+  padding:20px 0; margin-top:8px;
+  border-top:1px solid var(--glass-border-t);
+}
+.product-footer .spacer { flex:1; }
+
+/* TOAST */
+.toast-container { position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none; }
+.toast { display:flex;align-items:flex-start;gap:10px;padding:13px 16px;border-radius:14px;min-width:240px;max-width:380px;background:rgba(31,41,55,0.94);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border:1px solid rgba(255,255,255,0.10);box-shadow:0 8px 32px rgba(0,0,0,0.32);color:#fff;font-size:13.5px;pointer-events:auto;position:relative;overflow:hidden;animation:toastIn var(--t-base) var(--ease) forwards; }
+.toast.out { animation:toastOut var(--t-base) var(--ease) forwards; }
+@keyframes toastIn  { from{opacity:0;transform:translateY(12px) scale(0.96)} to{opacity:1;transform:none} }
+@keyframes toastOut { from{opacity:1;transform:none} to{opacity:0;transform:translateY(8px) scale(0.97)} }
+.toast-icon { flex-shrink:0;opacity:0.85; }
+.toast-msg  { flex:1;line-height:1.45;color:#fff; }
+.toast-progress { position:absolute;bottom:0;left:0;height:2px;background:rgba(255,255,255,0.25);width:100%;transform-origin:left;animation:shrink linear forwards; }
+@keyframes shrink { from{transform:scaleX(1)} to{transform:scaleX(0)} }
+.toast-actions { display:flex;gap:8px;margin-top:10px; }
+.toast-btn { padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:var(--sans);cursor:pointer;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.12);color:#fff;transition:background var(--t-fast); }
+.toast-btn:hover { background:rgba(255,255,255,0.22); }
+.toast-btn.primary { background:var(--primary);border-color:var(--primary); }
+.toast-btn.danger  { background:#DC2626;border-color:#DC2626; }
+
+/* NOT FOUND */
+.notfound { text-align:center;padding:80px 24px;color:var(--text-muted); }
+.notfound h2 { font-size:22px;color:var(--text);margin-bottom:12px; }
+.notfound a  { color:var(--primary);text-decoration:none;font-weight:500; }
+
+/* RESPONSIVE */
+@media(max-width:800px) {
+  .product-layout { grid-template-columns:1fr; }
+  .scrollspy-nav { display:none; }
+  .field-row { grid-template-columns:1fr; }
+  .field-row.thirds { grid-template-columns:1fr; }
+}
+@media(max-width:520px) {
+  .page { padding:0 16px 80px; }
+  .topbar { margin:0 -16px; padding-left:16px; padding-right:16px; }
+  .or-ladder { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<svg class="schematic-bg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="#5E8A7B" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="80" y="80" width="440" height="300" rx="10" stroke-width="1" opacity="0.40"/>
+    <path d="M100 180 H 220 V 140 H 360 V 180 H 480" stroke-width="1.4" opacity="0.50"/>
+    <path d="M100 240 H 180 V 270 H 340 V 240 H 480" stroke-width="1.4" opacity="0.45"/>
+    <rect x="200" y="190" width="140" height="100" rx="5" stroke-width="1.2" opacity="0.50"/>
+    <g opacity="0.35" stroke-width="0.8">
+      <line x1="180" y1="205" x2="200" y2="205"/><line x1="180" y1="220" x2="200" y2="220"/>
+      <line x1="180" y1="235" x2="200" y2="235"/><line x1="180" y1="250" x2="200" y2="250"/>
+      <line x1="340" y1="205" x2="360" y2="205"/><line x1="340" y1="220" x2="360" y2="220"/>
+      <line x1="340" y1="235" x2="360" y2="235"/><line x1="340" y1="250" x2="360" y2="250"/>
+    </g>
+    <g fill="#5E8A7B" opacity="0.40">
+      <circle cx="180" cy="270" r="3"/><circle cx="340" cy="240" r="3"/>
+    </g>
+    <path d="M 560 200 H 1860" stroke-width="0.7" opacity="0.14" stroke-dasharray="5 9"/>
+    <path d="M 560 350 H 1860" stroke-width="0.7" opacity="0.11" stroke-dasharray="5 9"/>
+    <g opacity="0.28" stroke-width="0.7">
+      <g transform="translate(1350,180)"><line x1="-7" y1="0" x2="7" y2="0"/><line x1="0" y1="-7" x2="0" y2="7"/><circle r="10" fill="none" stroke-width="0.5"/></g>
+      <g transform="translate(1600,450)"><line x1="-6" y1="0" x2="6" y2="0"/><line x1="0" y1="-6" x2="0" y2="6"/><circle r="8" fill="none" stroke-width="0.5"/></g>
+    </g>
+    <text x="88" y="72" font-size="8" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.32">SCH-003 · PRODUCT-ASSESS · REV 1.0</text>
+  </g>
+</svg>
+<div class="depth-orbs"><div class="depth-orb o1"></div><div class="depth-orb o2"></div><div class="depth-orb o3"></div></div>
+
+<div class="page">
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb" id="topbar-breadcrumb">
+      <a href="index.html">Portfolios</a>
+      <span class="sep">/</span>
+      <a id="portfolio-link" href="#">Portfolio</a>
+      <span class="sep">/</span>
+      <span class="topbar-product-name" id="topbar-product-name">Product</span>
+    </div>
+    <span class="save-pill" id="save-pill"></span>
+  </header>
+
+  <div id="main-content">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA MODEL MIGRATION
+   ============================================================ */
+try { (function migrateToPortfolios() {
+  const PF_KEY='roadmap-builder.portfolios',RM_KEY='roadmap-builder.roadmaps',BAK_KEY='roadmap-builder.legacy-backup';
+  if(localStorage.getItem(PF_KEY))return;
+  const raw=localStorage.getItem(RM_KEY); if(!raw)return;
+  let legacy; try{legacy=JSON.parse(raw);}catch(e){return;}
+  if(!Array.isArray(legacy)||!legacy.length)return;
+  if(!localStorage.getItem(BAK_KEY))localStorage.setItem(BAK_KEY,raw);
+  function _uuid(){return(typeof crypto!=='undefined'&&crypto.randomUUID)?crypto.randomUUID():'p-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);}
+  function _inferType(n){return/hsm|hardware/i.test(n||'')?'hardware':'software';}
+  function _inferTrl(s){s=(s||'').toLowerCase().trim();return s==='beta'?5:s==='pre-ga'?7:s==='ga'?8:null;}
+  function _inferComm(s){s=(s||'').toLowerCase().trim();if(['concept','spec','design'].includes(s))return 1;if(s==='in build')return 3;if(s==='beta')return 4;if(['pre-ga','ga','maintenance'].includes(s))return 5;return null;}
+  function _inferBiz(s){return({concept:'Concept',spec:'Concept',design:'Concept','in build':'Concept',beta:'Beta','pre-ga':'Pre-GA',ga:'GA',maintenance:'Mature',sunset:'Sunset'})[(s||'').toLowerCase().trim()]||'Concept';}
+  const NA='n/a',now=new Date().toISOString();
+  localStorage.setItem(PF_KEY,JSON.stringify(legacy.map(rm=>{const d=rm.data||{};return{id:rm.id,name:rm.name||'Untitled Portfolio',isSnapshot:false,snapshotDate:null,createdAt:rm.createdAt||now,updatedAt:rm.updatedAt||now,lastEditedBy:'me',strategicContext:{masthead:d.masthead||{},hero:d.hero||{},kpis:d.kpis||[],bets:d.bets||[],actions:d.actions||[],quarters:d.quarters||[],decisions:d.decisions||[],risks:d.risks||[]},products:(d.products||[]).map(p=>({id:_uuid(),type:_inferType(p.name),identity:{name:p.name||'',owner:'',oneLiner:p.whyNow||'',vision:'',currentCustomers:''},technologyReadiness:{trl:_inferTrl(p.stage),evidence:'',targetTrl:null,targetDate:null},maturity:{level:null,evidence:''},commercializationStage:_inferComm(p.stage),businessStage:_inferBiz(p.stage),investment:{fteCount:null,budgetTier:null,capacityNotes:p.capacity||''},rag:{status:p.rag||'A',reasoning:''},nextMilestone:{description:p.nextMilestone||'',targetDate:null,owner:''},compliance:{iso21434:'n/a',aisXXX:'n/a',uneceR155:'n/a',certIn:'n/a',iso27001:'n/a',tisax:'n/a',custom:[]},customerEvidence:[],productRisks:[],productRoadmap:[],createdAt:rm.createdAt||now,updatedAt:rm.updatedAt||now,lastEditedBy:'me'}))};})));
+})(); } catch(e){ console.warn('[migration] skipped:',e); }
+
+/* ============================================================
+   STORAGE & UTILITIES
+   ============================================================ */
+const STORAGE_KEY = 'roadmap-builder.portfolios';
+function loadPortfolios() { try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch(e){return[];} }
+function savePortfolios(arr) { localStorage.setItem(STORAGE_KEY,JSON.stringify(arr)); }
+function uuid() { return(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'p-'+Date.now()+'-'+Math.random().toString(36).slice(2,10); }
+function esc(s) { const d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML; }
+function el(id) { return document.getElementById(id); }
+function fmtDate(iso) { if(!iso)return'';try{return new Date(iso).toISOString().slice(0,10);}catch(e){return'';} }
+
+/* ============================================================
+   LOAD PRODUCT
+   ============================================================ */
+const params      = new URLSearchParams(window.location.search);
+const portfolioId = params.get('portfolio');
+const productId   = params.get('product');
+
+let allPortfolios = loadPortfolios();
+let portfolio     = allPortfolios.find(p => p.id === portfolioId);
+let product       = portfolio && (portfolio.products||[]).find(p => p.id === productId);
+
+const mainContent = el('main-content');
+
+if (!portfolio || !product) {
+  mainContent.innerHTML = `<div class="notfound"><h2>Product not found</h2><p>This product doesn't exist or has been deleted.</p><p style="margin-top:18px;"><a href="index.html">← Back to portfolios</a></p></div>`;
+} else {
+  // Ensure all sub-objects exist
+  product.identity          = product.identity          || {};
+  product.technologyReadiness= product.technologyReadiness|| {trl:null,evidence:'',targetTrl:null,targetDate:null};
+  product.maturity          = product.maturity          || {level:null,evidence:''};
+  product.investment        = product.investment        || {fteCount:null,budgetTier:null,capacityNotes:''};
+  product.rag               = product.rag               || {status:'A',reasoning:''};
+  product.nextMilestone     = product.nextMilestone     || {description:'',targetDate:null,owner:''};
+  product.compliance        = product.compliance        || {iso21434:'n/a',aisXXX:'n/a',uneceR155:'n/a',certIn:'n/a',iso27001:'n/a',tisax:'n/a',custom:[]};
+  product.customerEvidence  = product.customerEvidence  || [];
+  product.productRisks      = product.productRisks      || [];
+  product.productRoadmap    = product.productRoadmap    || [];
+
+  // Update breadcrumb
+  el('topbar-product-name').textContent = (product.identity.name || 'Unnamed product');
+  el('portfolio-link').textContent = portfolio.name || 'Portfolio';
+  el('portfolio-link').href = `dashboard.html?id=${portfolioId}`;
+  document.title = (product.identity.name || 'Product') + ' · Assessment';
+
+  // ============================================================
+  // BUILD PAGE
+  // ============================================================
+  const NAV_ITEMS = [
+    { id:'s1',  num:'01', label:'Identity' },
+    { id:'s2',  num:'02', label:'Technology Readiness' },
+    { id:'s3',  num:'03', label:'Maturity' },
+    { id:'s4',  num:'04', label:'Commercialization' },
+    { id:'s5',  num:'05', label:'Investment & RAG' },
+    { id:'s6',  num:'06', label:'Next Milestone' },
+    { id:'s7',  num:'07', label:'Compliance' },
+    { id:'s8',  num:'08', label:'Customer Evidence' },
+    { id:'s9',  num:'09', label:'Product Roadmap' },
+    { id:'s10', num:'10', label:'Product Risks' },
+  ];
+
+  mainContent.innerHTML = `
+    <div class="product-layout">
+      <main class="form-content" id="form-content">
+        ${buildSection1()}
+        ${buildSection2()}
+        ${buildSection3()}
+        ${buildSection4()}
+        ${buildSection5()}
+        ${buildSection6()}
+        ${buildSection7()}
+        <div id="s8-wrapper">${buildSection8()}</div>
+        <div id="s9-wrapper">${buildSection9()}</div>
+        <div id="s10-wrapper">${buildSection10()}</div>
+      </main>
+      <aside class="scrollspy-nav" id="scrollspy-nav">
+        ${NAV_ITEMS.map(n=>`
+          <a class="spy-item" href="#${n.id}" data-target="${n.id}">
+            <span class="spy-dot"></span>${n.label}
+          </a>
+        `).join('')}
+      </aside>
+    </div>
+    <footer class="product-footer">
+      <a href="dashboard.html?id=${esc(portfolioId)}" class="btn">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></span>
+        Back to portfolio
+      </a>
+      <span class="spacer"></span>
+      <button class="btn danger" id="delete-product-btn">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+        Delete product
+      </button>
+    </footer>
+  `;
+
+  wireAllFields();
+  wireScrollspy();
+  wireDeleteProduct();
+}
+
+/* ============================================================
+   SECTION BUILDERS
+   ============================================================ */
+function sectionShell(id, num, title, hint, body) {
+  return `<section class="form-section" id="${id}">
+    <div class="section-header">
+      <div class="section-num-badge">${num}</div>
+      <div><div class="section-title">${title}</div>${hint?`<div class="section-hint">${hint}</div>`:''}</div>
+    </div>
+    <div class="section-body">${body}</div>
+  </section>`;
+}
+
+function buildSection1() {
+  const id = product.identity;
+  return sectionShell('s1','01','Identity','Name, owner, and strategic positioning',`
+    <div class="field-group">
+      <label for="f-name">Product name</label>
+      <input type="text" id="f-name" value="${esc(id.name||'')}" placeholder="e.g. HSM Security Module">
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label for="f-owner">Owner</label>
+        <input type="text" id="f-owner" value="${esc(id.owner||'')}" placeholder="Name or team">
+      </div>
+      <div class="field-group">
+        <label for="f-oneliner">One-liner</label>
+        <input type="text" id="f-oneliner" value="${esc(id.oneLiner||'')}" placeholder="What it does in one sentence">
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="f-vision">Vision</label>
+      <textarea id="f-vision" placeholder="Long-term vision for this product…">${esc(id.vision||'')}</textarea>
+    </div>
+    <div class="field-group">
+      <label for="f-customers">Current customers</label>
+      <input type="text" id="f-customers" value="${esc(id.currentCustomers||'')}" placeholder="Brief summary of current customers / pilots">
+    </div>
+  `);
+}
+
+function buildSection2() {
+  const tr = product.technologyReadiness;
+  return sectionShell('s2','02','Technology Readiness','TRL 1–9 · current and target',`
+    <div class="ladder-wrap">
+      <div class="ladder-label">Current TRL</div>
+      <div class="ladder" id="trl-current">
+        ${[1,2,3,4,5,6,7,8,9].map(v=>`<button type="button" class="ladder-dot${tr.trl!=null&&v<=tr.trl?' filled':''}${tr.trl===v?' selected':''}" data-val="${v}">${v}</button>`).join('')}
+      </div>
+      <div class="ladder-sublabels">
+        <div class="ladder-sublabel" style="width:114px">Research<br>1–3</div>
+        <div class="ladder-sublabel" style="width:114px">Development<br>4–6</div>
+        <div class="ladder-sublabel" style="width:114px">Deployment<br>7–9</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="f-trl-evidence">Evidence</label>
+      <textarea id="f-trl-evidence" placeholder="What validates the current TRL level?">${esc(tr.evidence||'')}</textarea>
+    </div>
+    <div class="ladder-wrap">
+      <div class="ladder-label">Target TRL</div>
+      <div class="ladder" id="trl-target">
+        ${[1,2,3,4,5,6,7,8,9].map(v=>`<button type="button" class="ladder-dot${tr.targetTrl!=null&&v<=tr.targetTrl?' filled':''}${tr.targetTrl===v?' selected':''}" data-val="${v}">${v}</button>`).join('')}
+      </div>
+    </div>
+    <div class="field-group" style="max-width:220px">
+      <label for="f-trl-target-date">Target date</label>
+      <input type="date" id="f-trl-target-date" value="${tr.targetDate?fmtDate(tr.targetDate):''}">
+    </div>
+  `);
+}
+
+function buildSection3() {
+  return sectionShell('s3','03','Maturity','Adapts to product type: hardware → MRL, software → Operational Readiness',`
+    <div class="field-group">
+      <label>Product type</label>
+      <div class="seg-group" id="seg-type">
+        <button type="button" class="seg-btn${product.type==='hardware'?' active':''}" data-val="hardware">🔩 Hardware</button>
+        <button type="button" class="seg-btn${product.type==='software'?' active':''}" data-val="software">▣ Software</button>
+        <button type="button" class="seg-btn${product.type==='service'?' active':''}" data-val="service">◌ Service</button>
+      </div>
+    </div>
+    <div id="maturity-body">${buildMaturityBody(product.type)}</div>
+  `);
+}
+
+function buildMaturityBody(type) {
+  const m = product.maturity;
+  if (type === 'service') {
+    return `<p style="font-size:13px;color:var(--text-muted);font-style:italic;padding:4px 0;">Maturity level not applicable for service products.</p>`;
+  }
+  if (type === 'hardware') {
+    return `
+      <div class="ladder-wrap">
+        <div class="ladder-label">Manufacturing Readiness Level (MRL)</div>
+        <div class="ladder" id="mrl-ladder">
+          ${[1,2,3,4,5,6,7,8,9,10].map(v=>`<button type="button" class="ladder-dot${m.level!=null&&v<=m.level?' filled':''}${m.level===v?' selected':''}" data-val="${v}">${v}</button>`).join('')}
+        </div>
+        <div class="ladder-sublabels">
+          <div class="ladder-sublabel" style="width:114px">Basic<br>1–3</div>
+          <div class="ladder-sublabel" style="width:114px">Capability<br>4–6</div>
+          <div class="ladder-sublabel" style="width:114px">Production<br>7–10</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label for="f-maturity-evidence">Evidence</label>
+        <textarea id="f-maturity-evidence" placeholder="What validates this MRL level?">${esc(m.evidence||'')}</textarea>
+      </div>
+    `;
+  }
+  // software
+  const OR_LABELS = ['','Concept','Pilot','Limited','Production','Scaled'];
+  return `
+    <div class="field-group">
+      <div class="ladder-label" style="margin-bottom:8px">Operational Readiness (OR)</div>
+      <div class="or-ladder" id="or-ladder">
+        ${[1,2,3,4,5].map(v=>`
+          <div class="or-dot${m.level===v?' selected':''}" data-val="${v}">
+            <div class="or-num">${v}</div>
+            <div class="or-label">${OR_LABELS[v]}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="f-maturity-evidence">Evidence</label>
+      <textarea id="f-maturity-evidence" placeholder="What validates this OR level?">${esc(m.evidence||'')}</textarea>
+    </div>
+  `;
+}
+
+function buildSection4() {
+  const cs = product.commercializationStage;
+  const bs = product.businessStage || 'Concept';
+  const COMM_LABELS = ['','Concept','Validation','Pilot','Commercial','Scale'];
+  const BIZ_STAGES  = ['Concept','Beta','Pre-GA','GA','Mature','Sunset'];
+  return sectionShell('s4','04','Commercialization & Business Stage','Market readiness and lifecycle position',`
+    <div class="field-group">
+      <label>Commercialization Stage</label>
+      <div class="seg-group full-width" id="seg-comm">
+        ${[1,2,3,4,5].map(v=>`<button type="button" class="seg-btn${cs===v?' active':''}" data-val="${v}">${v} — ${COMM_LABELS[v]}</button>`).join('')}
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Business Stage</label>
+      <div class="seg-group full-width" id="seg-bizstage">
+        ${BIZ_STAGES.map(s=>`<button type="button" class="seg-btn${bs===s?' active':''}" data-val="${s}">${s}</button>`).join('')}
+      </div>
+    </div>
+  `);
+}
+
+function buildSection5() {
+  const inv = product.investment;
+  const rag = product.rag;
+  const BT_OPTS = [{v:'XS',l:'XS · <10 FTE'},{v:'S',l:'S · 1–3 FTE'},{v:'M',l:'M · 4–8 FTE'},{v:'L',l:'L · 9+ FTE'}];
+  return sectionShell('s5','05','Investment & RAG','Team size, budget, and current status',`
+    <div class="field-row">
+      <div class="field-group">
+        <label for="f-fte">FTE count</label>
+        <input type="number" id="f-fte" value="${inv.fteCount!=null?inv.fteCount:''}" placeholder="0" min="0" step="0.5">
+      </div>
+      <div class="field-group">
+        <label>Budget tier</label>
+        <div class="seg-group" id="seg-budget">
+          ${BT_OPTS.map(o=>`<button type="button" class="seg-btn${inv.budgetTier===o.v?' active':''}" data-val="${o.v}">${o.l}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="f-capacity-notes">Capacity notes</label>
+      <input type="text" id="f-capacity-notes" value="${esc(inv.capacityNotes||'')}" placeholder="e.g. 3 engineers, 1 PM, contract resource ending June">
+    </div>
+    <div class="field-group">
+      <label>RAG status</label>
+      <div class="seg-group" id="seg-rag">
+        <button type="button" class="seg-btn rag-g${rag.status==='G'?' active':''}" data-val="G">● On Track</button>
+        <button type="button" class="seg-btn rag-a${rag.status==='A'?' active':''}" data-val="A">● Caution</button>
+        <button type="button" class="seg-btn rag-r${rag.status==='R'?' active':''}" data-val="R">● At Risk</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="f-rag-reasoning">RAG reasoning</label>
+      <textarea id="f-rag-reasoning" placeholder="Why is this product at this RAG status?">${esc(rag.reasoning||'')}</textarea>
+    </div>
+  `);
+}
+
+function buildSection6() {
+  const ms = product.nextMilestone;
+  return sectionShell('s6','06','Next Milestone','The most important upcoming deliverable',`
+    <div class="field-group">
+      <label for="f-ms-description">Description</label>
+      <input type="text" id="f-ms-description" value="${esc(ms.description||'')}" placeholder="e.g. FIPS 140-3 Level 3 lab test completion">
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label for="f-ms-date">Target date</label>
+        <input type="date" id="f-ms-date" value="${ms.targetDate?fmtDate(ms.targetDate):''}">
+      </div>
+      <div class="field-group">
+        <label for="f-ms-owner">Owner</label>
+        <input type="text" id="f-ms-owner" value="${esc(ms.owner||'')}" placeholder="Name or team">
+      </div>
+    </div>
+  `);
+}
+
+function buildSection7() {
+  const c = product.compliance;
+  const FRAMEWORKS = [
+    { key:'iso21434', name:'ISO 21434', sub:'Automotive cybersecurity' },
+    { key:'aisXXX',   name:'AIS XXX',   sub:'AI system safety (UNECE WP.29)' },
+    { key:'uneceR155',name:'UNECE R155', sub:'Cyber security management' },
+    { key:'certIn',   name:'CERT-In',    sub:'Indian CERT compliance' },
+    { key:'iso27001', name:'ISO 27001',  sub:'Information security management' },
+    { key:'tisax',    name:'TISAX',      sub:'Automotive information security' },
+  ];
+  const STATE_OPTS = ['n/a','not_started','in_progress','aligned','certified'];
+  const STATE_LABELS = {'n/a':'N/A','not_started':'Not started','in_progress':'In progress','aligned':'Aligned','certified':'Certified'};
+  const customRows = (c.custom||[]).map((item,i)=>`
+    <div class="dyn-row" data-custom-idx="${i}">
+      <div class="dyn-row-header">
+        <span class="dyn-row-num">CUSTOM ${i+1}</span>
+        <button type="button" class="dyn-row-delete" data-custom-delete="${i}">Remove</button>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Standard name</label>
+          <input type="text" class="custom-std-name" data-idx="${i}" value="${esc(item.name||'')}" placeholder="e.g. FIPS 140-3 Level 3">
+        </div>
+        <div class="field-group">
+          <label>State</label>
+          <select class="custom-std-state" data-idx="${i}">
+            ${STATE_OPTS.map(s=>`<option value="${s}"${item.state===s?' selected':''}>${STATE_LABELS[s]}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  return sectionShell('s7','07','Compliance & Standards','Regulatory and certification status',`
+    <div class="compliance-grid" id="compliance-grid">
+      ${FRAMEWORKS.map(f=>`
+        <div class="compliance-row">
+          <div class="compliance-name">${f.name}<span class="compliance-sub">${f.sub}</span></div>
+          <select class="compliance-select" data-compliance-key="${f.key}">
+            ${STATE_OPTS.map(s=>`<option value="${s}"${c[f.key]===s?' selected':''}>${STATE_LABELS[s]}</option>`).join('')}
+          </select>
+        </div>
+      `).join('')}
+    </div>
+    <div class="dyn-list" id="custom-std-list">${customRows}</div>
+    <button type="button" class="add-row-btn" id="add-custom-std-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add custom standard
+    </button>
+  `);
+}
+
+function buildSection8() {
+  const items = product.customerEvidence || [];
+  const TYPE_OPTS = ['pilot','paid','prospect','reference'];
+  const TYPE_LABELS = {pilot:'Pilot',paid:'Paid',prospect:'Prospect',reference:'Reference'};
+  const rows = items.map((item,i)=>`
+    <div class="dyn-row" data-ce-idx="${i}">
+      <div class="dyn-row-header">
+        <span class="dyn-row-num">CUSTOMER ${i+1}</span>
+        <button type="button" class="dyn-row-delete" data-ce-delete="${i}">Remove</button>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Customer name</label>
+          <input type="text" class="ce-name" data-idx="${i}" value="${esc(item.name||'')}" placeholder="Company or person name">
+        </div>
+        <div class="field-group">
+          <label>Relationship type</label>
+          <select class="ce-type" data-idx="${i}">
+            ${TYPE_OPTS.map(t=>`<option value="${t}"${item.type===t?' selected':''}>${TYPE_LABELS[t]}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Since</label>
+          <input type="date" class="ce-since" data-idx="${i}" value="${item.since?fmtDate(item.since):''}">
+        </div>
+        <div class="field-group">
+          <label>Notes</label>
+          <input type="text" class="ce-notes" data-idx="${i}" value="${esc(item.notes||'')}" placeholder="Key context or outcome">
+        </div>
+      </div>
+    </div>
+  `).join('');
+  return sectionShell('s8','08','Customer Evidence','Structured record of customer relationships',`
+    <div class="dyn-list" id="ce-list">
+      ${rows || `<div class="empty-list">No customer evidence yet. Click below to add the first entry.</div>`}
+    </div>
+    <button type="button" class="add-row-btn" id="add-ce-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add customer
+    </button>
+  `);
+}
+
+function buildSection9() {
+  const items = product.productRoadmap || [];
+  const STATUS_OPTS = ['Planned','In progress','Done','At risk'];
+  const rows = items.map((item,i)=>`
+    <div class="dyn-row" data-rm-idx="${i}">
+      <div class="dyn-row-header">
+        <span class="dyn-row-num">ITEM ${i+1}</span>
+        <button type="button" class="dyn-row-delete" data-rm-delete="${i}">Remove</button>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Title</label>
+          <input type="text" class="rm-title" data-idx="${i}" value="${esc(item.title||'')}" placeholder="Milestone or deliverable">
+        </div>
+        <div class="field-group">
+          <label>Target date</label>
+          <input type="date" class="rm-date" data-idx="${i}" value="${item.targetDate?fmtDate(item.targetDate):''}">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Status</label>
+        <div class="seg-group" data-rm-status="${i}">
+          ${STATUS_OPTS.map(s=>`<button type="button" class="seg-btn${item.status===s?' active':''}" data-val="${s}">${s}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+  return sectionShell('s9','09','Product Roadmap','Key milestones for this product',`
+    <div class="dyn-list" id="rm-list">
+      ${rows || `<div class="empty-list">No roadmap items yet.</div>`}
+    </div>
+    <button type="button" class="add-row-btn" id="add-rm-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add milestone
+    </button>
+  `);
+}
+
+function buildSection10() {
+  const items = product.productRisks || [];
+  const LMH = ['L','M','H'];
+  const LMH_LABELS = {L:'Low',M:'Medium',H:'High'};
+  const rows = items.map((item,i)=>`
+    <div class="dyn-row" data-risk-idx="${i}">
+      <div class="dyn-row-header">
+        <span class="dyn-row-num">RISK ${i+1}</span>
+        <button type="button" class="dyn-row-delete" data-risk-delete="${i}">Remove</button>
+      </div>
+      <div class="field-group">
+        <label>Risk description</label>
+        <input type="text" class="risk-desc" data-idx="${i}" value="${esc(item.risk||'')}" placeholder="Describe the risk">
+      </div>
+      <div class="field-row thirds">
+        <div class="field-group">
+          <label>Likelihood</label>
+          <div class="seg-group" data-risk-likelihood="${i}">
+            ${LMH.map(v=>`<button type="button" class="seg-btn${item.likelihood===v?' active':''}" data-val="${v}">${LMH_LABELS[v]}</button>`).join('')}
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Impact</label>
+          <div class="seg-group" data-risk-impact="${i}">
+            ${LMH.map(v=>`<button type="button" class="seg-btn${item.impact===v?' active':''}" data-val="${v}">${LMH_LABELS[v]}</button>`).join('')}
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Mitigation</label>
+          <input type="text" class="risk-mitigation" data-idx="${i}" value="${esc(item.mitigation||'')}" placeholder="Mitigation plan">
+        </div>
+      </div>
+    </div>
+  `).join('');
+  return sectionShell('s10','10','Product Risks','Known risks specific to this product',`
+    <div class="dyn-list" id="risk-list">
+      ${rows || `<div class="empty-list">No risks logged yet.</div>`}
+    </div>
+    <button type="button" class="add-row-btn" id="add-risk-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add risk
+    </button>
+  `);
+}
+
+/* ============================================================
+   AUTOSAVE
+   ============================================================ */
+let saveTimer = null;
+const savePill = el('save-pill');
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  savePill.textContent = 'Saving…';
+  savePill.className = 'save-pill saving';
+  saveTimer = setTimeout(() => {
+    persist();
+    savePill.textContent = 'Saved ✓';
+    savePill.className = 'save-pill saved';
+    setTimeout(() => { savePill.className = 'save-pill'; }, 1600);
+  }, 350);
+}
+
+function persist() {
+  const latest = loadPortfolios();
+  const pf = latest.find(x => x.id === portfolioId);
+  if (!pf) return;
+  const idx = (pf.products||[]).findIndex(x => x.id === productId);
+  if (idx < 0) return;
+  product.updatedAt = new Date().toISOString();
+  pf.products[idx] = product;
+  pf.updatedAt = product.updatedAt;
+  savePortfolios(latest);
+  // Update breadcrumb name live
+  el('topbar-product-name').textContent = product.identity.name || 'Unnamed product';
+  document.title = (product.identity.name || 'Product') + ' · Assessment';
+}
+
+/* ============================================================
+   FIELD WIRING HELPERS
+   ============================================================ */
+function bindText(inputId, obj, key) {
+  const inp = el(inputId); if (!inp) return;
+  inp.addEventListener('input', () => { obj[key] = inp.value; scheduleSave(); });
+}
+function bindDate(inputId, obj, key) {
+  const inp = el(inputId); if (!inp) return;
+  inp.addEventListener('change', () => { obj[key] = inp.value || null; scheduleSave(); });
+}
+function bindNumber(inputId, obj, key) {
+  const inp = el(inputId); if (!inp) return;
+  inp.addEventListener('input', () => { obj[key] = inp.value !== '' ? parseFloat(inp.value) : null; scheduleSave(); });
+}
+function bindTextarea(textareaId, obj, key) {
+  const ta = el(textareaId); if (!ta) return;
+  ta.addEventListener('input', () => { obj[key] = ta.value; scheduleSave(); });
+}
+function bindSegmented(containerId, obj, key, afterChange) {
+  const ctr = el(containerId); if (!ctr) return;
+  ctr.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.dataset.val;
+      const numVal = !isNaN(val) && val !== '' ? parseInt(val, 10) : val;
+      obj[key] = (typeof obj[key] === 'number' || !isNaN(val)) ? numVal : val;
+      ctr.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.val === val));
+      scheduleSave();
+      if (afterChange) afterChange(obj[key]);
+    });
+  });
+}
+function bindLadder(containerId, obj, key) {
+  const ctr = el(containerId); if (!ctr) return;
+  const dots = ctr.querySelectorAll('.ladder-dot');
+  function updateDots(val) {
+    dots.forEach(d => {
+      const v = parseInt(d.dataset.val);
+      d.classList.toggle('filled',   val != null && v <= val);
+      d.classList.toggle('selected', val != null && v === val);
+    });
+  }
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const v = parseInt(dot.dataset.val);
+      obj[key] = obj[key] === v ? null : v;
+      updateDots(obj[key]);
+      scheduleSave();
+    });
+  });
+}
+function bindOrLadder(containerId, obj, key) {
+  const ctr = el(containerId); if (!ctr) return;
+  ctr.querySelectorAll('.or-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      const v = parseInt(dot.dataset.val);
+      obj[key] = obj[key] === v ? null : v;
+      ctr.querySelectorAll('.or-dot').forEach(d => d.classList.toggle('selected', parseInt(d.dataset.val) === obj[key]));
+      scheduleSave();
+    });
+  });
+}
+
+/* ============================================================
+   WIRE ALL FIELDS
+   ============================================================ */
+function wireAllFields() {
+  // S1 — Identity
+  bindText('f-name',      product.identity, 'name');
+  bindText('f-owner',     product.identity, 'owner');
+  bindText('f-oneliner',  product.identity, 'oneLiner');
+  bindTextarea('f-vision',product.identity, 'vision');
+  bindText('f-customers', product.identity, 'currentCustomers');
+
+  // S2 — TRL
+  bindLadder('trl-current',    product.technologyReadiness, 'trl');
+  bindTextarea('f-trl-evidence',product.technologyReadiness,'evidence');
+  bindLadder('trl-target',     product.technologyReadiness, 'targetTrl');
+  bindDate('f-trl-target-date',product.technologyReadiness,'targetDate');
+
+  // S3 — Type + Maturity (type wiring handled separately to trigger re-render)
+  wireTypeSegmented();
+  wireMaturityBody();
+
+  // S4 — Commercialization
+  bindSegmented('seg-comm',    product, 'commercializationStage');
+  bindSegmented('seg-bizstage',product, 'businessStage');
+
+  // S5 — Investment & RAG
+  bindNumber('f-fte',           product.investment, 'fteCount');
+  bindSegmented('seg-budget',   product.investment, 'budgetTier');
+  bindText('f-capacity-notes',  product.investment, 'capacityNotes');
+  bindSegmented('seg-rag',      product.rag,        'status');
+  bindTextarea('f-rag-reasoning',product.rag,       'reasoning');
+
+  // S6 — Next Milestone
+  bindText('f-ms-description', product.nextMilestone, 'description');
+  bindDate('f-ms-date',        product.nextMilestone, 'targetDate');
+  bindText('f-ms-owner',       product.nextMilestone, 'owner');
+
+  // S7 — Compliance
+  wireCompliance();
+
+  // S8 — Customer Evidence
+  wireCustomerEvidence();
+
+  // S9 — Roadmap
+  wireRoadmap();
+
+  // S10 — Risks
+  wireRisks();
+}
+
+function wireTypeSegmented() {
+  const ctr = el('seg-type'); if (!ctr) return;
+  ctr.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.dataset.val;
+      product.type = val;
+      product.maturity.level = null;
+      ctr.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.val === val));
+      el('maturity-body').innerHTML = buildMaturityBody(val);
+      wireMaturityBody();
+      scheduleSave();
+    });
+  });
+}
+
+function wireMaturityBody() {
+  if (product.type === 'hardware') {
+    bindLadder('mrl-ladder', product.maturity, 'level');
+  } else if (product.type === 'software') {
+    bindOrLadder('or-ladder', product.maturity, 'level');
+  }
+  bindTextarea('f-maturity-evidence', product.maturity, 'evidence');
+}
+
+function wireCompliance() {
+  document.querySelectorAll('[data-compliance-key]').forEach(sel => {
+    sel.addEventListener('change', () => {
+      product.compliance[sel.dataset.complianceKey] = sel.value;
+      scheduleSave();
+    });
+  });
+  wireCustomStandards();
+  el('add-custom-std-btn').addEventListener('click', () => {
+    product.compliance.custom = product.compliance.custom || [];
+    product.compliance.custom.push({ name:'', state:'not_started' });
+    rebuildCustomStandards();
+    scheduleSave();
+  });
+}
+
+function rebuildCustomStandards() {
+  const STATE_OPTS = ['n/a','not_started','in_progress','aligned','certified'];
+  const STATE_LABELS = {'n/a':'N/A','not_started':'Not started','in_progress':'In progress','aligned':'Aligned','certified':'Certified'};
+  const list = el('custom-std-list');
+  list.innerHTML = (product.compliance.custom||[]).map((item,i)=>`
+    <div class="dyn-row" data-custom-idx="${i}">
+      <div class="dyn-row-header">
+        <span class="dyn-row-num">CUSTOM ${i+1}</span>
+        <button type="button" class="dyn-row-delete" data-custom-delete="${i}">Remove</button>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Standard name</label>
+          <input type="text" class="custom-std-name" data-idx="${i}" value="${esc(item.name||'')}" placeholder="e.g. FIPS 140-3 Level 3">
+        </div>
+        <div class="field-group">
+          <label>State</label>
+          <select class="custom-std-state" data-idx="${i}">
+            ${STATE_OPTS.map(s=>`<option value="${s}"${item.state===s?' selected':''}>${STATE_LABELS[s]}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+  `).join('') || `<div class="empty-list" style="display:none"></div>`;
+  wireCustomStandards();
+}
+
+function wireCustomStandards() {
+  document.querySelectorAll('.custom-std-name').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const i = parseInt(inp.dataset.idx);
+      if (product.compliance.custom[i]) { product.compliance.custom[i].name = inp.value; scheduleSave(); }
+    });
+  });
+  document.querySelectorAll('.custom-std-state').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const i = parseInt(sel.dataset.idx);
+      if (product.compliance.custom[i]) { product.compliance.custom[i].state = sel.value; scheduleSave(); }
+    });
+  });
+  document.querySelectorAll('[data-custom-delete]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.dataset.customDelete);
+      product.compliance.custom.splice(i, 1);
+      rebuildCustomStandards();
+      scheduleSave();
+    });
+  });
+}
+
+function wireCustomerEvidence() {
+  function rebuildCE() {
+    el('s8-wrapper').innerHTML = buildSection8();
+    wireCustomerEvidence();
+  }
+  document.querySelectorAll('.ce-name').forEach(inp => {
+    inp.addEventListener('input', () => { const i=parseInt(inp.dataset.idx); if(product.customerEvidence[i])product.customerEvidence[i].name=inp.value; scheduleSave(); });
+  });
+  document.querySelectorAll('.ce-type').forEach(sel => {
+    sel.addEventListener('change', () => { const i=parseInt(sel.dataset.idx); if(product.customerEvidence[i])product.customerEvidence[i].type=sel.value; scheduleSave(); });
+  });
+  document.querySelectorAll('.ce-since').forEach(inp => {
+    inp.addEventListener('change', () => { const i=parseInt(inp.dataset.idx); if(product.customerEvidence[i])product.customerEvidence[i].since=inp.value||null; scheduleSave(); });
+  });
+  document.querySelectorAll('.ce-notes').forEach(inp => {
+    inp.addEventListener('input', () => { const i=parseInt(inp.dataset.idx); if(product.customerEvidence[i])product.customerEvidence[i].notes=inp.value; scheduleSave(); });
+  });
+  document.querySelectorAll('[data-ce-delete]').forEach(btn => {
+    btn.addEventListener('click', () => { product.customerEvidence.splice(parseInt(btn.dataset.ceDelete),1); rebuildCE(); scheduleSave(); });
+  });
+  const addBtn = el('add-ce-btn');
+  if (addBtn) addBtn.addEventListener('click', () => {
+    product.customerEvidence.push({ name:'', type:'prospect', since:null, notes:'' });
+    rebuildCE(); scheduleSave();
+  });
+}
+
+function wireRoadmap() {
+  function rebuildRM() {
+    el('s9-wrapper').innerHTML = buildSection9();
+    wireRoadmap();
+  }
+  document.querySelectorAll('.rm-title').forEach(inp => {
+    inp.addEventListener('input', () => { const i=parseInt(inp.dataset.idx); if(product.productRoadmap[i])product.productRoadmap[i].title=inp.value; scheduleSave(); });
+  });
+  document.querySelectorAll('.rm-date').forEach(inp => {
+    inp.addEventListener('change', () => { const i=parseInt(inp.dataset.idx); if(product.productRoadmap[i])product.productRoadmap[i].targetDate=inp.value||null; scheduleSave(); });
+  });
+  document.querySelectorAll('[data-rm-status]').forEach(ctr => {
+    const idx = parseInt(ctr.dataset.rmStatus);
+    ctr.querySelectorAll('.seg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if(product.productRoadmap[idx])product.productRoadmap[idx].status=btn.dataset.val;
+        ctr.querySelectorAll('.seg-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===btn.dataset.val));
+        scheduleSave();
+      });
+    });
+  });
+  document.querySelectorAll('[data-rm-delete]').forEach(btn => {
+    btn.addEventListener('click', () => { product.productRoadmap.splice(parseInt(btn.dataset.rmDelete),1); rebuildRM(); scheduleSave(); });
+  });
+  const addBtn = el('add-rm-btn');
+  if (addBtn) addBtn.addEventListener('click', () => {
+    product.productRoadmap.push({ title:'', targetDate:null, status:'Planned' });
+    rebuildRM(); scheduleSave();
+  });
+}
+
+function wireRisks() {
+  function rebuildRisks() {
+    el('s10-wrapper').innerHTML = buildSection10();
+    wireRisks();
+  }
+  document.querySelectorAll('.risk-desc').forEach(inp => {
+    inp.addEventListener('input', () => { const i=parseInt(inp.dataset.idx); if(product.productRisks[i])product.productRisks[i].risk=inp.value; scheduleSave(); });
+  });
+  document.querySelectorAll('.risk-mitigation').forEach(inp => {
+    inp.addEventListener('input', () => { const i=parseInt(inp.dataset.idx); if(product.productRisks[i])product.productRisks[i].mitigation=inp.value; scheduleSave(); });
+  });
+  document.querySelectorAll('[data-risk-likelihood]').forEach(ctr => {
+    const idx = parseInt(ctr.dataset.riskLikelihood);
+    ctr.querySelectorAll('.seg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if(product.productRisks[idx])product.productRisks[idx].likelihood=btn.dataset.val;
+        ctr.querySelectorAll('.seg-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===btn.dataset.val));
+        scheduleSave();
+      });
+    });
+  });
+  document.querySelectorAll('[data-risk-impact]').forEach(ctr => {
+    const idx = parseInt(ctr.dataset.riskImpact);
+    ctr.querySelectorAll('.seg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if(product.productRisks[idx])product.productRisks[idx].impact=btn.dataset.val;
+        ctr.querySelectorAll('.seg-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===btn.dataset.val));
+        scheduleSave();
+      });
+    });
+  });
+  document.querySelectorAll('[data-risk-delete]').forEach(btn => {
+    btn.addEventListener('click', () => { product.productRisks.splice(parseInt(btn.dataset.riskDelete),1); rebuildRisks(); scheduleSave(); });
+  });
+  const addBtn = el('add-risk-btn');
+  if (addBtn) addBtn.addEventListener('click', () => {
+    product.productRisks.push({ risk:'', likelihood:'M', impact:'M', mitigation:'' });
+    rebuildRisks(); scheduleSave();
+  });
+}
+
+function wireDeleteProduct() {
+  const btn = el('delete-product-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    window.toast && window.toast.confirm(
+      `Delete "${product.identity.name || 'this product'}"? This cannot be undone.`,
+      { duration: 0, actions: [
+        { label: 'Delete', variant: 'danger', onClick: () => {
+          const latest = loadPortfolios();
+          const pf = latest.find(x => x.id === portfolioId);
+          if (pf) {
+            pf.products = (pf.products||[]).filter(x => x.id !== productId);
+            pf.updatedAt = new Date().toISOString();
+            savePortfolios(latest);
+          }
+          window.location.href = `dashboard.html?id=${portfolioId}`;
+        }},
+        { label: 'Cancel', variant: '' }
+      ]}
+    );
+  });
+}
+
+/* ============================================================
+   SCROLLSPY
+   ============================================================ */
+function wireScrollspy() {
+  const navLinks = document.querySelectorAll('.spy-item[data-target]');
+
+  // Click nav → smooth scroll
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = el(link.dataset.target);
+      if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
+
+  // IntersectionObserver → highlight active
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const link = document.querySelector(`.spy-item[data-target="${entry.target.id}"]`);
+      if (link) link.classList.toggle('active', entry.isIntersecting);
+    });
+  }, { threshold: 0.25, rootMargin: '-48px 0px -55% 0px' });
+
+  document.querySelectorAll('.form-section[id]').forEach(sec => observer.observe(sec));
+
+  // Highlight first item by default
+  if (navLinks.length) navLinks[0].classList.add('active');
+}
+
+/* ============================================================
+   TOAST NOTIFICATION SYSTEM
+   ============================================================ */
+(function() {
+  let container = null;
+  function ensureContainer() {
+    if (!container) { container=document.createElement('div'); container.className='toast-container'; document.body.appendChild(container); }
+    return container;
+  }
+  const ICONS = {
+    success:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    info:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    confirm:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
+  function escS(s){const d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+  function show(opts) {
+    if(typeof opts==='string')opts={message:opts};
+    const o=Object.assign({message:'',type:'info',duration:3200,actions:null},opts);
+    const c=ensureContainer(),el2=document.createElement('div');
+    el2.className='toast '+o.type;
+    el2.innerHTML=`<div class="toast-icon">${ICONS[o.type]||ICONS.info}</div><div class="toast-msg">${escS(o.message)}</div>`;
+    if(o.actions&&o.actions.length){
+      const ad=document.createElement('div');ad.className='toast-actions';
+      o.actions.forEach(a=>{
+        const btn=document.createElement('button');btn.className='toast-btn '+(a.variant||'');btn.textContent=a.label;
+        btn.onclick=()=>{dismiss();if(a.onClick)a.onClick();};ad.appendChild(btn);
+      });
+      el2.querySelector('.toast-msg').appendChild(ad);
+    }
+    if(o.duration>0){const p=document.createElement('div');p.className='toast-progress';p.style.animationDuration=o.duration+'ms';el2.appendChild(p);}
+    c.appendChild(el2);
+    let t=null;
+    function dismiss(){clearTimeout(t);el2.classList.add('out');setTimeout(()=>el2.remove(),220);}
+    if(o.duration>0)t=setTimeout(dismiss,o.duration);
+    el2.addEventListener('click',()=>{if(!o.actions||!o.actions.length)dismiss();});
+    return{dismiss};
+  }
+  window.toast={
+    success:(msg,opts)=>show(Object.assign({message:msg,type:'success'},opts)),
+    error:  (msg,opts)=>show(Object.assign({message:msg,type:'error',duration:5000},opts)),
+    info:   (msg,opts)=>show(Object.assign({message:msg,type:'info'},opts)),
+    confirm:(msg,opts)=>show(Object.assign({message:msg,type:'confirm',duration:0},opts))
+  };
+})();
+</script>
+</body>
+</html>

@@ -3692,6 +3692,77 @@ html {
   color: inherit;
 }
 
+/* ---- TIDELAND THEME OVERRIDE ---- */
+:root {
+  --base-bg: #F7F4ED;
+  --primary: #5E8A7B;
+  --secondary: #B5A491;
+  --anchor: #2C4A52;
+  --highlight: #C99B6B;
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --glass-bg-t: rgba(255, 255, 252, 0.70);
+  --glass-border-t: rgba(46, 74, 82, 0.10);
+  --brand: #5E8A7B;
+  --brand-hover: #2C4A52;
+  --brand-soft: #EEF5F3;
+  --brand-fg: #2C4A52;
+}
+body { background: var(--base-bg) !important; }
+.depth-orb.o1 {
+  background: radial-gradient(circle, #5E8A7B 0%, rgba(94,138,123,0) 65%) !important;
+  opacity: 0.22 !important;
+  animation-duration: 100s !important;
+}
+.depth-orb.o2 {
+  background: radial-gradient(circle, #B5A491 0%, rgba(181,164,145,0) 65%) !important;
+  opacity: 0.20 !important;
+  animation-duration: 120s !important;
+}
+.depth-orb.o3 {
+  background: radial-gradient(circle, #C99B6B 0%, rgba(201,155,107,0) 65%) !important;
+  opacity: 0.12 !important;
+  animation-duration: 100s !important;
+}
+.depth-orbs::before {
+  background: radial-gradient(circle, #B5A491 0%, rgba(181,164,145,0) 65%) !important;
+  opacity: 0.10 !important;
+}
+.schematic-bg path, .schematic-bg line, .schematic-bg rect,
+.schematic-bg circle, .schematic-bg polyline, .schematic-bg polygon {
+  stroke: #5E8A7B !important;
+  fill: none !important;
+}
+.schematic-bg text { fill: #5E8A7B !important; stroke: none !important; }
+.schematic-bg linearGradient stop:first-child { stop-color: #5E8A7B !important; }
+.schematic-bg linearGradient stop:last-child  { stop-color: #2C4A52 !important; }
+.btn.primary, button.btn.primary, a.btn.primary,
+.btn.primary:hover, button.btn.primary:hover, a.btn.primary:hover {
+  background: linear-gradient(135deg, #5E8A7B 0%, #2C4A52 100%) !important;
+  border-color: #5E8A7B !important;
+  color: #fff !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.20) inset,
+    0 4px 12px -4px rgba(94,138,123,0.45),
+    0 8px 24px -8px rgba(44,74,82,0.35) !important;
+}
+.sec, .card, .bet, .product, .panel, .risk-card, .kpi, .empty, .masthead, .foot {
+  background: var(--glass-bg-t) !important;
+  border-color: var(--glass-border-t) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, #2C4A52 0%, #5E8A7B 50%, #C99B6B 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+.reading-progress .bar, .progress-bar {
+  background: linear-gradient(90deg, #5E8A7B, #2C4A52) !important;
+}
+.toast, .toast * { color: #ffffff !important; }
 
 </style>
 </head>
@@ -3989,23 +4060,31 @@ function loadAll() {
   catch(e) { return []; }
 }
 
+/* portfolioToLegacyShape — converts the Phase-A portfolio schema into the
+   legacy {id, name, data:{masthead,hero,kpis,bets,products,...}} shape that
+   all existing render functions expect. Called on every load and on every
+   postMessage preview-update so renderers never need to know about the new schema. */
+function portfolioToLegacyShape(portfolio) {
+  if (!portfolio) return portfolio;
+  const sc = portfolio.strategicContext || portfolio.data || {};
+  return Object.assign({}, portfolio, {
+    data: Object.assign({}, sc, {
+      products: (portfolio.products || []).map(p => ({
+        name:          (p.identity  && p.identity.name)              || '',
+        stage:         p.businessStage                               || '',
+        rag:           (p.rag       && p.rag.status)                 || 'A',
+        capacity:      (p.investment && p.investment.capacityNotes)  || '',
+        nextMilestone: (p.nextMilestone && p.nextMilestone.description) || '',
+        whyNow:        (p.identity  && p.identity.oneLiner)          || ''
+      }))
+    })
+  });
+}
+
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const all = loadAll();
-const roadmap = all.find(r => r.id === id);
-// Gate 1 compat shim: make portfolio shape readable by existing render functions.
-// Products converted from new schema → legacy {name,stage,rag,...} shape renderers expect.
-if (roadmap && roadmap.strategicContext && !roadmap.data) {
-  roadmap.data = roadmap.strategicContext;
-  roadmap.data.products = (roadmap.products || []).map(p => ({
-    name:          (p.identity && p.identity.name) || '',
-    stage:         p.businessStage || '',
-    rag:           (p.rag && p.rag.status) || 'A',
-    capacity:      (p.investment && p.investment.capacityNotes) || '',
-    nextMilestone: (p.nextMilestone && p.nextMilestone.description) || '',
-    whyNow:        (p.identity && p.identity.oneLiner) || ''
-  }));
-}
+const roadmap = portfolioToLegacyShape(all.find(r => r.id === id));
 
 const target = document.getElementById('render-target');
 
@@ -4585,7 +4664,7 @@ if (dlBtn2) dlBtn2.onclick = downloadHTML;
   window.addEventListener('message', (e) => {
     if (!e.data || e.data.type !== 'preview-update' || !e.data.roadmap) return;
     try {
-      currentRender()(e.data.roadmap);
+      currentRender()(portfolioToLegacyShape(e.data.roadmap));
     } catch(err) {
       console.error('[preview] render failed:', err);
     }

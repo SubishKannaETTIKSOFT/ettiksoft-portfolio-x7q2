@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Dashboard · Roadmap Builder</title>
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TIDELAND DESIGN TOKENS
+   ============================================================ */
+:root {
+  --base-bg:       #F7F4ED;
+  --primary:       #5E8A7B;
+  --primary-dark:  #2C4A52;
+  --secondary:     #B5A491;
+  --anchor:        #2C4A52;
+  --highlight:     #C99B6B;
+  --text:          #1F2937;
+  --text-muted:    #6B7280;
+  --glass-bg-t:    rgba(255, 255, 252, 0.70);
+  --glass-border-t:rgba(46, 74, 82, 0.10);
+  --shadow-sm:     0 1px 3px rgba(44,74,82,0.08), 0 4px 12px rgba(44,74,82,0.06);
+  --shadow-md:     0 2px 8px rgba(44,74,82,0.10), 0 8px 24px rgba(44,74,82,0.08);
+  --shadow-lg:     0 4px 16px rgba(44,74,82,0.12), 0 16px 48px rgba(44,74,82,0.10);
+  --radius-sm:     10px;
+  --radius-md:     16px;
+  --radius-lg:     20px;
+  --radius-pill:   999px;
+  --mono:          'Geist Mono', ui-monospace, monospace;
+  --sans:          'Geist', -apple-system, sans-serif;
+  --ease:          cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast:        120ms;
+  --t-base:        220ms;
+  --t-slow:        380ms;
+
+  /* Status colours */
+  --rag-g:    #16A34A;
+  --rag-g-bg: #DCFCE7;
+  --rag-a:    #D97706;
+  --rag-a-bg: #FEF3C7;
+  --rag-r:    #DC2626;
+  --rag-r-bg: #FEE2E2;
+
+  /* TRL band colours */
+  --trl-research: var(--secondary);
+  --trl-dev:      var(--primary);
+  --trl-deploy:   var(--anchor);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 15px; }
+
+body {
+  font-family: var(--sans);
+  background: var(--base-bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   SCHEMATIC BACKGROUND
+   ============================================================ */
+.schematic-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.14;
+  filter: blur(0.5px) saturate(0.8);
+}
+
+/* ============================================================
+   DEPTH ORBS
+   ============================================================ */
+.depth-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.depth-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(85px);
+}
+.depth-orb.o1 {
+  width: 700px; height: 700px;
+  top: -180px; left: -120px;
+  background: radial-gradient(circle at 40% 40%, #5E8A7B 0%, transparent 70%);
+  opacity: 0.22;
+  animation: orbDrift1 100s ease-in-out infinite;
+}
+.depth-orb.o2 {
+  width: 600px; height: 600px;
+  bottom: -100px; right: -80px;
+  background: radial-gradient(circle at 60% 60%, #B5A491 0%, transparent 70%);
+  opacity: 0.20;
+  animation: orbDrift2 120s ease-in-out infinite;
+}
+.depth-orb.o3 {
+  width: 480px; height: 480px;
+  top: 40%; left: 55%;
+  background: radial-gradient(circle at 50% 50%, #C99B6B 0%, transparent 70%);
+  opacity: 0.12;
+  animation: orbDrift3 100s ease-in-out infinite;
+}
+@keyframes orbDrift1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(60px,-40px) scale(1.04); }
+  66%      { transform: translate(-30px,50px) scale(0.97); }
+}
+@keyframes orbDrift2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%      { transform: translate(-50px,30px) scale(1.05); }
+  70%      { transform: translate(40px,-20px) scale(0.96); }
+}
+@keyframes orbDrift3 {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%      { transform: translate(-52%,-48%) scale(1.06); }
+}
+
+/* ============================================================
+   PAGE WRAPPER
+   ============================================================ */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  background: rgba(247, 244, 237, 0.88);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--glass-border-t);
+  margin: 0 -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.topbar-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  border: 1px solid var(--glass-border-t);
+  background: var(--glass-bg-t);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text);
+  text-decoration: none;
+  transition: background var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+  white-space: nowrap;
+}
+.btn:hover {
+  background: rgba(255,255,252,0.90);
+  border-color: rgba(94,138,123,0.25);
+  box-shadow: var(--shadow-sm);
+}
+.btn.primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--anchor) 100%);
+  color: #fff;
+  border-color: transparent;
+}
+.btn.primary:hover {
+  background: linear-gradient(135deg, #6B9B8C 0%, #375863 100%);
+  box-shadow: 0 4px 12px rgba(44,74,82,0.30);
+}
+.btn.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-muted);
+}
+.btn.ghost:hover {
+  background: rgba(94,138,123,0.08);
+  color: var(--text);
+}
+.btn .icn { display: inline-flex; align-items: center; }
+.btn[disabled], .btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ============================================================
+   GLASS CARD
+   ============================================================ */
+.card {
+  background: var(--glass-bg-t);
+  border: 1px solid var(--glass-border-t);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--t-base) var(--ease),
+              transform var(--t-base) var(--ease);
+}
+
+/* ============================================================
+   CONTEXT SUMMARY
+   ============================================================ */
+.context-summary {
+  padding: 24px 28px;
+  margin-top: 24px;
+}
+.context-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-family: var(--mono);
+  margin-bottom: 10px;
+}
+.context-headline {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+.context-headline .accent {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--anchor) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.context-bets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.bet-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(94,138,123,0.10);
+  border: 1px solid rgba(94,138,123,0.18);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  color: var(--anchor);
+  font-weight: 500;
+}
+.bet-pill .bet-verb {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.context-quarter {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.quarter-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--highlight); flex-shrink: 0; }
+.context-empty {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ============================================================
+   PRODUCTS SECTION HEADER
+   ============================================================ */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 40px 0 20px;
+}
+.section-num {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--primary);
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-num::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+.section-count {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+/* ============================================================
+   PRODUCTS GRID
+   ============================================================ */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* ============================================================
+   PRODUCT CARD
+   ============================================================ */
+.product-card {
+  padding: 20px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.product-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.product-type-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  background: rgba(94,138,123,0.12);
+  border: 1px solid rgba(94,138,123,0.18);
+}
+.product-type-icon.hardware { background: rgba(201,155,107,0.12); border-color: rgba(201,155,107,0.22); }
+.product-type-icon.service  { background: rgba(44,74,82,0.10);    border-color: rgba(44,74,82,0.18); }
+.product-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  flex: 1;
+}
+.product-owner {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* chips row */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+}
+.chip.trl-research  { background: rgba(181,164,145,0.18); color: #7A6650; border-color: rgba(181,164,145,0.30); }
+.chip.trl-dev       { background: rgba(94,138,123,0.15);  color: var(--primary); border-color: rgba(94,138,123,0.25); }
+.chip.trl-deploy    { background: rgba(44,74,82,0.12);    color: var(--anchor); border-color: rgba(44,74,82,0.20); }
+.chip.trl-none      { background: rgba(107,114,128,0.10); color: var(--text-muted); border-color: rgba(107,114,128,0.18); }
+.chip.stage         { background: rgba(201,155,107,0.12); color: #8B6B35; border-color: rgba(201,155,107,0.22); }
+.chip.comm          { background: rgba(94,138,123,0.08);  color: var(--primary); border-color: rgba(94,138,123,0.16); }
+
+/* RAG dot */
+.rag-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.7);
+}
+.rag-dot.G { background: var(--rag-g); }
+.rag-dot.A { background: var(--rag-a); }
+.rag-dot.R { background: var(--rag-r); }
+
+/* milestone */
+.product-milestone {
+  border-top: 1px solid var(--glass-border-t);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.milestone-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  margin-bottom: 3px;
+}
+.milestone-text {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.milestone-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  margin-top: 3px;
+}
+
+/* ============================================================
+   ADD PRODUCT TILE
+   ============================================================ */
+.add-product-tile {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  border: 2px dashed rgba(94,138,123,0.25);
+  background: rgba(94,138,123,0.04);
+  transition: border-color var(--t-base) var(--ease),
+              background var(--t-base) var(--ease);
+  min-height: 160px;
+  text-align: center;
+}
+.add-product-tile:hover {
+  border-color: rgba(94,138,123,0.45);
+  background: rgba(94,138,123,0.08);
+  box-shadow: none;
+  transform: none;
+}
+.add-product-tile .add-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(94,138,123,0.12);
+  border: 1px solid rgba(94,138,123,0.20);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary);
+}
+.add-product-tile .add-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.add-product-tile .add-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot {
+  margin-top: 64px;
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg-t);
+  border: 1px solid var(--glass-border-t);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  min-width: 240px;
+  max-width: 380px;
+  background: rgba(31,41,55,0.94);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.32);
+  color: #fff;
+  font-size: 13.5px;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  animation: toastIn var(--t-base) var(--ease) forwards;
+}
+.toast.out { animation: toastOut var(--t-base) var(--ease) forwards; }
+@keyframes toastIn  { from { opacity:0; transform:translateY(12px) scale(0.96); } to { opacity:1; transform:none; } }
+@keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateY(8px) scale(0.97); } }
+.toast-icon { flex-shrink:0; opacity:0.85; }
+.toast-msg  { flex:1; line-height:1.45; color:#fff; }
+.toast-progress {
+  position:absolute; bottom:0; left:0; height:2px;
+  background:rgba(255,255,255,0.25);
+  width:100%;
+  transform-origin:left;
+  animation: shrink linear forwards;
+}
+@keyframes shrink { from { transform:scaleX(1); } to { transform:scaleX(0); } }
+.toast-actions { display:flex; gap:8px; margin-top:10px; }
+.toast-btn { padding:5px 12px; border-radius:8px; font-size:12px; font-weight:600; font-family:var(--sans); cursor:pointer; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.12); color:#fff; transition:background var(--t-fast); }
+.toast-btn:hover { background:rgba(255,255,255,0.22); }
+.toast-btn.primary { background:var(--primary); border-color:var(--primary); }
+
+/* ============================================================
+   ENTER ANIMATIONS
+   ============================================================ */
+.rise { opacity:0; transform:translateY(14px); animation:rise var(--t-slow) var(--ease) forwards; }
+.d1 { animation-delay: 60ms; }
+.d2 { animation-delay:120ms; }
+.d3 { animation-delay:180ms; }
+.d4 { animation-delay:240ms; }
+@keyframes rise { to { opacity:1; transform:none; } }
+
+/* ============================================================
+   NOT FOUND STATE
+   ============================================================ */
+.notfound {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-muted);
+}
+.notfound h2 { font-size: 22px; color: var(--text); margin-bottom: 12px; }
+.notfound a  { color: var(--primary); text-decoration: none; font-weight: 500; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .page { padding: 0 16px 48px; }
+  .topbar { margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+  .products-grid { grid-template-columns: 1fr; }
+  .topbar-meta { display: none; }
+  .context-headline { font-size: 18px; }
+}
+@media (max-width: 480px) {
+  .topbar-actions .btn span:not(.icn) { display: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Schematic SVG backdrop (Tideland — sage strokes) -->
+<svg class="schematic-bg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="sg-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5E8A7B"/>
+      <stop offset="100%" stop-color="#2C4A52"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#5E8A7B" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Board outline -->
+    <rect x="60" y="60" width="520" height="380" rx="12" stroke-width="1.2" opacity="0.45"/>
+    <!-- Traces -->
+    <path d="M 80 160 H 200 V 120 H 380 V 160 H 440" stroke-width="1.5" opacity="0.55"/>
+    <path d="M 80 220 H 160 V 260 H 340 V 220 H 560" stroke-width="1.5" opacity="0.50"/>
+    <path d="M 80 300 H 240 V 340 H 420 V 300 H 560" stroke-width="1.5" opacity="0.45"/>
+    <path d="M 200 160 V 340" stroke-width="1"   opacity="0.30"/>
+    <path d="M 380 160 V 220" stroke-width="1"   opacity="0.30"/>
+    <!-- MCU block -->
+    <rect x="220" y="180" width="160" height="120" rx="6" stroke-width="1.4" opacity="0.55"/>
+    <text x="300" y="246" font-size="9" text-anchor="middle" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.65">MCU-HSM</text>
+    <!-- IC pins left -->
+    <g opacity="0.40" stroke-width="1">
+      <line x1="200" y1="196" x2="220" y2="196"/>
+      <line x1="200" y1="212" x2="220" y2="212"/>
+      <line x1="200" y1="228" x2="220" y2="228"/>
+      <line x1="200" y1="244" x2="220" y2="244"/>
+      <line x1="200" y1="260" x2="220" y2="260"/>
+      <line x1="200" y1="276" x2="220" y2="276"/>
+    </g>
+    <!-- IC pins right -->
+    <g opacity="0.40" stroke-width="1">
+      <line x1="380" y1="196" x2="400" y2="196"/>
+      <line x1="380" y1="212" x2="400" y2="212"/>
+      <line x1="380" y1="228" x2="400" y2="228"/>
+      <line x1="380" y1="244" x2="400" y2="244"/>
+      <line x1="380" y1="260" x2="400" y2="260"/>
+      <line x1="380" y1="276" x2="400" y2="276"/>
+    </g>
+    <!-- Connector blocks -->
+    <rect x="80" y="130" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
+    <rect x="80" y="200" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
+    <rect x="460" y="130" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
+    <!-- Capacitors (small) -->
+    <g opacity="0.38" stroke-width="1">
+      <rect x="430" y="188" width="14" height="8" rx="1"/>
+      <rect x="430" y="204" width="14" height="8" rx="1"/>
+    </g>
+    <!-- Via dots -->
+    <g fill="#5E8A7B" opacity="0.45">
+      <circle cx="160" cy="260" r="3.5"/>
+      <circle cx="340" cy="220" r="3.5"/>
+      <circle cx="440" cy="300" r="3.5"/>
+    </g>
+    <!-- Dimension lines -->
+    <g opacity="0.28" stroke-width="0.7" fill="#5E8A7B">
+      <line x1="220" y1="316" x2="380" y2="316"/>
+      <line x1="220" y1="311" x2="220" y2="321"/>
+      <line x1="380" y1="311" x2="380" y2="321"/>
+      <text x="300" y="330" font-size="7.5" text-anchor="middle" stroke="none" font-family="ui-monospace,monospace">160.0</text>
+    </g>
+    <!-- Crosshairs top-right area -->
+    <g opacity="0.30" stroke-width="0.8">
+      <g transform="translate(1400,200)">
+        <line x1="-8" y1="0" x2="8" y2="0"/>
+        <line x1="0" y1="-8" x2="0" y2="8"/>
+        <circle r="11" fill="none" stroke-width="0.6"/>
+      </g>
+      <g transform="translate(1600,500)">
+        <line x1="-6" y1="0" x2="6" y2="0"/>
+        <line x1="0" y1="-6" x2="0" y2="6"/>
+        <circle r="9" fill="none" stroke-width="0.5"/>
+      </g>
+      <g transform="translate(900,950)">
+        <line x1="-6" y1="0" x2="6" y2="0"/>
+        <line x1="0" y1="-6" x2="0" y2="6"/>
+      </g>
+    </g>
+    <!-- Long horizontal trace across canvas -->
+    <path d="M 620 260 H 1860" stroke-width="0.8" opacity="0.18" stroke-dasharray="4 8"/>
+    <path d="M 620 400 H 1860" stroke-width="0.8" opacity="0.14" stroke-dasharray="4 8"/>
+    <!-- Board label -->
+    <text x="68" y="54" font-size="8.5" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SCH-002 · PORTFOLIO-DASH · REV 1.0</text>
+    <text x="1852" y="1182" font-size="8.5" text-anchor="end" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SHEET 1/1</text>
+  </g>
+</svg>
+
+<!-- Depth orbs -->
+<div class="depth-orbs">
+  <div class="depth-orb o1"></div>
+  <div class="depth-orb o2"></div>
+  <div class="depth-orb o3"></div>
+</div>
+
+<div class="page">
+  <header class="topbar">
+    <span class="topbar-name" id="topbar-name">Portfolio</span>
+    <span class="topbar-meta" id="topbar-meta"></span>
+    <nav class="topbar-actions">
+      <a href="index.html" class="btn ghost">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span>Portfolios</span>
+      </a>
+      <button class="btn" id="snapshot-btn" title="Snapshots coming in Phase B">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+        <span>Snapshot</span>
+      </button>
+      <a id="edit-context-btn" href="#" class="btn">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+        <span>Edit Context</span>
+      </a>
+      <a id="view-roadmap-btn" href="#" class="btn primary">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <span>View Roadmap</span>
+      </a>
+    </nav>
+  </header>
+
+  <div id="page-content"></div>
+
+  <footer class="foot">
+    <div>Portfolio · Roadmap Builder</div>
+    <div id="foot-meta">v1.0</div>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   DATA MODEL MIGRATION  v1→v2  (roadmaps → portfolios)
+   ============================================================ */
+try { (function migrateToPortfolios() {
+  const PF_KEY  = 'roadmap-builder.portfolios';
+  const RM_KEY  = 'roadmap-builder.roadmaps';
+  const BAK_KEY = 'roadmap-builder.legacy-backup';
+  if (localStorage.getItem(PF_KEY)) return;
+  const raw = localStorage.getItem(RM_KEY);
+  if (!raw) return;
+  let legacy; try { legacy = JSON.parse(raw); } catch(e) { return; }
+  if (!Array.isArray(legacy) || !legacy.length) return;
+  if (!localStorage.getItem(BAK_KEY)) localStorage.setItem(BAK_KEY, raw);
+  function _uuid() {
+    return (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+  }
+  function _inferType(n) { return /hsm|hardware/i.test(n || '') ? 'hardware' : 'software'; }
+  function _inferTrl(s) {
+    s = (s || '').toLowerCase().trim();
+    return s === 'beta' ? 5 : s === 'pre-ga' ? 7 : s === 'ga' ? 8 : null;
+  }
+  function _inferComm(s) {
+    s = (s || '').toLowerCase().trim();
+    if (['concept','spec','design'].includes(s)) return 1;
+    if (s === 'in build') return 3;
+    if (s === 'beta') return 4;
+    if (['pre-ga','ga','maintenance'].includes(s)) return 5;
+    return null;
+  }
+  function _inferBiz(s) {
+    return ({concept:'Concept',spec:'Concept',design:'Concept','in build':'Concept',
+             beta:'Beta','pre-ga':'Pre-GA',ga:'GA',maintenance:'Mature',sunset:'Sunset'
+            })[(s||'').toLowerCase().trim()] || 'Concept';
+  }
+  const NA = 'n/a', now = new Date().toISOString();
+  localStorage.setItem(PF_KEY, JSON.stringify(legacy.map(rm => {
+    const d = rm.data || {};
+    return {
+      id: rm.id, name: rm.name || 'Untitled Portfolio',
+      isSnapshot: false, snapshotDate: null,
+      createdAt: rm.createdAt || now, updatedAt: rm.updatedAt || now, lastEditedBy: 'me',
+      strategicContext: {
+        masthead: d.masthead || {}, hero: d.hero || {},
+        kpis: d.kpis || [], bets: d.bets || [], actions: d.actions || [],
+        quarters: d.quarters || [], decisions: d.decisions || [], risks: d.risks || []
+      },
+      products: (d.products || []).map(p => ({
+        id: _uuid(), type: _inferType(p.name),
+        identity:     { name: p.name||'', owner:'', oneLiner: p.whyNow||'', vision:'', currentCustomers:'' },
+        technologyReadiness: { trl: _inferTrl(p.stage), evidence:'', targetTrl:null, targetDate:null },
+        maturity:     { level:null, evidence:'' },
+        commercializationStage: _inferComm(p.stage),
+        businessStage: _inferBiz(p.stage),
+        investment:   { fteCount:null, budgetTier:null, capacityNotes: p.capacity||'' },
+        rag:          { status: p.rag||'A', reasoning:'' },
+        nextMilestone:{ description: p.nextMilestone||'', targetDate:null, owner:'' },
+        compliance:   { iso21434:'n/a', aisXXX:'n/a', uneceR155:'n/a', certIn:'n/a', iso27001:'n/a', tisax:'n/a', custom:[] },
+        customerEvidence:[], productRisks:[], productRoadmap:[],
+        createdAt: rm.createdAt||now, updatedAt: rm.updatedAt||now, lastEditedBy:'me'
+      }))
+    };
+  })));
+})(); } catch(e) { console.warn('[migration] skipped:', e); }
+
+/* ============================================================
+   STORAGE & UTILITIES
+   ============================================================ */
+const STORAGE_KEY = 'roadmap-builder.portfolios';
+
+function loadPortfolios() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function savePortfolios(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+function uuid() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+}
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
+}
+function fmtDate(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' }); }
+  catch(e) { return iso; }
+}
+function fmtRelative(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d ago`;
+  return fmtDate(iso);
+}
+
+/* ============================================================
+   TRL HELPERS
+   ============================================================ */
+function trlBand(trl) {
+  if (trl == null) return { cls: 'trl-none', label: 'Not assessed' };
+  if (trl <= 3)    return { cls: 'trl-research', label: `TRL ${trl} · Research` };
+  if (trl <= 6)    return { cls: 'trl-dev',      label: `TRL ${trl} · Development` };
+  return               { cls: 'trl-deploy',    label: `TRL ${trl} · Deployment` };
+}
+
+function maturityLabel(type, level) {
+  if (type === 'service' || level == null) return null;
+  if (type === 'hardware') return `MRL ${level}`;
+  const labels = ['', 'Concept', 'Pilot', 'Limited', 'Production', 'Scaled'];
+  return `OR ${level}${labels[level] ? ' · ' + labels[level] : ''}`;
+}
+
+function typeIcon(type) {
+  if (type === 'hardware') return '🔩';
+  if (type === 'service')  return '◌';
+  return '▣';
+}
+
+/* ============================================================
+   ACCENT WORD HELPER
+   ============================================================ */
+function applyAccent(headline, accent) {
+  if (!accent || !accent.trim()) return esc(headline);
+  const re = new RegExp('\\b(' + accent.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')\\b', 'i');
+  return esc(headline).replace(re, '<span class="accent">$1</span>');
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const params = new URLSearchParams(window.location.search);
+const portfolioId = params.get('id');
+const all = loadPortfolios();
+const portfolio = all.find(p => p.id === portfolioId);
+
+const content = document.getElementById('page-content');
+
+if (!portfolio) {
+  content.innerHTML = `
+    <div class="notfound">
+      <h2>Portfolio not found</h2>
+      <p>This portfolio doesn't exist or has been deleted.</p>
+      <p style="margin-top:18px;"><a href="index.html">← Back to portfolios</a></p>
+    </div>
+  `;
+} else {
+  // Update top bar
+  document.getElementById('topbar-name').textContent = portfolio.name || 'Untitled Portfolio';
+  document.getElementById('topbar-meta').textContent =
+    portfolio.updatedAt ? 'Updated ' + fmtRelative(portfolio.updatedAt) : '';
+  document.getElementById('edit-context-btn').href  = `editor.html?id=${portfolioId}`;
+  document.getElementById('view-roadmap-btn').href  = `output.html?id=${portfolioId}`;
+  document.title = (portfolio.name || 'Portfolio') + ' · Dashboard';
+
+  // Page title in foot
+  document.getElementById('foot-meta').textContent =
+    `${(portfolio.products||[]).length} product${(portfolio.products||[]).length===1?'':'s'} · updated ${fmtDate(portfolio.updatedAt)}`;
+
+  const sc = portfolio.strategicContext || {};
+  const hero = sc.hero || {};
+  const bets = (sc.bets || []).slice(0, 3);
+  const quarters = sc.quarters || [];
+  const currentQuarter = quarters[0];
+
+  // Strategic context summary
+  const ctxHTML = `
+    <section class="context-summary card rise d2">
+      <div class="context-label">Strategic Context</div>
+      ${hero.headline
+        ? `<div class="context-headline">${applyAccent(hero.headline, hero.accentWord)}</div>`
+        : `<div class="context-empty">No hero headline set — <a href="editor.html?id=${portfolioId}" style="color:var(--primary)">Edit Context</a> to add one.</div>`
+      }
+      ${bets.length ? `
+        <div class="context-bets">
+          ${bets.map(b => `
+            <span class="bet-pill">
+              <span class="bet-verb">${esc(b.verb || '')}</span>
+              ${esc(b.headline || '')}
+            </span>
+          `).join('')}
+        </div>
+      ` : ''}
+      ${currentQuarter ? `
+        <div class="context-quarter">
+          <span class="quarter-dot"></span>
+          <span><strong>${esc(currentQuarter.label || '')}</strong>${currentQuarter.theme ? ' — ' + esc(currentQuarter.theme) : ''}</span>
+        </div>
+      ` : ''}
+    </section>
+  `;
+
+  // Products section
+  const products = portfolio.products || [];
+
+  function productCardHTML(p) {
+    const name = (p.identity && p.identity.name) || 'Unnamed product';
+    const owner = (p.identity && p.identity.owner) || '';
+    const trl = p.technologyReadiness && p.technologyReadiness.trl;
+    const band = trlBand(trl);
+    const maturity = maturityLabel(p.type, p.maturity && p.maturity.level);
+    const commStage = p.commercializationStage;
+    const ragStatus = (p.rag && p.rag.status) || 'A';
+    const bizStage = p.businessStage || '';
+    const ms = p.nextMilestone || {};
+
+    return `
+      <article class="product-card card rise d3" data-product-id="${esc(p.id)}">
+        <div class="product-card-header">
+          <div class="product-type-icon ${esc(p.type || 'software')}" title="${esc(p.type || 'software')}">
+            ${typeIcon(p.type)}
+          </div>
+          <div>
+            <div class="product-name">${esc(name)}</div>
+            ${owner ? `<div class="product-owner">${esc(owner)}</div>` : ''}
+          </div>
+          <span class="rag-dot ${ragStatus}" title="RAG: ${ragStatus === 'G' ? 'On Track' : ragStatus === 'A' ? 'Caution' : 'At Risk'}" style="margin-left:auto;margin-top:3px;flex-shrink:0"></span>
+        </div>
+        <div class="chip-row">
+          <span class="chip ${band.cls}">${esc(band.label)}</span>
+          ${maturity ? `<span class="chip comm">${esc(maturity)}</span>` : ''}
+          ${commStage != null ? `<span class="chip stage">Comm ${commStage}/5</span>` : ''}
+          ${bizStage ? `<span class="chip stage">${esc(bizStage)}</span>` : ''}
+        </div>
+        ${ms.description ? `
+          <div class="product-milestone">
+            <div class="milestone-label">Next milestone</div>
+            <div class="milestone-text">${esc(ms.description)}</div>
+            ${ms.targetDate ? `<div class="milestone-date">${fmtDate(ms.targetDate)}</div>` : ''}
+          </div>
+        ` : ''}
+      </article>
+    `;
+  }
+
+  const addTileHTML = `
+    <article class="add-product-tile card rise d4" id="add-product-btn">
+      <div class="add-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      <div class="add-label">Add product</div>
+      <div class="add-hint">Create a new product assessment</div>
+    </article>
+  `;
+
+  const productsHTML = `
+    <div class="section-head rise d3">
+      <span class="section-num">01</span>
+      <span class="section-title">Products</span>
+      <span class="section-count">${products.length} TOTAL</span>
+    </div>
+    <div class="products-grid">
+      ${products.map(productCardHTML).join('')}
+      ${addTileHTML}
+    </div>
+  `;
+
+  content.innerHTML = ctxHTML + productsHTML;
+
+  // Wire product card clicks → product.html
+  content.querySelectorAll('.product-card[data-product-id]').forEach(card => {
+    card.onclick = () => {
+      const pid = card.dataset.productId;
+      window.location.href = `product.html?portfolio=${portfolioId}&product=${pid}`;
+    };
+  });
+
+  // Wire "Add product" tile
+  document.getElementById('add-product-btn').onclick = () => {
+    const newId = uuid();
+    const now = new Date().toISOString();
+    const NA = 'n/a';
+    const newProduct = {
+      id: newId, type: 'software',
+      identity: { name: '', owner: '', oneLiner: '', vision: '', currentCustomers: '' },
+      technologyReadiness: { trl: null, evidence: '', targetTrl: null, targetDate: null },
+      maturity: { level: null, evidence: '' },
+      commercializationStage: null,
+      businessStage: 'Concept',
+      investment: { fteCount: null, budgetTier: null, capacityNotes: '' },
+      rag: { status: 'A', reasoning: '' },
+      nextMilestone: { description: '', targetDate: null, owner: '' },
+      compliance: { iso21434:NA, aisXXX:NA, uneceR155:NA, certIn:NA, iso27001:NA, tisax:NA, custom:[] },
+      customerEvidence: [], productRisks: [], productRoadmap: [],
+      createdAt: now, updatedAt: now, lastEditedBy: 'me'
+    };
+    const latest = loadPortfolios();
+    const pf = latest.find(x => x.id === portfolioId);
+    if (!pf) { window.toast && window.toast.error('Portfolio not found'); return; }
+    pf.products = pf.products || [];
+    pf.products.push(newProduct);
+    pf.updatedAt = now;
+    savePortfolios(latest);
+    window.location.href = `product.html?portfolio=${portfolioId}&product=${newId}`;
+  };
+}
+
+// Snapshot button — Phase B, no-op for now
+document.getElementById('snapshot-btn').onclick = () => {
+  window.toast && window.toast.info('Snapshots are coming in Phase B');
+};
+
+/* ============================================================
+   TOAST NOTIFICATION SYSTEM
+   ============================================================ */
+(function() {
+  let container = null;
+  function ensureContainer() {
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    return container;
+  }
+  const ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    confirm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
+  function escSafe(s) {
+    const d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+  function show(opts) {
+    if (typeof opts === 'string') opts = { message: opts };
+    const o = Object.assign({ message:'', type:'info', duration:3200, actions:null }, opts);
+    const c = ensureContainer();
+    const el = document.createElement('div');
+    el.className = 'toast ' + o.type;
+    el.innerHTML = `<div class="toast-icon">${ICONS[o.type]||ICONS.info}</div><div class="toast-msg">${escSafe(o.message)}</div>`;
+    if (o.actions && o.actions.length) {
+      const ad = document.createElement('div'); ad.className = 'toast-actions';
+      o.actions.forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = 'toast-btn ' + (a.variant||'');
+        btn.textContent = a.label;
+        btn.onclick = () => { dismiss(); if (a.onClick) a.onClick(); };
+        ad.appendChild(btn);
+      });
+      el.querySelector('.toast-msg').appendChild(ad);
+    }
+    if (o.duration > 0) {
+      const prog = document.createElement('div');
+      prog.className = 'toast-progress';
+      prog.style.animationDuration = o.duration + 'ms';
+      el.appendChild(prog);
+    }
+    c.appendChild(el);
+    let t = null;
+    function dismiss() {
+      clearTimeout(t);
+      el.classList.add('out');
+      setTimeout(() => el.remove(), 220);
+    }
+    if (o.duration > 0) t = setTimeout(dismiss, o.duration);
+    el.onclick = dismiss;
+    return { dismiss };
+  }
+  window.toast = {
+    success: (msg, opts) => show(Object.assign({ message: msg, type: 'success' }, opts)),
+    error:   (msg, opts) => show(Object.assign({ message: msg, type: 'error',   duration: 5000 }, opts)),
+    info:    (msg, opts) => show(Object.assign({ message: msg, type: 'info' }, opts)),
+    confirm: (msg, opts) => show(Object.assign({ message: msg, type: 'confirm', duration: 0 }, opts))
+  };
+})();
+</script>
+</body>
+</html>

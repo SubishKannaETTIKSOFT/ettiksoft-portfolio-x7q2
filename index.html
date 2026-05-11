@@ -3322,6 +3322,86 @@ html {
 /* But toast/dialog text MUST stay white — re-assert */
 .toast, .toast * { color: #ffffff !important; }
 
+/* ---- TIDELAND THEME OVERRIDE ---- */
+:root {
+  --base-bg: #F7F4ED;
+  --primary: #5E8A7B;
+  --secondary: #B5A491;
+  --anchor: #2C4A52;
+  --highlight: #C99B6B;
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --glass-bg-t: rgba(255, 255, 252, 0.70);
+  --glass-border-t: rgba(46, 74, 82, 0.10);
+  /* remap legacy Aurora tokens so all var(--brand) usages follow */
+  --brand: #5E8A7B;
+  --brand-hover: #2C4A52;
+  --brand-soft: #EEF5F3;
+  --brand-fg: #2C4A52;
+}
+body { background: var(--base-bg) !important; }
+/* Orbs → sage / taupe / amber */
+.depth-orb.o1 {
+  background: radial-gradient(circle, #5E8A7B 0%, rgba(94,138,123,0) 65%) !important;
+  opacity: 0.22 !important;
+  animation-duration: 100s !important;
+}
+.depth-orb.o2 {
+  background: radial-gradient(circle, #B5A491 0%, rgba(181,164,145,0) 65%) !important;
+  opacity: 0.20 !important;
+  animation-duration: 120s !important;
+}
+.depth-orb.o3 {
+  background: radial-gradient(circle, #C99B6B 0%, rgba(201,155,107,0) 65%) !important;
+  opacity: 0.12 !important;
+  animation-duration: 100s !important;
+}
+.depth-orbs::before {
+  background: radial-gradient(circle, #B5A491 0%, rgba(181,164,145,0) 65%) !important;
+  opacity: 0.10 !important;
+}
+/* Schematic SVG strokes → sage */
+.schematic-bg path, .schematic-bg line, .schematic-bg rect,
+.schematic-bg circle, .schematic-bg polyline, .schematic-bg polygon {
+  stroke: #5E8A7B !important;
+  fill: none !important;
+}
+.schematic-bg text { fill: #5E8A7B !important; stroke: none !important; }
+.schematic-bg linearGradient stop:first-child { stop-color: #5E8A7B !important; }
+.schematic-bg linearGradient stop:last-child  { stop-color: #2C4A52 !important; }
+/* Primary button → sage→marine (match full specificity of existing rule) */
+.btn.primary, button.btn.primary, a.btn.primary,
+.btn.primary:hover, button.btn.primary:hover, a.btn.primary:hover {
+  background: linear-gradient(135deg, #5E8A7B 0%, #2C4A52 100%) !important;
+  border-color: #5E8A7B !important;
+  color: #fff !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.20) inset,
+    0 4px 12px -4px rgba(94,138,123,0.45),
+    0 8px 24px -8px rgba(44,74,82,0.35) !important;
+}
+/* Glass surfaces */
+.sec, .card, .bet, .product, .panel, .risk-card, .kpi, .empty, .masthead, .foot {
+  background: var(--glass-bg-t) !important;
+  border-color: var(--glass-border-t) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+}
+/* Hero accent → marine→sage→amber */
+.hero h1 .accent {
+  background: linear-gradient(135deg, #2C4A52 0%, #5E8A7B 50%, #C99B6B 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+/* Progress / reading bar */
+.reading-progress .bar, .progress-bar {
+  background: linear-gradient(90deg, #5E8A7B, #2C4A52) !important;
+}
+/* Toast stays white-on-dark */
+.toast, .toast * { color: #ffffff !important; }
+
 </style>
 </head>
 
@@ -3600,7 +3680,7 @@ html {
   </section>
 
   <section class="toolbar rise d3">
-    <button class="btn primary" id="create-btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Create new roadmap</button>
+    <button class="btn primary" id="create-btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Create new portfolio</button>
     <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 8px;">
       Stored locally in your browser. Nothing leaves this machine.
     </span>
@@ -3609,7 +3689,7 @@ html {
   <section class="section rise d4">
     <div class="section-head">
       <div class="num">01</div>
-      <div class="title">Your roadmaps</div>
+      <div class="title">Your portfolios</div>
       <div class="count" id="count"></div>
     </div>
     
@@ -3837,7 +3917,7 @@ function render() {
         </div>
         <div class="actions">
           <a href="output.html?id=${r.id}" class="btn primary"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>View</a>
-          <a href="editor.html?id=${r.id}" class="btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>Edit</a>
+          <a href="dashboard.html?id=${r.id}" class="btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg></span>Open</a>
           <button class="btn-tiny" data-action="duplicate"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>Duplicate</button>
           <button class="btn-tiny danger" data-action="delete"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>Delete</button>
         </div>
@@ -4045,7 +4125,7 @@ window.render = function() {
             <circle cx="80" cy="47" r="2" fill="currentColor" opacity="0.22"/>
             <path d="M 22 41 L 78 39" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 4" opacity="0.35"/>
           </svg>
-          <div>No roadmaps yet. Click <strong>+ Create new roadmap</strong> above to start.</div>
+          <div>No portfolios yet. Click <strong>+ Create new portfolio</strong> above to start.</div>
         </div>
       `;
     } else {
@@ -4056,7 +4136,7 @@ window.render = function() {
             <line x1="51" y1="45" x2="64" y2="58" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
             <line x1="32" y1="32" x2="44" y2="32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          <div>No roadmaps match <strong>"${escapeHtml(searchQuery)}"</strong>.</div>
+          <div>No portfolios match <strong>"${escapeHtml(searchQuery)}"</strong>.</div>
         </div>
       `;
     }
@@ -4071,7 +4151,7 @@ window.render = function() {
     return `
       <article class="card" data-id="${r.id}">
         <div class="info">
-          <div class="name">${highlight(r.name || 'Untitled roadmap', searchQuery)}</div>
+          <div class="name">${highlight(r.name || 'Untitled portfolio', searchQuery)}</div>
           <div class="meta">
             ${company ? `<span>${highlight(company, searchQuery)}</span><span class="dot">·</span>` : ''}
             <span>UPDATED ${fmtRelative(r.updatedAt).toUpperCase()}</span>
@@ -4083,7 +4163,7 @@ window.render = function() {
         </div>
         <div class="actions">
           <a href="output.html?id=${r.id}" class="btn primary"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>View</a>
-          <a href="editor.html?id=${r.id}" class="btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>Edit</a>
+          <a href="dashboard.html?id=${r.id}" class="btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg></span>Open</a>
           <button class="btn-tiny" data-action="duplicate"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>Duplicate</button>
           <button class="btn-tiny danger" data-action="delete"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>Delete</button>
         </div>
@@ -4142,7 +4222,7 @@ document.getElementById('create-btn').onclick = function() {
   const all = loadPortfolios();
   all.push(defaultPortfolio(id));
   savePortfolios(all);
-  navigate(`editor.html?id=${id}`);
+  navigate(`dashboard.html?id=${id}`);
 };
 
 

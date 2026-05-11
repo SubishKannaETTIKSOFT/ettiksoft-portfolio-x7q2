@@ -3507,6 +3507,80 @@ html {
   color: inherit;
 }
 
+/* ---- TIDELAND THEME OVERRIDE ---- */
+:root {
+  --base-bg: #F7F4ED;
+  --primary: #5E8A7B;
+  --secondary: #B5A491;
+  --anchor: #2C4A52;
+  --highlight: #C99B6B;
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --glass-bg-t: rgba(255, 255, 252, 0.70);
+  --glass-border-t: rgba(46, 74, 82, 0.10);
+  --brand: #5E8A7B;
+  --brand-hover: #2C4A52;
+  --brand-soft: #EEF5F3;
+  --brand-fg: #2C4A52;
+}
+body { background: var(--base-bg) !important; }
+.depth-orb.o1 {
+  background: radial-gradient(circle, #5E8A7B 0%, rgba(94,138,123,0) 65%) !important;
+  opacity: 0.22 !important;
+  animation-duration: 100s !important;
+}
+.depth-orb.o2 {
+  background: radial-gradient(circle, #B5A491 0%, rgba(181,164,145,0) 65%) !important;
+  opacity: 0.20 !important;
+  animation-duration: 120s !important;
+}
+.depth-orb.o3 {
+  background: radial-gradient(circle, #C99B6B 0%, rgba(201,155,107,0) 65%) !important;
+  opacity: 0.12 !important;
+  animation-duration: 100s !important;
+}
+.depth-orbs::before {
+  background: radial-gradient(circle, #B5A491 0%, rgba(181,164,145,0) 65%) !important;
+  opacity: 0.10 !important;
+}
+.schematic-bg path, .schematic-bg line, .schematic-bg rect,
+.schematic-bg circle, .schematic-bg polyline, .schematic-bg polygon {
+  stroke: #5E8A7B !important;
+  fill: none !important;
+}
+.schematic-bg text { fill: #5E8A7B !important; stroke: none !important; }
+.schematic-bg linearGradient stop:first-child { stop-color: #5E8A7B !important; }
+.schematic-bg linearGradient stop:last-child  { stop-color: #2C4A52 !important; }
+.btn.primary, button.btn.primary, a.btn.primary,
+.topbar .btn.primary, .topbar button.btn.primary, .topbar a.btn.primary,
+.app-toolbar .primary, .app-toolbar button.primary, .app-toolbar a.primary,
+.btn.primary:hover, button.btn.primary:hover, a.btn.primary:hover,
+.topbar .btn.primary:hover, .topbar button.btn.primary:hover, .topbar a.btn.primary:hover {
+  background: linear-gradient(135deg, #5E8A7B 0%, #2C4A52 100%) !important;
+  border-color: #5E8A7B !important;
+  color: #fff !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.20) inset,
+    0 4px 12px -4px rgba(94,138,123,0.45),
+    0 8px 24px -8px rgba(44,74,82,0.35) !important;
+}
+.sec, .card, .bet, .product, .panel, .risk-card, .kpi, .empty, .masthead, .foot {
+  background: var(--glass-bg-t) !important;
+  border-color: var(--glass-border-t) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, #2C4A52 0%, #5E8A7B 50%, #C99B6B 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+.reading-progress .bar, .progress-bar {
+  background: linear-gradient(90deg, #5E8A7B, #2C4A52) !important;
+}
+.toast, .toast * { color: #ffffff !important; }
 
 </style>
 </head>
@@ -3722,6 +3796,7 @@ html {
 <div class="topbar">
   <div class="topbar-inner">
     <a href="index.html" class="back"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a>
+    <a href="#" class="btn" id="dashboard-link">← Dashboard</a>
     <input type="text" class="title-input" id="title-input" placeholder="Untitled roadmap">
     <span class="save-state" id="save-state">All changes saved</span>
     <button class="btn" id="preview-toggle-btn" title="Toggle live preview (Ctrl/Cmd+P)"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="label-text">Preview</span></button>
@@ -3825,18 +3900,9 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 let all = loadAll();
 let roadmap = all.find(r => r.id === id);
-// Gate 1 compat shim: make portfolio shape look like legacy roadmap for existing form code.
-// roadmap.data aliases strategicContext; products converted to legacy {name,stage,rag,...} shape.
+// Alias strategicContext as data so all existing form code works unchanged.
 if (roadmap && roadmap.strategicContext && !roadmap.data) {
   roadmap.data = roadmap.strategicContext;
-  roadmap.data.products = (roadmap.products || []).map(p => ({
-    name:          (p.identity && p.identity.name) || '',
-    stage:         p.businessStage || '',
-    rag:           (p.rag && p.rag.status) || 'A',
-    capacity:      (p.investment && p.investment.capacityNotes) || '',
-    nextMilestone: (p.nextMilestone && p.nextMilestone.description) || '',
-    whyNow:        (p.identity && p.identity.oneLiner) || ''
-  }));
 }
 
 if (!roadmap) {
@@ -3859,7 +3925,6 @@ roadmap.data.masthead = roadmap.data.masthead || { company:'', tagline:'', date:
 roadmap.data.hero = roadmap.data.hero || { eyebrow:'', headline:'', accentWord:'', lede:'' };
 roadmap.data.kpis = roadmap.data.kpis || [];
 roadmap.data.bets = roadmap.data.bets || [];
-roadmap.data.products = roadmap.data.products || [];
 roadmap.data.actions = roadmap.data.actions || [];
 roadmap.data.quarters = roadmap.data.quarters || [];
 roadmap.data.decisions = roadmap.data.decisions || [];
@@ -3867,6 +3932,7 @@ roadmap.data.risks = roadmap.data.risks || [];
 
 document.getElementById('title-input').value = roadmap.name || '';
 document.getElementById('view-output-btn').href = `output.html?id=${roadmap.id}`;
+document.getElementById('dashboard-link').href = `dashboard.html?id=${roadmap.id}`;
 
 /* ============================================================
    AUTO-SAVE
@@ -3885,9 +3951,12 @@ function showSaved() {
 }
 function persist() {
   roadmap.updatedAt = new Date().toISOString();
+  // Save without the transient `data` alias — strategicContext is the source of truth.
+  const toSave = Object.assign({}, roadmap);
+  delete toSave.data;
   const idx = all.findIndex(r => r.id === roadmap.id);
-  if (idx >= 0) all[idx] = roadmap;
-  else all.push(roadmap);
+  if (idx >= 0) all[idx] = toSave;
+  else all.push(toSave);
   saveAll(all);
   showSaved();
 }
@@ -4364,44 +4433,6 @@ function renderBets() {
   });
 }
 
-function renderProducts() {
-  const RAG = [
-    { value: 'G', label: 'On track', cls: 'go' },
-    { value: 'A', label: 'Caution',  cls: 'amber' },
-    { value: 'R', label: 'At risk',  cls: 'red' },
-  ];
-  return dynamicSection({
-    num: '05',
-    title: 'Products',
-    hint: 'One card per product / workstream. Status, capacity, next milestone, why it matters now.',
-    listKey: 'products',
-    addLabel: 'Add product',
-    blank: { name: '', stage: '', rag: 'A', capacity: '', nextMilestone: '', whyNow: '' },
-    render: (row, item) => {
-      const grid1 = el('div', { class: 'row-grid cols-2' },
-        field('Product name',
-          makeInput(item.name, v => item.name = v, 'e.g. CYPHERA')),
-        fieldChips('Stage',
-          makeInput(item.stage, v => item.stage = v, 'click below or type'),
-          STAGE_OPTIONS)
-      );
-      row.appendChild(grid1);
-
-      const ragField = el('div', { class: 'field' });
-      ragField.appendChild(el('label', {}, 'RAG status'));
-      ragField.appendChild(makeSegmented('rag', RAG, item.rag, v => item.rag = v));
-      row.appendChild(ragField);
-
-      row.appendChild(field('Capacity assigned',
-        makeInput(item.capacity, v => item.capacity = v, 'e.g. 2 devs · 60% PO')));
-      row.appendChild(field('Next milestone',
-        makeInput(item.nextMilestone, v => item.nextMilestone = v, 'e.g. Convert eval → first paid customer')));
-      row.appendChild(field('Why now',
-        makeTextarea(item.whyNow, v => item.whyNow = v, 'One sentence on why this product matters at this moment.', 2)));
-    }
-  });
-}
-
 function renderActions() {
   const PRIO = [
     { value: 'P0', label: 'P0', cls: 'p0' },
@@ -4446,7 +4477,6 @@ main.appendChild(renderIdentity());
 main.appendChild(renderHero());
 main.appendChild(renderKpis());
 main.appendChild(renderBets());
-main.appendChild(renderProducts());
 main.appendChild(renderActions());
 
 // Footer with delete
@@ -4694,14 +4724,12 @@ window.addEventListener('keydown', (e) => {
 // ============================================================
 (function() {
   // Map listKey by section number — must match renderActions etc.
-  const SECTION_LIST_KEYS = ['kpis', 'bets', 'products', 'actions', 'quarters', 'decisions', 'risks'];
+  const SECTION_LIST_KEYS = ['kpis', 'bets', 'actions', 'quarters', 'decisions', 'risks'];
 
   function enhanceSections() {
     const dynLists = document.querySelectorAll('.dyn-list');
     dynLists.forEach((list, sectionIdx) => {
-      // Determine which data array this list represents
-      // The order of dyn-lists matches: kpis (3rd sec), bets (4th), products (5th), actions (6th)
-      // So sectionIdx 0..3 maps to SECTION_LIST_KEYS[0..3]
+      // Order of dyn-lists: kpis, bets, actions, quarters, decisions, risks
       const listKey = SECTION_LIST_KEYS[sectionIdx];
       if (!listKey || !roadmap.data[listKey]) return;
 
