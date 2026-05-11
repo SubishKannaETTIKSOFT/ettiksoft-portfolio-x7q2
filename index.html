@@ -1876,16 +1876,6 @@ input:focus, textarea:focus, select:focus,
 .masthead .brand { font-size: 16px !important; }
 .masthead .meta { font-size: 11.5px !important; white-space: nowrap !important; }
 
-/* === Scrollbar hint (subtle) === */
-::-webkit-scrollbar { width: 12px; height: 12px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.15);
-  border-radius: 6px;
-  border: 3px solid transparent;
-  background-clip: content-box;
-}
-::-webkit-scrollbar-thumb:hover { background: rgba(15, 23, 42, 0.25); background-clip: content-box; }
 
 
 /* ============================================================
@@ -1907,11 +1897,6 @@ input:focus, textarea:focus, select:focus,
   z-index: 0;
 }
 
-/* Slow drift on the schematic so it feels alive */
-@keyframes sch-drift {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(-12px, -8px); }
-}
 .schematic-bg { animation: sch-drift 32s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .schematic-bg, .schematic-bg circle { animation: none !important; }
@@ -2218,11 +2203,6 @@ html, body {
   filter: blur(2.5px) saturate(0.60) brightness(1.20) !important;
   animation: sch-drift 36s ease-in-out infinite !important;
 }
-@keyframes sch-drift {
-  0%, 100% { transform: translate(0, 0); }
-  50%       { transform: translate(-10px, -6px); }
-}
-
 /* Depth orbs */
 .depth-orbs {
   position: fixed !important;
@@ -2609,20 +2589,6 @@ input:focus, textarea:focus, select:focus {
 /* Drag handles */
 .drag-handle { color: rgba(100, 116, 139, 0.48) !important; }
 .drag-handle:hover { color: #0891B2 !important; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.20);
-  border-radius: 5px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.35);
-  background-clip: content-box;
-}
 
 /* -------------------------------------------------------------- */
 /* 12. RESPONSIVE                                                  */

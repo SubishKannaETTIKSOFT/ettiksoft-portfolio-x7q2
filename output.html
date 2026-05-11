@@ -734,19 +734,6 @@ html { scroll-behavior: smooth; }
 
 
 /* ============================================================
-   ENHANCED ANIMATIONS — gradient mesh drift
-   ============================================================ */
-@keyframes mesh-drift {
-  0%   { transform: translateX(-50%) translateY(0px) rotate(0deg); }
-  33%  { transform: translateX(-48%) translateY(-20px) rotate(2deg); }
-  66%  { transform: translateX(-52%) translateY(15px) rotate(-2deg); }
-  100% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
-}
-body::before {
-  animation: mesh-drift 24s ease-in-out infinite;
-}
-
-/* ============================================================
    TOAST NOTIFICATIONS
    ============================================================ */
 .toast-container {
@@ -1213,13 +1200,6 @@ body::before {
   filter: blur(36px) !important;
   opacity: 1 !important;
 }
-@keyframes mesh-drift-bold {
-  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
-  33% { transform: translateX(-30px) translateY(-15px) scale(1.04); }
-  66% { transform: translateX(20px) translateY(12px) scale(0.98); }
-}
-body::before { animation: mesh-drift-bold 28s ease-in-out infinite !important; }
-
 /* Hero gets a subtle tinted backdrop band (visible) */
 .hero {
   background: linear-gradient(180deg,
@@ -1490,15 +1470,6 @@ body::before { display: none !important; }
   letter-spacing: -0.045em !important;
   line-height: 0.96 !important;
   color: #0F172A !important;
-}
-.hero h1 .accent {
-  background: linear-gradient(135deg, #06B6D4 0%, #8B5CF6 60%, #EC4899 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-  font-style: normal !important;
-  font-weight: 700 !important;
 }
 .hero .lede {
   font-size: 17px !important;
@@ -1950,9 +1921,9 @@ button.btn.primary {
     0 24px 56px -12px rgba(99, 102, 241, 0.50) !important;
 }
 
-/* === ACCENT-TEXT GRADIENT: same cyan→indigo so it now matches button === */
+/* === ACCENT-TEXT GRADIENT: cyan→violet→coral matches primary button === */
 .hero h1 .accent {
-  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  background: linear-gradient(135deg, #06B6D4 0%, #A78BFA 55%, #FB7185 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
@@ -2035,7 +2006,6 @@ button.btn.primary {
    One easing curve, three durations: fast (110), base (220), slow (380)
    This stops the page from feeling like multiple apps stitched together. */
 :root {
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --t-fast: 110ms;
   --t-base: 220ms;
   --t-slow: 380ms;
@@ -2081,17 +2051,6 @@ input, textarea, select {
   content: '';
 }
 
-/* === UNIFORM BORDER RADIUS ===
-   Mid-size surfaces all 14-16px; pills 999px; small chips 6-10px. */
-.card, .bet, .product, .risk-card, .panel, .ribbon, .sec,
-.kpi, .empty, .foot, .preview-pane .preview-header {
-  border-radius: 16px !important;
-}
-.hero { border-radius: 22px !important; }
-.btn, button.btn { border-radius: 10px !important; }
-.btn-tiny { border-radius: 8px !important; }
-.chip { border-radius: 999px !important; }
-.dyn-row { border-radius: 12px !important; }
 
 /* === EDITOR FOOTER DELETE BUTTON: gets glass too ===
    Was the only button still in the old flat style. */
@@ -2946,7 +2905,6 @@ input:focus, textarea:focus, select:focus {
 /* 8. UNIFIED TRANSITION SYSTEM                                    */
 /* -------------------------------------------------------------- */
 :root {
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --t-fast: 120ms;
   --t-base: 220ms;
   --t-slow: 380ms;
@@ -2970,18 +2928,6 @@ input:focus, textarea:focus, select:focus {
     background  var(--t-base) var(--ease),
     border-color var(--t-base) var(--ease) !important;
 }
-
-/* -------------------------------------------------------------- */
-/* 9. BORDER RADIUS SYSTEM                                         */
-/* -------------------------------------------------------------- */
-.hero { border-radius: 22px !important; }
-.sec, .card { border-radius: 18px !important; }
-.bet, .product, .panel, .ribbon,
-.risk-card, .kpi, .masthead, .foot { border-radius: 16px !important; }
-.dyn-row { border-radius: 12px !important; }
-.btn, button.btn, a.btn { border-radius: 10px !important; }
-.btn-tiny { border-radius: 8px !important; }
-.chip { border-radius: 999px !important; }
 
 /* Button text fit */
 .btn, button.btn, a.btn, .add-btn {
@@ -3704,18 +3650,7 @@ input:focus, textarea:focus, select:focus {
 .depth-orb.o3 { animation-duration: 60s !important; filter: blur(85px) !important; }
 .depth-orbs::before { animation-duration: 80s !important; filter: blur(85px) !important; }
 
-/* ---- 7. KILL ANIMATED SCHEMATIC PULSES ---- */
-/* The animateMotion mpath was running 4 separate timelines per page.
-   The static schematic is the engineering visual — it doesn't need to move. */
-.schematic-bg circle[fill="#06B6D4"],
-.schematic-bg circle[fill="#6366F1"],
-.schematic-bg circle[fill="#0891B2"] {
-  display: none !important;
-}
-.schematic-bg animateMotion,
-.schematic-bg animate {
-  begin: never !important;
-}
+/* ---- 7. SCHEMATIC STATIC APPEARANCE ---- */
 .schematic-bg {
   animation: none !important;
   filter: blur(0.5px) saturate(0.85) brightness(0.95) !important;
@@ -3942,37 +3877,14 @@ html {
         <path id="trace-7" d="M 114 850 L 320 850 L 320 645 L 105 645 L 105 215 L 105 215"/>
       </g>
 
-      <!-- ANIMATED CURRENT PULSES traveling along traces -->
+      <!-- ANIMATED CURRENT PULSE traveling along trace-1 -->
       <g>
-        <circle r="3.2" fill="#06B6D4" opacity="0.95">
-          <animateMotion dur="5.5s" repeatCount="indefinite">
-            <mpath href="#trace-1"/>
-          </animateMotion>
-        </circle>
         <circle r="5" fill="none" stroke="#06B6D4" stroke-width="1" opacity="0.6">
           <animateMotion dur="5.5s" repeatCount="indefinite">
             <mpath href="#trace-1"/>
           </animateMotion>
           <animate attributeName="r" values="5;9;5" dur="1.2s" repeatCount="indefinite"/>
           <animate attributeName="opacity" values="0.6;0;0.6" dur="1.2s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle r="2.6" fill="#06B6D4" opacity="0.85">
-          <animateMotion dur="4s" begin="-1.5s" repeatCount="indefinite">
-            <mpath href="#trace-3"/>
-          </animateMotion>
-        </circle>
-
-        <circle r="2.6" fill="#6366F1" opacity="0.85">
-          <animateMotion dur="6s" begin="-2.5s" repeatCount="indefinite">
-            <mpath href="#trace-5"/>
-          </animateMotion>
-        </circle>
-
-        <circle r="2.4" fill="#0891B2" opacity="0.7">
-          <animateMotion dur="3.5s" begin="-0.8s" repeatCount="indefinite">
-            <mpath href="#trace-2"/>
-          </animateMotion>
         </circle>
       </g>
 

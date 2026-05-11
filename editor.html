@@ -1283,15 +1283,6 @@ body::before { display: none !important; }
   line-height: 0.96 !important;
   color: #0F172A !important;
 }
-.hero h1 .accent {
-  background: linear-gradient(135deg, #06B6D4 0%, #8B5CF6 60%, #EC4899 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-  font-style: normal !important;
-  font-weight: 700 !important;
-}
 .hero .lede {
   font-size: 17px !important;
   color: #475569 !important;
@@ -1364,28 +1355,6 @@ button.btn, .add-btn {
     0 12px 28px -8px rgba(6, 182, 212, 0.30) !important;
 }
 
-/* PRIMARY = gradient glass pill */
-.btn.primary, .topbar .btn.primary, .app-toolbar .primary {
-  background: linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #0E7490 100%) !important;
-  color: white !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.45) inset,
-    0 2px 6px -1px rgba(6, 182, 212, 0.45),
-    0 8px 24px -4px rgba(6, 182, 212, 0.50) !important;
-  font-weight: 600 !important;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
-}
-.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
-  background: linear-gradient(135deg, #0891B2 0%, #0E7490 50%, #155E75 100%) !important;
-  box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.55) inset,
-    0 4px 12px -2px rgba(6, 182, 212, 0.55),
-    0 16px 36px -8px rgba(6, 182, 212, 0.65),
-    0 24px 60px -16px rgba(139, 92, 246, 0.40) !important;
-  transform: translateY(-2px);
-  color: white !important;
-}
 .btn-tiny {
   background: rgba(255, 255, 255, 0.50) !important;
   backdrop-filter: blur(10px);
@@ -1873,17 +1842,6 @@ input, textarea, select {
   content: '';
 }
 
-/* === UNIFORM BORDER RADIUS ===
-   Mid-size surfaces all 14-16px; pills 999px; small chips 6-10px. */
-.card, .bet, .product, .risk-card, .panel, .ribbon, .sec,
-.kpi, .empty, .foot, .preview-pane .preview-header {
-  border-radius: 16px !important;
-}
-.hero { border-radius: 22px !important; }
-.btn, button.btn { border-radius: 10px !important; }
-.btn-tiny { border-radius: 8px !important; }
-.chip { border-radius: 999px !important; }
-.dyn-row { border-radius: 12px !important; }
 
 /* === EDITOR FOOTER DELETE BUTTON: gets glass too ===
    Was the only button still in the old flat style. */
@@ -1911,17 +1869,6 @@ input, textarea, select {
   transform: translateY(-1px);
 }
 
-/* === BUTTON TEXT FIT GUARANTEES ===
-   White-space and min-width prevent any button label from wrapping
-   or getting clipped. */
-.btn, .btn-tiny, .topbar .btn, .app-toolbar button, .app-toolbar a.btn,
-button.btn {
-  white-space: nowrap !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-  line-height: 1 !important;
-}
 .btn .icn, .btn-tiny .icn, button.btn .icn {
   display: inline-flex !important;
   flex-shrink: 0 !important;
@@ -2764,27 +2711,6 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* -------------------------------------------------------------- */
-/* 9. BORDER RADIUS SYSTEM                                         */
-/* -------------------------------------------------------------- */
-.hero { border-radius: 22px !important; }
-.sec, .card { border-radius: 18px !important; }
-.bet, .product, .panel, .ribbon,
-.risk-card, .kpi, .masthead, .foot { border-radius: 16px !important; }
-.dyn-row { border-radius: 12px !important; }
-.btn, button.btn, a.btn { border-radius: 10px !important; }
-.btn-tiny { border-radius: 8px !important; }
-.chip { border-radius: 999px !important; }
-
-/* Button text fit */
-.btn, button.btn, a.btn, .add-btn {
-  white-space: nowrap !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-  line-height: 1 !important;
-}
-
-/* -------------------------------------------------------------- */
 /* 10. SECTION HEADING CLEANUP                                     */
 /* -------------------------------------------------------------- */
 /* Remove old accent bar (stale from earlier bold.py pass) */
@@ -2826,10 +2752,6 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 1px 4px rgba(0,0,0,0.12) !important;
   color: #0F172A !important;
 }
-
-/* Drag handles */
-.drag-handle { color: rgba(100, 116, 139, 0.48) !important; }
-.drag-handle:hover { color: #0891B2 !important; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -3300,7 +3222,7 @@ input:focus, textarea:focus, select:focus {
 .chip { border-radius: 999px !important; }
 
 /* Button consistent layout */
-.btn, button.btn, a.btn, .add-btn {
+.btn, button.btn, a.btn, .add-btn, .btn-tiny {
   white-space: nowrap !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -3595,8 +3517,6 @@ html {
   color: inherit;
 }
 
-/* But toast/dialog text MUST stay white — re-assert */
-.toast, .toast * { color: #ffffff !important; }
 
 </style>
 </head>
