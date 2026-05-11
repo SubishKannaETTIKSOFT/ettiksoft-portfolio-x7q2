@@ -2887,21 +2887,6 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* -------------------------------------------------------------- */
-/* 7. HOVER LIFT (cards that should lift)                          */
-/* -------------------------------------------------------------- */
-.card:hover, .bet:hover, .product:hover,
-.risk-card:hover, .kpi:hover {
-  transform: translateY(-2px) !important;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.92) inset,
-    0 -1px 0 rgba(255, 255, 255, 0.22) inset,
-    0 8px 20px -4px rgba(0, 0, 0, 0.32),
-    0 24px 64px -12px rgba(0, 0, 0, 0.42),
-    0 48px 120px -24px rgba(99, 102, 241, 0.30),
-    0 96px 200px -48px rgba(6, 182, 212, 0.18) !important;
-}
-
-/* -------------------------------------------------------------- */
 /* 8. UNIFIED TRANSITION SYSTEM                                    */
 /* -------------------------------------------------------------- */
 :root {
@@ -3271,7 +3256,9 @@ body::before {
 }
 
 /* ---- 5. TYPOGRAPHY: high contrast on bright bg ---- */
-body, .page, p, span, div, td, th, li {
+body, .page, p:not(:is(.toast, .toast *)),
+span:not(:is(.toast, .toast *)),
+div:not(:is(.toast, .toast *)), td, th, li {
   color: #0F172A !important;
 }
 h1, h2, h3, h4, h5, h6 { color: #0F172A !important; }
@@ -3415,13 +3402,6 @@ input:focus, textarea:focus, select:focus {
 .topbar a.back:hover, .app-toolbar a.back:hover {
   background: rgba(255, 255, 255, 0.95) !important;
   color: #0F172A !important;
-}
-
-/* ---- 9. HOVER LIFT ---- */
-.card:hover, .bet:hover, .product:hover,
-.risk-card:hover, .kpi:hover {
-  transform: translateY(-3px) !important;
-  box-shadow: var(--shadow-glass-hover) !important;
 }
 
 /* ---- 10. UNIFIED TRANSITIONS ---- */
@@ -3589,11 +3569,6 @@ input:focus, textarea:focus, select:focus {
 .card, .bet, .product, .risk-card, .sec, .kpi {
   transform: none !important;
 }
-/* Allow only hover lift via specific transform */
-.card:hover, .bet:hover, .product:hover, .risk-card:hover, .kpi:hover {
-  transform: translateY(-2px) !important;
-}
-
 /* ---- 4. REDUCE BACKDROP-FILTER (the #1 scroll perf win) ---- */
 .sec, .card, .bet, .product, .panel,
 .risk-card, .kpi, .empty, .masthead, .foot {
@@ -3717,8 +3692,6 @@ html {
   color: inherit;
 }
 
-/* But toast/dialog text MUST stay white — re-assert */
-.toast, .toast * { color: #ffffff !important; }
 
 </style>
 </head>

@@ -3039,7 +3039,9 @@ body::before {
 }
 
 /* ---- 5. TYPOGRAPHY: high contrast on bright bg ---- */
-body, .page, p, span, div, td, th, li {
+body, .page, p:not(:is(.toast, .toast *)),
+span:not(:is(.toast, .toast *)),
+div:not(:is(.toast, .toast *)), td, th, li {
   color: #0F172A !important;
 }
 h1, h2, h3, h4, h5, h6 { color: #0F172A !important; }
@@ -3313,18 +3315,6 @@ body.preview-on .topbar a.btn {
    This block is LAST. Wins everything.
    ============================================================ */
 
-/* ---- 1. TOAST / CONFIRM DIALOG: force white text ---- */
-/* Rule must be specific enough to beat the broad div selector */
-.toast,
-.toast *,
-.toast .toast-msg,
-.toast .toast-msg *,
-.toast .toast-actions *,
-.toast .toast-btn,
-.toast .toast-title,
-.toast .toast-icon {
-  color: #ffffff !important;
-}
 
 .toast {
   background: rgba(15, 23, 42, 0.94) !important;
