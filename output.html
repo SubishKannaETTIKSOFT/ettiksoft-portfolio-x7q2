@@ -1,0 +1,4947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap</title>
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230891B2%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* Surfaces — clean, no warmth */
+  --bg: #FFFFFF;
+  --surface: #FAFAFA;
+  --surface-2: #F4F4F5;
+
+  /* Text — zinc scale */
+  --ink: #09090B;
+  --muted: #52525B;
+  --faint: #A1A1AA;
+  --hairline: #E4E4E7;
+  --hairline-strong: #D4D4D8;
+
+  /* Brand: vivid cyan */
+  --brand: #0891B2;
+  --brand-hover: #0E7490;
+  --brand-soft: #ECFEFF;
+  --brand-fg: #155E75;
+
+  /* Status: vivid, modern */
+  --go: #16A34A;
+  --go-soft: #DCFCE7;
+  --go-fg: #15803D;
+  --decide: #D97706;
+  --decide-soft: #FEF3C7;
+  --decide-fg: #B45309;
+  --risk: #DC2626;
+  --risk-soft: #FEE2E2;
+  --risk-fg: #B91C1C;
+
+  /* Type — Geist family */
+  --display: 'Geist', system-ui, -apple-system, sans-serif;
+  --body: 'Geist', system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Spacing rhythm */
+  --gutter: 24px;
+  --section: 56px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* ============================================================
+   ENTRANCE ANIMATION
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise { opacity: 0; animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.d1 { animation-delay: 0.04s; }
+.d2 { animation-delay: 0.10s; }
+.d3 { animation-delay: 0.16s; }
+.d4 { animation-delay: 0.22s; }
+.d5 { animation-delay: 0.28s; }
+.d6 { animation-delay: 0.34s; }
+
+/* ============================================================
+   APP TOOLBAR
+   ============================================================ */
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--hairline);
+}
+.app-toolbar-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 12px 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.app-toolbar a.back {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 7px 10px;
+  margin-left: -10px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.app-toolbar a.back:hover { color: var(--ink); background: var(--surface-2); }
+.app-toolbar .spacer { flex: 1; }
+.app-toolbar button, .app-toolbar a.btn {
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+.app-toolbar button:hover, .app-toolbar a.btn:hover {
+  border-color: var(--hairline-strong);
+  background: var(--surface);
+}
+.app-toolbar .primary {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+.app-toolbar .primary:hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+  color: white;
+}
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 48px 48px 80px;
+}
+@media (max-width: 880px) {
+  .page { padding: 32px 24px 56px; }
+  .app-toolbar-inner { padding: 12px 24px; }
+}
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--hairline);
+}
+.masthead .brand {
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.masthead .brand span {
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 8px;
+}
+.masthead .meta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--faint);
+  font-weight: 500;
+}
+
+/* ============================================================
+   HERO — clean, no eyebrow, no italic-accent
+   ============================================================ */
+.hero {
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--hairline);
+}
+.hero .eyebrow {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brand-fg);
+  background: var(--brand-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(36px, 5.2vw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  max-width: 1080px;
+}
+.hero h1 .accent {
+  color: var(--brand);
+  font-weight: 600;
+  font-style: normal;
+}
+.hero .lede {
+  margin-top: 20px;
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   KPI STRIP
+   ============================================================ */
+.kpis {
+  display: grid;
+  gap: 0;
+  margin-top: 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+.kpi {
+  background: var(--bg);
+  padding: 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid var(--hairline);
+  transition: background 0.2s ease;
+}
+.kpi:last-child { border-right: none; }
+.kpi:hover { background: var(--surface); }
+.kpi .num {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 36px;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  line-height: 1;
+}
+.kpi .num small {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--brand);
+  margin-left: 6px;
+  letter-spacing: 0;
+}
+.kpi .label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+}
+@media (max-width: 880px) {
+  .kpis { grid-template-columns: repeat(2, 1fr) !important; }
+  .kpi { border-right: none; border-bottom: 1px solid var(--hairline); }
+  .kpi:nth-last-child(-n+2) { border-bottom: none; }
+  .kpi .num { font-size: 28px; }
+}
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.section { padding: var(--section) 0 0; }
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 32px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hairline);
+}
+.section-head .num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand);
+  letter-spacing: 0;
+}
+.section-head .title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.section-head .desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin-left: auto;
+  max-width: 420px;
+  text-align: right;
+}
+@media (max-width: 880px) {
+  .section-head { flex-wrap: wrap; }
+  .section-head .desc { text-align: left; margin-left: 0; max-width: 100%; }
+}
+
+/* ============================================================
+   STRATEGIC BETS — bordered cards, color-shift hover
+   ============================================================ */
+.bets {
+  display: grid;
+  gap: var(--gutter);
+}
+.bet {
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 28px 28px 24px;
+  position: relative;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.bet:hover {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+.bet:hover h3, .bet:hover .verb, .bet:hover .why::before {
+  color: var(--brand-fg);
+}
+.bet .num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand);
+  margin-bottom: 14px;
+}
+.bet .verb {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+  transition: color 0.18s ease;
+}
+.bet h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  margin-bottom: 18px;
+  transition: color 0.18s ease;
+}
+.bet .why {
+  font-size: 13.5px;
+  color: var(--muted);
+  border-top: 1px solid var(--hairline);
+  padding-top: 16px;
+  margin-top: 18px;
+  line-height: 1.55;
+}
+.bet .why::before {
+  content: 'Why ';
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand);
+  font-weight: 600;
+  transition: color 0.18s ease;
+}
+
+/* ============================================================
+   PRODUCTS — colored top stripe, modern card
+   ============================================================ */
+.products {
+  display: grid;
+  gap: 16px;
+}
+.product {
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 22px 22px 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color 0.18s ease, background 0.18s ease;
+  overflow: hidden;
+}
+.product::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 3px;
+  background: var(--hairline-strong);
+}
+.product[data-rag="R"]::before { background: var(--risk); }
+.product[data-rag="A"]::before { background: var(--decide); }
+.product[data-rag="G"]::before { background: var(--go); }
+.product:hover {
+  border-color: var(--ink);
+}
+.product .name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.018em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.product .pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pill {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 9px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pill.stage { background: var(--surface-2); color: var(--ink); }
+.pill.rag-R { background: var(--risk-soft); color: var(--risk-fg); }
+.pill.rag-A { background: var(--decide-soft); color: var(--decide-fg); }
+.pill.rag-G { background: var(--go-soft); color: var(--go-fg); }
+.pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+.pill.rag-R .dot { background: var(--risk); }
+.pill.rag-A .dot { background: var(--decide); }
+.pill.rag-G .dot { background: var(--go); }
+
+.product .field { display: flex; flex-direction: column; gap: 4px; }
+.product .field .key {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  font-weight: 500;
+}
+.product .field .val {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.product .field .val.muted { color: var(--muted); font-size: 12.5px; }
+
+/* ============================================================
+   ACTIONS PANEL
+   ============================================================ */
+.panel {
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 24px 26px 8px;
+}
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--hairline);
+}
+.panel-head h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+}
+.panel-head .count {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--brand);
+  font-weight: 500;
+}
+.row {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hairline);
+  align-items: start;
+  transition: background 0.15s ease;
+}
+.row:last-child { border-bottom: none; }
+.row:hover { background: var(--surface); }
+.row .date {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  padding-top: 1px;
+}
+.row .body { display: flex; flex-direction: column; gap: 4px; }
+.row .body .what { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+.row .body .who {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+.row .badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: center;
+  align-self: start;
+  text-transform: uppercase;
+}
+.badge.p0 { background: var(--risk-soft); color: var(--risk-fg); }
+.badge.p1 { background: var(--decide-soft); color: var(--decide-fg); }
+.badge.p2 { background: var(--brand-soft); color: var(--brand-fg); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot {
+  margin-top: var(--section);
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.foot .left { font-size: 13px; color: var(--muted); max-width: 640px; line-height: 1.6; }
+.foot .left strong { color: var(--ink); font-weight: 600; }
+.foot .right {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--faint);
+  text-align: right;
+}
+
+/* not-found state */
+.notfound {
+  text-align: center;
+  padding: 120px 24px;
+  color: var(--muted);
+}
+.notfound h2 {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.notfound a { color: var(--brand); text-decoration: none; }
+.notfound a:hover { color: var(--brand-hover); }
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  body { background: white; }
+  .app-toolbar { display: none !important; }
+  .page { max-width: none; padding: 16px; }
+  .product:hover, .bet:hover { background: white; border-color: var(--hairline); }
+  .rise { animation: none; opacity: 1; }
+}
+
+/* ============================================================
+   POLISH — background graphics + smooth transitions
+   ============================================================ */
+
+/* Subtle dot-grid background — Linear/Vercel inspired */
+body {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(9, 9, 11, 0.045) 1px, transparent 0);
+  background-size: 24px 24px;
+  background-attachment: fixed;
+}
+
+/* Soft gradient mesh that lives just behind the hero */
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1400px;
+  height: 700px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 30% 40%, rgba(8, 145, 178, 0.06), transparent 60%),
+    radial-gradient(ellipse 500px 350px at 70% 60%, rgba(22, 163, 74, 0.04), transparent 60%);
+  filter: blur(40px);
+}
+
+/* Smooth easing curve for everything that moves */
+* { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Page entrance */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.page, .topbar, .app-toolbar { animation: page-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.app-toolbar, .topbar { animation-duration: 0.35s; }
+
+/* Refined focus ring — animates in */
+@keyframes focus-ring {
+  from { box-shadow: 0 0 0 0 var(--brand-soft); }
+  to { box-shadow: 0 0 0 3px var(--brand-soft); }
+}
+input:focus, textarea:focus, select:focus, button:focus-visible, .title-input:focus {
+  animation: focus-ring 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+  outline: none;
+}
+
+/* Button press micro-interaction */
+button:active:not(:disabled), .btn:active, .btn-tiny:active {
+  transform: scale(0.97);
+  transition-duration: 0.06s;
+}
+
+/* Smooth dynamic-row entrance */
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(-4px); max-height: 0; }
+  to { opacity: 1; transform: none; max-height: 600px; }
+}
+.dyn-row {
+  animation: row-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Card hover — subtle elevation with brand glow */
+.card, .bet, .product {
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.3s, transform 0.2s;
+}
+.card:hover, .product:hover {
+  box-shadow: 0 8px 24px -12px rgba(8, 145, 178, 0.18);
+  transform: translateY(-1px);
+}
+.bet:hover {
+  box-shadow: 0 12px 32px -16px rgba(8, 145, 178, 0.22);
+  transform: translateY(-2px);
+}
+
+/* Section header — accent dot on the section number */
+.section-head .num, .sec-head .num {
+  position: relative;
+  padding-left: 14px;
+}
+.section-head .num::before, .sec-head .num::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--brand);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+/* Add-row button — animated dashed border */
+.add-btn {
+  position: relative;
+  overflow: hidden;
+}
+.add-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(8, 145, 178, 0.08), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.add-btn:hover::after { transform: translateX(100%); }
+
+/* Smooth segmented control transitions */
+.seg label span { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Save state pulse on save */
+@keyframes save-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.save-state.saving { animation: save-pulse 0.8s ease-in-out infinite; }
+
+/* Toolbar button hover lift */
+.app-toolbar button:hover, .app-toolbar a.btn:hover,
+.topbar .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.08);
+}
+
+/* KPI number subtle hover */
+.kpi { transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.kpi:hover .num { color: var(--brand); transition: color 0.25s; }
+
+/* Smooth scroll behavior */
+html { scroll-behavior: smooth; }
+
+/* Selection color matching brand */
+::selection { background: var(--brand-soft); color: var(--brand-fg); }
+
+
+/* Inline icon system */
+.icn { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.icn svg { display: block; }
+.btn, .btn-tiny, .back, .add-btn { display: inline-flex; align-items: center; gap: 7px; }
+.add-btn { justify-content: center; }
+
+
+/* ============================================================
+   ENHANCED ANIMATIONS — gradient mesh drift
+   ============================================================ */
+@keyframes mesh-drift {
+  0%   { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+  33%  { transform: translateX(-48%) translateY(-20px) rotate(2deg); }
+  66%  { transform: translateX(-52%) translateY(15px) rotate(-2deg); }
+  100% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+}
+body::before {
+  animation: mesh-drift 24s ease-in-out infinite;
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: calc(100vw - 48px);
+}
+.toast {
+  pointer-events: auto;
+  background: var(--ink);
+  color: white;
+  padding: 14px 18px;
+  border-radius: 10px;
+  box-shadow:
+    0 12px 32px -8px rgba(0,0,0,0.28),
+    0 0 0 1px rgba(255,255,255,0.05);
+  font-family: var(--body);
+  font-size: 13.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 280px;
+  max-width: 420px;
+  animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  overflow: hidden;
+}
+.toast.removing {
+  animation: toast-out 0.3s cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+.toast .toast-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+.toast .toast-msg {
+  flex: 1;
+  line-height: 1.4;
+}
+.toast .toast-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.toast .toast-btn {
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.toast .toast-btn:hover { background: rgba(255,255,255,0.22); }
+.toast .toast-btn.primary {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.toast .toast-btn.primary:hover { background: var(--brand-hover); border-color: var(--brand-hover); }
+.toast .toast-btn.danger {
+  background: var(--risk);
+  border-color: var(--risk);
+}
+.toast .toast-btn.danger:hover { background: #B91C1C; border-color: #B91C1C; }
+.toast.success .toast-icon { color: var(--go); }
+.toast.error .toast-icon { color: var(--risk); }
+.toast.info .toast-icon { color: var(--brand); }
+.toast.confirm .toast-icon { color: var(--decide); }
+
+/* Progress bar at bottom of toast for auto-dismiss */
+.toast .toast-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.3);
+  width: 100%;
+  transform-origin: left;
+  animation: toast-progress linear forwards;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px) scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes toast-out {
+  to { opacity: 0; transform: translateX(20px) scale(0.9); }
+}
+@keyframes toast-progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* ============================================================
+   VIEW TRANSITIONS (modern browsers)
+   ============================================================ */
+@view-transition { navigation: auto; }
+::view-transition-old(root) {
+  animation: 0.18s cubic-bezier(0.4, 0, 1, 1) both fade-out;
+}
+::view-transition-new(root) {
+  animation: 0.32s cubic-bezier(0, 0, 0.2, 1) both fade-in;
+}
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+
+/* ============================================================
+   READING PROGRESS BAR
+   ============================================================ */
+.reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brand) 0%, var(--go) 100%);
+  width: 0%;
+  z-index: 200;
+  transition: width 0.08s linear;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgba(8, 145, 178, 0.4);
+}
+
+/* ============================================================
+   SECTION NAV (RIGHT RAIL)
+   ============================================================ */
+.section-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 8px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.section-nav.visible { opacity: 1; pointer-events: auto; }
+.section-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  width: 8px;
+  height: 8px;
+  background: var(--hairline-strong);
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.section-nav a:hover { background: var(--brand); transform: scale(1.4); }
+.section-nav a.active {
+  background: var(--brand);
+  width: 8px; height: 22px;
+  border-radius: 999px;
+}
+.section-nav a .label {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  background: var(--ink);
+  color: white;
+  padding: 4px 9px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+.section-nav a:hover .label { opacity: 1; }
+@media (max-width: 1100px) {
+  .section-nav { display: none; }
+}
+
+/* ============================================================
+   REVEAL-ON-SCROLL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   COUNTER ANIMATION
+   ============================================================ */
+.kpi .num.counting { color: var(--brand); }
+
+/* ============================================================
+   CLICK-TO-COPY
+   ============================================================ */
+.copyable {
+  cursor: copy;
+  position: relative;
+  transition: color 0.15s ease;
+}
+.copyable:hover { color: var(--brand); }
+.copyable.copied {
+  color: var(--go);
+  animation: copied-pulse 0.4s ease-out;
+}
+@keyframes copied-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+
+/* ============================================================
+   QUARTERLY RIBBON
+   ============================================================ */
+.ribbon {
+  display: grid;
+  gap: 0;
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.q {
+  padding: 24px 22px 22px;
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 0.2s ease;
+}
+.q:last-child { border-right: none; }
+.q:hover { background: var(--surface); }
+.q .marker {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.q .marker .label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.q .marker .span {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--faint);
+}
+.q h5 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+}
+.q .points {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  list-style: none;
+  padding: 0;
+}
+.q .points li {
+  font-size: 12.5px;
+  color: var(--muted);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.45;
+}
+.q .points li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--brand);
+  font-family: var(--mono);
+  font-weight: 600;
+}
+@media (max-width: 880px) {
+  .ribbon { grid-template-columns: 1fr 1fr !important; }
+  .q:nth-child(2n) { border-right: none; }
+  .q { border-bottom: 1px solid var(--hairline); }
+  .q:nth-last-child(-n+2) { border-bottom: none; }
+}
+
+/* ============================================================
+   DECISION ROWS
+   ============================================================ */
+.decision-row .default-line {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--hairline);
+}
+.decision-row .default-line .default-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--decide);
+  margin-right: 6px;
+}
+
+/* ============================================================
+   RISK CARDS
+   ============================================================ */
+.risks-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.risk-card {
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 20px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.18s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+.risk-card:hover {
+  border-color: var(--ink);
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+.risk-head {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+.risk-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.risk-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.risk-pill.lvl-low  { background: var(--go-soft); color: var(--go-fg); }
+.risk-pill.lvl-med  { background: var(--brand-soft); color: var(--brand-fg); }
+.risk-pill.lvl-high { background: var(--decide-soft); color: var(--decide-fg); }
+.risk-pill.lvl-crit { background: var(--risk-soft); color: var(--risk-fg); }
+.risk-mit {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  border-top: 1px solid var(--hairline);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.risk-mit .risk-mit-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--brand);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 6px;
+  margin-bottom: 2px;
+}
+
+
+/* ============================================================
+   STRATEGIC HORIZON — topographic backdrop in hero
+   ============================================================ */
+.hero { position: relative; overflow: hidden; isolation: isolate; }
+.hero > *:not(.topo-bg) { position: relative; z-index: 1; }
+.topo-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  animation: topo-drift 56s ease-in-out infinite;
+}
+.topo-bg .waypoints circle { animation: waypoint-pulse 4.2s ease-in-out infinite; }
+.topo-bg .waypoints circle:nth-child(2) { animation-delay: 1s; }
+.topo-bg .waypoints circle:nth-child(3) { animation-delay: 2.1s; }
+.topo-bg .waypoints circle:nth-child(4) { animation-delay: 3.2s; }
+@keyframes topo-drift {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  33% { transform: translateX(-14px) translateY(-2px); }
+  66% { transform: translateX(7px) translateY(1px); }
+}
+@keyframes waypoint-pulse {
+  0%, 100% { opacity: 0.32; }
+  50% { opacity: 0.78; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .topo-bg, .topo-bg .waypoints circle { animation: none; }
+}
+
+
+/* ============================================================
+   BOLD VISUAL UPGRADE — v3
+   No more invisible decoration. Make it actually look alive.
+   ============================================================ */
+
+/* Visible cyan blueprint grid (replaces invisible dot grid) */
+body {
+  background-image:
+    linear-gradient(to right, rgba(8, 145, 178, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(8, 145, 178, 0.07) 1px, transparent 1px) !important;
+  background-size: 56px 56px !important;
+  background-attachment: fixed !important;
+}
+
+/* Gradient mesh — 3-4x more visible, fills more of viewport */
+body::before {
+  background:
+    radial-gradient(ellipse 1000px 700px at 15% 25%, rgba(8, 145, 178, 0.22), transparent 60%),
+    radial-gradient(ellipse 800px 550px at 85% 35%, rgba(22, 163, 74, 0.13), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 50% 80%, rgba(217, 119, 6, 0.06), transparent 60%) !important;
+  width: 100vw !important;
+  height: 90vh !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  filter: blur(36px) !important;
+  opacity: 1 !important;
+}
+@keyframes mesh-drift-bold {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  33% { transform: translateX(-30px) translateY(-15px) scale(1.04); }
+  66% { transform: translateX(20px) translateY(12px) scale(0.98); }
+}
+body::before { animation: mesh-drift-bold 28s ease-in-out infinite !important; }
+
+/* Hero gets a subtle tinted backdrop band (visible) */
+.hero {
+  background: linear-gradient(180deg,
+    rgba(8, 145, 178, 0.05) 0%,
+    rgba(8, 145, 178, 0.02) 70%,
+    transparent 100%);
+  border-radius: 12px;
+  margin-left: -16px;
+  margin-right: -16px;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+/* Topographic SVG — bigger, bleeds beyond hero edges */
+.topo-bg {
+  inset: -8% -5% -8% -5% !important;
+  width: 110% !important;
+  height: 116% !important;
+}
+
+/* Section accent bars — visible cyan markers above each section heading */
+.section .section-head,
+.sec .sec-head {
+  position: relative;
+}
+.section .section-head::before,
+.sec .sec-head::before {
+  content: '';
+  position: absolute;
+  top: -22px;
+  left: 0;
+  width: 56px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand) 0%, rgba(8, 145, 178, 0.15) 100%);
+  border-radius: 2px;
+}
+
+/* Stronger card hovers — visible lift, shadow, cyan ring */
+.card:hover {
+  border-color: var(--brand) !important;
+  box-shadow:
+    0 16px 40px -8px rgba(8, 145, 178, 0.25),
+    0 0 0 1px rgba(8, 145, 178, 0.45) !important;
+  transform: translateY(-3px) !important;
+}
+.bet:hover {
+  border-color: var(--brand) !important;
+  background: var(--brand-soft) !important;
+  box-shadow: 0 18px 48px -10px rgba(8, 145, 178, 0.30) !important;
+  transform: translateY(-3px) !important;
+}
+.product:hover {
+  border-color: var(--brand) !important;
+  box-shadow:
+    0 14px 36px -10px rgba(8, 145, 178, 0.22),
+    0 0 0 1px rgba(8, 145, 178, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Slightly bolder buttons */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary {
+  box-shadow: 0 4px 12px -2px rgba(8, 145, 178, 0.30) !important;
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  box-shadow: 0 8px 20px -4px rgba(8, 145, 178, 0.45) !important;
+}
+
+/* Make existing dot pattern (was 4.5%) and animation drift PARENT pause-aware */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; }
+}
+
+
+/* ============================================================
+   GLASS + DEPTH — design portfolio mode
+   Replaces the muted cyan-on-white aesthetic with layered
+   translucent surfaces over a colorful aurora background.
+   ============================================================ */
+
+/* Reset prior body backgrounds, replace with light cream + aurora */
+body {
+  background: #FAFAF7 !important;
+  background-image: none !important;
+  background-attachment: initial !important;
+  color: #0F172A !important;
+}
+body::before { display: none !important; }
+
+/* AURORA — colorful drifting blobs */
+.aurora {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px) saturate(140%);
+  opacity: 0.65;
+  will-change: transform;
+}
+.aurora-blob.ab1 {
+  width: 720px; height: 720px;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 60%);
+  top: -280px; left: -160px;
+  animation: drift1 22s ease-in-out infinite;
+}
+.aurora-blob.ab2 {
+  width: 620px; height: 620px;
+  background: radial-gradient(circle, #8B5CF6 0%, transparent 60%);
+  top: 5%; right: -180px;
+  animation: drift2 26s ease-in-out infinite;
+  opacity: 0.55;
+}
+.aurora-blob.ab3 {
+  width: 800px; height: 600px;
+  background: radial-gradient(circle, #EC4899 0%, transparent 60%);
+  bottom: -100px; left: 18%;
+  animation: drift3 30s ease-in-out infinite;
+  opacity: 0.45;
+}
+.aurora-blob.ab4 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #F59E0B 0%, transparent 60%);
+  bottom: -150px; right: 14%;
+  animation: drift4 24s ease-in-out infinite;
+  opacity: 0.50;
+}
+.aurora-grain {
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+  opacity: 0.25;
+  mix-blend-mode: overlay;
+}
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(60px, 30px) scale(1.08); }
+  66% { transform: translate(-30px, 60px) scale(0.95); }
+}
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-80px, 40px) scale(1.12); }
+}
+@keyframes drift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -50px) scale(0.92); }
+  66% { transform: translate(-60px, 20px) scale(1.05); }
+}
+@keyframes drift4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -40px) scale(1.10); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob { animation: none !important; }
+}
+
+/* Page above aurora */
+.page, .topbar, .app-toolbar, .preview-pane {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   GLASS TOPBAR
+   ============================================================ */
+.topbar, .app-toolbar {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.6) inset,
+    0 1px 0 0 rgba(15, 23, 42, 0.04),
+    0 8px 32px -8px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ============================================================
+   GLASS SECTIONS / CARDS
+   ============================================================ */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card,
+.preview-header {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 4px 0 rgba(15, 23, 42, 0.04),
+    0 12px 32px -12px rgba(15, 23, 42, 0.16),
+    0 32px 64px -32px rgba(15, 23, 42, 0.22) !important;
+  position: relative;
+  overflow: visible;
+}
+
+/* Cursor highlight — radial spotlight following mouse */
+.card, .bet, .product, .risk-card, .sec {
+  --mx: 50%;
+  --my: 50%;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.card::after, .bet::after, .product::after, .risk-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 280px at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.55),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.card:hover::after, .bet:hover::after, .product:hover::after, .risk-card:hover::after {
+  opacity: 1;
+}
+
+/* Card hover: real lift + colored glow */
+.card:hover, .product:hover, .risk-card:hover {
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 4px 0 rgba(15, 23, 42, 0.06),
+    0 20px 48px -8px rgba(15, 23, 42, 0.18),
+    0 40px 80px -32px rgba(6, 182, 212, 0.35),
+    0 60px 120px -48px rgba(139, 92, 246, 0.30) !important;
+}
+.bet:hover {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 24px 56px -8px rgba(15, 23, 42, 0.20),
+    0 48px 100px -32px rgba(6, 182, 212, 0.40),
+    0 72px 140px -48px rgba(139, 92, 246, 0.35) !important;
+}
+
+/* ============================================================
+   HERO — big floating glass with gradient text
+   ============================================================ */
+.hero {
+  background: rgba(255, 255, 255, 0.40) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 28px !important;
+  padding: 72px 56px 64px !important;
+  margin: 8px 0 32px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -2px rgba(15, 23, 42, 0.06),
+    0 24px 60px -12px rgba(15, 23, 42, 0.16),
+    0 48px 96px -32px rgba(139, 92, 246, 0.28),
+    0 64px 120px -48px rgba(6, 182, 212, 0.30) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.hero h1 {
+  font-size: clamp(48px, 7vw, 88px) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 0.96 !important;
+  color: #0F172A !important;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, #06B6D4 0%, #8B5CF6 60%, #EC4899 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+}
+.hero .lede {
+  font-size: 17px !important;
+  color: #475569 !important;
+  max-width: 640px !important;
+  line-height: 1.55 !important;
+  margin-top: 22px !important;
+}
+.hero .eyebrow {
+  background: rgba(255, 255, 255, 0.65) !important;
+  color: #155E75 !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 6px -1px rgba(15, 23, 42, 0.08);
+  padding: 5px 12px !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================
+   SECTION HEADERS — bigger, bolder
+   ============================================================ */
+.section-head .title, .sec-head .title {
+  font-size: 30px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.032em !important;
+  color: #0F172A !important;
+}
+.section-head .num, .sec-head .num {
+  font-size: 13px !important;
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  font-weight: 700 !important;
+}
+.section-head .num::before, .sec-head .num::before {
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6) !important;
+  width: 8px !important; height: 8px !important;
+  box-shadow:
+    0 0 0 4px rgba(6, 182, 212, 0.15),
+    0 0 12px rgba(139, 92, 246, 0.4) !important;
+}
+.section-head::before { display: none !important; }
+
+/* ============================================================
+   GLASS BUTTONS
+   ============================================================ */
+.btn, .topbar .btn, .app-toolbar button, .app-toolbar a.btn,
+button.btn, .add-btn {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 6px -1px rgba(15, 23, 42, 0.06),
+    0 8px 16px -8px rgba(15, 23, 42, 0.12) !important;
+  color: #0F172A !important;
+  font-weight: 500 !important;
+  border-radius: 10px !important;
+}
+.btn:hover, .topbar .btn:hover, .app-toolbar button:hover, .app-toolbar a.btn:hover {
+  background: rgba(255, 255, 255, 0.75) !important;
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 10px -2px rgba(15, 23, 42, 0.10),
+    0 12px 28px -8px rgba(6, 182, 212, 0.30) !important;
+}
+
+/* PRIMARY = gradient glass pill */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #0E7490 100%) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.45) inset,
+    0 2px 6px -1px rgba(6, 182, 212, 0.45),
+    0 8px 24px -4px rgba(6, 182, 212, 0.50) !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  background: linear-gradient(135deg, #0891B2 0%, #0E7490 50%, #155E75 100%) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.55) inset,
+    0 4px 12px -2px rgba(6, 182, 212, 0.55),
+    0 16px 36px -8px rgba(6, 182, 212, 0.65),
+    0 24px 60px -16px rgba(139, 92, 246, 0.40) !important;
+  transform: translateY(-2px);
+  color: white !important;
+}
+.btn-tiny {
+  background: rgba(255, 255, 255, 0.50) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 2px 4px -1px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* ============================================================
+   GLASS INPUTS
+   ============================================================ */
+input[type="text"], input[type="date"], textarea, select,
+.search-wrap input, .sort-select, .topbar .title-input {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(12px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+  color: #0F172A !important;
+  border-radius: 10px !important;
+}
+input:focus, textarea:focus, select:focus,
+.search-wrap input:focus, .sort-select:focus {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: #06B6D4 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 0 0 4px rgba(6, 182, 212, 0.15),
+    0 4px 16px -4px rgba(6, 182, 212, 0.30) !important;
+}
+
+/* Chips → glass */
+.chip {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+  color: #475569 !important;
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border-color: #06B6D4 !important;
+  color: #0E7490 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -2px rgba(6, 182, 212, 0.30) !important;
+}
+.chip.active {
+  background: linear-gradient(135deg, #06B6D4, #0891B2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: white !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
+    0 4px 12px -2px rgba(6, 182, 212, 0.45) !important;
+}
+
+/* ============================================================
+   KPI STRIP — nested glass divisions
+   ============================================================ */
+.kpis {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  gap: 12px !important;
+  display: grid;
+}
+.kpi {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.12) !important;
+}
+.kpi:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 16px 40px -8px rgba(6, 182, 212, 0.30) !important;
+}
+.kpi .num {
+  background: linear-gradient(135deg, #0F172A 0%, #475569 100%) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  font-size: 40px !important;
+}
+.kpi .num small {
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================
+   PRODUCT TOP STRIPE → gradient
+   ============================================================ */
+.product::before {
+  height: 4px !important;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.product[data-rag="R"]::before { background: linear-gradient(90deg, #DC2626, #EC4899) !important; }
+.product[data-rag="A"]::before { background: linear-gradient(90deg, #F59E0B, #FB923C) !important; }
+.product[data-rag="G"]::before { background: linear-gradient(90deg, #10B981, #06B6D4) !important; }
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead {
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+.masthead .brand {
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #0F172A, #475569) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================
+   TOPOGRAPHIC HORIZON — softer (aurora is the star now)
+   ============================================================ */
+.topo-bg {
+  opacity: 0.55 !important;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================================
+   TOAST → glass
+   ============================================================ */
+.toast {
+  background: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.1) inset,
+    0 16px 40px -8px rgba(15, 23, 42, 0.30),
+    0 32px 80px -16px rgba(15, 23, 42, 0.40) !important;
+}
+
+/* Empty state → softer */
+.empty {
+  background: rgba(255, 255, 255, 0.40) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px dashed rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset !important;
+}
+
+
+/* ============================================================
+   CALM PASS — restraint and bug fixes
+   Overrides earlier glass.py rules. Less color, fewer elements.
+   ============================================================ */
+
+/* === FIX: gradient-text bug ===
+   Earlier rules set background-clip: text but later rules in the
+   stylesheet were re-asserting `color`. With !important on
+   text-fill-color and background-clip, the gradient now actually
+   shows through as text instead of as a solid bar. */
+.hero h1 .accent {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+
+/* Brand wordmark stays solid — no gradient. The gradient block
+   in the screenshots was the bug; just use a normal color. */
+.masthead .brand {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+/* KPI numbers — solid dark, not gradient. Subscript stays cyan-only. */
+.kpi .num {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0F172A !important;
+}
+.kpi .num small {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #06B6D4 !important;
+  font-weight: 600 !important;
+}
+
+/* Section number — solid cyan, no gradient. Reads cleaner. */
+.section-head .num, .sec-head .num {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0891B2 !important;
+}
+.section-head .num::before, .sec-head .num::before {
+  background: #06B6D4 !important;
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15) !important;
+}
+
+/* Section title — solid dark. Big and bold but not gradient. */
+.section-head .title, .sec-head .title {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0F172A !important;
+}
+
+/* === AURORA: down to two colors === */
+.aurora-blob.ab1 {
+  width: 600px !important; height: 600px !important;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 65%) !important;
+  opacity: 0.40 !important;
+  animation-duration: 32s !important;
+}
+.aurora-blob.ab2 {
+  width: 540px !important; height: 540px !important;
+  background: radial-gradient(circle, #A78BFA 0%, transparent 65%) !important;
+  opacity: 0.32 !important;
+  animation-duration: 36s !important;
+}
+/* Drop pink and amber entirely */
+.aurora-blob.ab3, .aurora-blob.ab4 { display: none !important; }
+
+/* Grain stays but quieter */
+.aurora-grain { opacity: 0.15 !important; }
+
+/* === HIDE topographic horizon in hero === */
+/* The topo SVG was competing with the title — turn it off in hero. */
+.hero .topo-bg { display: none !important; }
+/* Output static download keeps the topo visible elsewhere if injected */
+
+/* === SHADOWS: dial back the colored glows === */
+.hero {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -2px rgba(15, 23, 42, 0.05),
+    0 16px 40px -12px rgba(15, 23, 42, 0.10),
+    0 32px 60px -32px rgba(99, 102, 241, 0.15) !important;
+}
+.card:hover, .product:hover, .risk-card:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 12px 28px -8px rgba(15, 23, 42, 0.10),
+    0 24px 48px -24px rgba(99, 102, 241, 0.18) !important;
+}
+.bet:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 16px 36px -8px rgba(15, 23, 42, 0.12),
+    0 32px 64px -24px rgba(99, 102, 241, 0.20) !important;
+}
+
+/* Primary button: simpler shadow */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.40) inset,
+    0 2px 6px -1px rgba(6, 182, 212, 0.30),
+    0 8px 20px -6px rgba(6, 182, 212, 0.40) !important;
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.50) inset,
+    0 4px 10px -2px rgba(6, 182, 212, 0.40),
+    0 12px 28px -6px rgba(6, 182, 212, 0.50) !important;
+}
+
+/* === Smoother card hover transition === */
+.card, .bet, .product, .risk-card, .kpi {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* === Tone down 3D tilt: was 5deg max, now 2.5deg === */
+/* (Handled in JS — see below) */
+
+
+/* ============================================================
+   POLISH — KPI fit + button match + more glass
+   ============================================================ */
+
+/* === KPI VALUES: responsive size + single-line ===
+   Fixes ₹4-8L wrapping by capping max font-size and forcing nowrap. */
+.kpi .num {
+  font-size: clamp(26px, 2.4vw, 36px) !important;
+  letter-spacing: -0.030em !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+}
+.kpi .num small {
+  font-size: clamp(10.5px, 0.95vw, 13px) !important;
+  margin-left: 0 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  font-weight: 600 !important;
+}
+.kpi {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.kpi .label {
+  font-size: 12.5px !important;
+  line-height: 1.4 !important;
+}
+
+/* === PRIMARY BUTTON: cyan→indigo gradient matching accent text === */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary,
+button.btn.primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  /* Glass shine on top edge + colored shadow underneath */
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.55) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.05) inset,
+    0 2px 6px -1px rgba(99, 102, 241, 0.28),
+    0 8px 20px -4px rgba(6, 182, 212, 0.36),
+    0 16px 40px -12px rgba(99, 102, 241, 0.40) !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.10) !important;
+  position: relative;
+  overflow: hidden;
+}
+.btn.primary::before, .topbar .btn.primary::before,
+.app-toolbar .primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0) 45%);
+  pointer-events: none;
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  background: linear-gradient(135deg, #0891B2 0%, #4F46E5 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.62) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.06) inset,
+    0 4px 10px -2px rgba(99, 102, 241, 0.40),
+    0 16px 32px -6px rgba(6, 182, 212, 0.50),
+    0 24px 56px -12px rgba(99, 102, 241, 0.50) !important;
+}
+
+/* === ACCENT-TEXT GRADIENT: same cyan→indigo so it now matches button === */
+.hero h1 .accent {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* === MORE GLASS === */
+
+/* Masthead — subtle glass band */
+.masthead {
+  background: rgba(255, 255, 255, 0.30) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  padding: 14px 22px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.65) inset,
+    0 6px 18px -8px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Footer — glass treatment */
+.foot {
+  background: rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 16px !important;
+  padding: 22px 26px !important;
+  margin-top: 56px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Reading progress bar — give it a subtle glass shimmer */
+.reading-progress {
+  background: linear-gradient(90deg, #06B6D4 0%, #6366F1 100%) !important;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.55) !important;
+}
+
+/* Live preview header — glass */
+.preview-header {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+}
+.preview-pane {
+  background: rgba(250, 250, 247, 0.65) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+}
+
+/* Section nav (right rail) — better glass */
+.section-nav {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* === Slightly more transparent glass everywhere so aurora shows ===
+   Was 0.55, now 0.48 — aurora shows through cards a bit more clearly. */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card {
+  background: rgba(255, 255, 255, 0.48) !important;
+}
+
+/* Save state pill — glass */
+.topbar .save-state {
+  backdrop-filter: blur(12px) saturate(180%) !important;
+}
+
+
+/* ============================================================
+   FINAL CONSOLIDATION
+   Applies last → wins specificity battles
+   ============================================================ */
+
+/* === UNIFIED TIMING SYSTEM ===
+   One easing curve, three durations: fast (110), base (220), slow (380)
+   This stops the page from feeling like multiple apps stitched together. */
+:root {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 110ms;
+  --t-base: 220ms;
+  --t-slow: 380ms;
+}
+* { transition-timing-function: var(--ease) !important; }
+
+/* Standardize the most common transitions */
+.btn, .btn-tiny, button, .chip, .seg label span,
+.del-btn, .add-btn, .topbar a.back, .app-toolbar a.back,
+input, textarea, select {
+  transition: background var(--t-base), color var(--t-base),
+              border-color var(--t-base), box-shadow var(--t-base),
+              transform var(--t-fast) !important;
+}
+
+.card, .bet, .product, .risk-card, .kpi, .sec, .panel, .ribbon {
+  transition: transform var(--t-base) var(--ease),
+              box-shadow var(--t-slow) var(--ease),
+              background var(--t-base) var(--ease),
+              border-color var(--t-base) var(--ease) !important;
+}
+
+/* === REMOVE the old section-accent bar ===
+   It was a cyan slash above each heading from an earlier visual direction.
+   In the glass aesthetic it just looks like leftover debris. */
+.section .section-head::before,
+.sec .sec-head::before {
+  display: none !important;
+}
+
+/* But KEEP the small cyan dot before the section number — that one belongs */
+.section-head .num::before, .sec-head .num::before {
+  display: inline-block !important;
+  position: absolute !important;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50%;
+  background: #06B6D4 !important;
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.16) !important;
+  content: '';
+}
+
+/* === UNIFORM BORDER RADIUS ===
+   Mid-size surfaces all 14-16px; pills 999px; small chips 6-10px. */
+.card, .bet, .product, .risk-card, .panel, .ribbon, .sec,
+.kpi, .empty, .foot, .preview-pane .preview-header {
+  border-radius: 16px !important;
+}
+.hero { border-radius: 22px !important; }
+.btn, button.btn { border-radius: 10px !important; }
+.btn-tiny { border-radius: 8px !important; }
+.chip { border-radius: 999px !important; }
+.dyn-row { border-radius: 12px !important; }
+
+/* === EDITOR FOOTER DELETE BUTTON: gets glass too ===
+   Was the only button still in the old flat style. */
+.foot button {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  color: #475569 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 6px -1px rgba(15, 23, 42, 0.06) !important;
+}
+.foot button:hover {
+  background: rgba(254, 226, 226, 0.7) !important;
+  color: #B91C1C !important;
+  border-color: rgba(220, 38, 38, 0.5) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 4px 12px -2px rgba(220, 38, 38, 0.20) !important;
+  transform: translateY(-1px);
+}
+
+/* === BUTTON TEXT FIT GUARANTEES ===
+   White-space and min-width prevent any button label from wrapping
+   or getting clipped. */
+.btn, .btn-tiny, .topbar .btn, .app-toolbar button, .app-toolbar a.btn,
+button.btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+.btn .icn, .btn-tiny .icn, button.btn .icn {
+  display: inline-flex !important;
+  flex-shrink: 0 !important;
+  line-height: 0 !important;
+}
+.add-btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+
+/* === TOPBAR ALIGNMENT — all elements vertically centered ===
+   Across topbar (editor) and app-toolbar (output), keep heights
+   consistent so buttons don't appear to jump between elements. */
+.topbar-inner, .app-toolbar-inner {
+  align-items: center !important;
+}
+.topbar .btn, .topbar a.btn, .topbar button,
+.app-toolbar .btn, .app-toolbar a.btn, .app-toolbar button {
+  height: 36px !important;
+  padding: 0 14px !important;
+}
+.topbar .save-state {
+  height: 26px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0 10px !important;
+}
+.app-toolbar a.back, .topbar a.back {
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0 10px !important;
+}
+
+/* === HERO PADDING SANITY ===
+   Earlier additions stacked padding (16px from one rule + 56px from another).
+   Single source of truth: */
+.hero {
+  padding: 64px 48px 56px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+@media (max-width: 720px) {
+  .hero { padding: 44px 24px 36px !important; }
+}
+
+/* === KPI STRIP: ensure subscript breathes from value ===
+   Already responsive but the gap was missing on flex */
+.kpi { padding: 22px 22px 20px !important; }
+.kpi .num {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 7px !important;
+  flex-wrap: nowrap !important;
+  min-width: 0 !important;
+}
+.kpi .label {
+  margin-top: 6px !important;
+  white-space: normal !important;
+}
+
+/* === ACTION ROW LAYOUT (output) === */
+.row {
+  align-items: center !important;
+  gap: 18px !important;
+}
+.row .body { min-width: 0; }
+.row .body .what {
+  word-break: break-word !important;
+}
+.row .badge {
+  align-self: center !important;
+}
+
+/* === DYNAMIC ROWS in editor — consistent inner padding === */
+.dyn-row {
+  padding: 18px 18px 16px 38px !important;
+  gap: 14px;
+}
+.dyn-row .row-num {
+  top: 10px !important;
+  right: 14px !important;
+  font-size: 10.5px !important;
+}
+.dyn-row .del-btn {
+  top: 26px !important;
+  right: 10px !important;
+}
+
+/* === SEG (segmented controls): consistent height === */
+.seg {
+  height: 32px !important;
+  align-items: center !important;
+  display: inline-flex !important;
+}
+.seg label span {
+  height: 26px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0 12px !important;
+}
+
+/* === FOCUS RING: standardized === */
+input:focus, textarea:focus, select:focus,
+.search-wrap input:focus, .sort-select:focus,
+.title-input:focus {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 0 0 3px rgba(6, 182, 212, 0.18),
+    0 4px 14px -4px rgba(6, 182, 212, 0.30) !important;
+  animation: none !important;
+}
+
+/* === PRIMARY BUTTON: ensure shine renders correctly === */
+.btn.primary, button.btn.primary,
+.topbar .btn.primary, .app-toolbar .primary {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate;
+}
+.btn.primary > * { position: relative; z-index: 2; }
+
+/* === FOOT (footer) layout consistency === */
+.foot {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 14px !important;
+}
+
+/* === SECTIONS: even spacing === */
+.section { padding-top: 56px !important; }
+.section + .section { padding-top: 48px !important; }
+.section-head, .sec-head { margin-bottom: 24px !important; padding-bottom: 16px !important; }
+
+/* === MOBILE: ensure preview pane is hidden, hero scales === */
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  body.preview-on .topbar-inner,
+  body.preview-on .page,
+  body.preview-on .app-toolbar-inner {
+    margin-right: 0 !important;
+    max-width: none !important;
+  }
+}
+@media (max-width: 720px) {
+  .topbar-inner, .app-toolbar-inner { padding: 12px 18px !important; }
+  .page { padding-left: 18px !important; padding-right: 18px !important; }
+  .kpi { padding: 18px 18px 16px !important; }
+  .kpi .num { font-size: 26px !important; }
+  .section-head, .sec-head { flex-wrap: wrap; }
+  .section-head .desc, .sec-head .desc {
+    margin-left: 0 !important;
+    text-align: left !important;
+    max-width: 100% !important;
+    width: 100%;
+    margin-top: 4px;
+  }
+}
+
+/* === ACCENT TEXT: prevent ascenders from being clipped === */
+.hero h1 .accent {
+  padding-bottom: 0.05em !important;
+  display: inline-block;
+}
+
+/* === MASTHEAD: tidy the brand line === */
+.masthead .brand { font-size: 16px !important; }
+.masthead .meta { font-size: 11.5px !important; white-space: nowrap !important; }
+
+/* === Scrollbar hint (subtle) === */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.15);
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(15, 23, 42, 0.25); background-clip: content-box; }
+
+
+/* ============================================================
+   ENGINEERING SCHEMATIC BACKDROP
+   Replaces the colorful aurora with a circuit/PCB schematic.
+   Glass cards refract the traces underneath.
+   ============================================================ */
+
+/* Hide the colorful aurora — schematic takes over */
+.aurora { display: none !important; }
+
+/* Schematic SVG fills the viewport, sits behind everything */
+.schematic-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Slow drift on the schematic so it feels alive */
+@keyframes sch-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-12px, -8px); }
+}
+.schematic-bg { animation: sch-drift 32s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .schematic-bg, .schematic-bg circle { animation: none !important; }
+}
+
+/* Body becomes plain cream, no gradient — schematic is the visual */
+body {
+  background: #FAFAF7 !important;
+  background-image: none !important;
+}
+body::before { display: none !important; }
+
+/* ============================================================
+   FIX: PREVIEW PANE position regression
+   Earlier glass.py grouped .preview-pane with .page (position:relative).
+   Force position:fixed with !important so it slides in from the right
+   instead of stacking at the bottom.
+   ============================================================ */
+.preview-pane {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 80 !important;
+  width: 45vw !important;
+  max-width: 800px !important;
+  min-width: 480px !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  background: rgba(250, 250, 247, 0.78) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 0 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.5) inset,
+    -16px 0 56px -16px rgba(15, 23, 42, 0.18) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(100%) !important;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.preview-pane.visible {
+  transform: translateX(0) !important;
+}
+
+/* When preview is on, shrink page content to leave room */
+body.preview-on .topbar,
+body.preview-on .app-toolbar {
+  padding-right: 45vw !important;
+  transition: padding-right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.preview-on .page {
+  margin-right: 45vw !important;
+  max-width: none !important;
+  transition: margin-right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  body.preview-on .topbar,
+  body.preview-on .app-toolbar,
+  body.preview-on .page { padding-right: 0 !important; margin-right: 0 !important; }
+  #preview-toggle-btn { display: none !important; }
+}
+
+/* Glass surfaces now refract the schematic — slightly bump opacity
+   so the cards stay readable over the busier backdrop */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card {
+  background: rgba(255, 255, 255, 0.62) !important;
+}
+.hero {
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+.kpi {
+  background: rgba(255, 255, 255, 0.62) !important;
+}
+.topbar, .app-toolbar {
+  background: rgba(250, 250, 247, 0.65) !important;
+}
+
+/* The is-preview class on output (when iframe-embedded) keeps schematic visible */
+.is-preview body { background: transparent !important; }
+
+
+/* ============================================================
+   DARK PORTRAIT-MODE BACKGROUND
+   Body: deep navy. Schematic blurred & dimmed → recedes.
+   3 soft glowing orbs add atmospheric depth.
+   Glass cards stay bright at 0.96 opacity → "in-focus subject".
+   ============================================================ */
+
+html, body {
+  background: #0B1020 !important;
+  background-image: none !important;
+}
+
+/* Schematic recedes into background atmosphere */
+.schematic-bg {
+  opacity: 0.30 !important;
+  filter: blur(2.5px) saturate(0.7) brightness(1.15) !important;
+  z-index: 0 !important;
+}
+
+/* Atmospheric depth orbs — large, blurred, slowly drifting */
+.depth-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.depth-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform;
+}
+.depth-orb.o1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 70%);
+  top: -180px; left: -160px;
+  opacity: 0.40;
+  animation: depth-drift-1 36s ease-in-out infinite;
+}
+.depth-orb.o2 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #6366F1 0%, transparent 70%);
+  bottom: -120px; right: -120px;
+  opacity: 0.35;
+  animation: depth-drift-2 40s ease-in-out infinite;
+}
+.depth-orb.o3 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #0891B2 0%, transparent 70%);
+  top: 45%; left: 40%;
+  opacity: 0.18;
+  animation: depth-drift-3 32s ease-in-out infinite;
+}
+@keyframes depth-drift-1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(80px, 60px); }
+}
+@keyframes depth-drift-2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-70px, -90px); }
+}
+@keyframes depth-drift-3 {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(-30%, -65%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb { animation: none !important; }
+}
+
+/* === BRIGHT FOREGROUND (the "in-focus" subject) === */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card, .empty {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.40),
+    0 16px 48px -12px rgba(0, 0, 0, 0.50),
+    0 32px 96px -24px rgba(99, 102, 241, 0.35) !important;
+}
+
+.hero {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.45),
+    0 24px 64px -12px rgba(0, 0, 0, 0.55),
+    0 48px 128px -24px rgba(99, 102, 241, 0.40) !important;
+}
+
+.kpi {
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+.masthead {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.30) !important;
+}
+
+.foot {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.30) !important;
+}
+
+/* === TOPBAR — light glass over dark, suspended UI === */
+.topbar, .app-toolbar {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.40) !important;
+}
+
+/* === SECTION NAV (right rail on output) — dark mode adjustment === */
+.section-nav {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* === DYN-ROW (editor inputs) — keep bright === */
+.dyn-row {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+}
+
+/* === SEARCH wrapper / sort select on home === */
+.search-wrap, .sort-select {
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* === EMPTY STATE === */
+.empty {
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* === Toast notifications stay bright === */
+.toast {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow:
+    0 8px 24px -4px rgba(0, 0, 0, 0.40),
+    0 16px 48px -16px rgba(0, 0, 0, 0.50) !important;
+}
+
+/* === Reading progress bar visible on dark === */
+.reading-progress {
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+.reading-progress .bar {
+  background: linear-gradient(90deg, #06B6D4 0%, #6366F1 100%) !important;
+}
+
+/* === Preview pane (declarative fallback — JS inline still wins) === */
+.preview-pane {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.7) !important;
+}
+.preview-pane .preview-header {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+
+/* ================================================================
+   ✦  ROADMAP BUILDER — FINAL VISUAL POLISH
+      Authoritative. Resolves all previous stacked overrides.
+   ================================================================ */
+
+/* -------------------------------------------------------------- */
+/* 0. RESET COMPETING RULES                                        */
+/* -------------------------------------------------------------- */
+body::before,
+body::after {
+  display: none !important;
+  content: none !important;
+}
+.aurora {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 1. DARK PORTRAIT FOUNDATION                                     */
+/*    Slate-900 — deep navy, not pitch black                       */
+/* -------------------------------------------------------------- */
+html, body {
+  background: #0F172A !important;
+  background-image: none !important;
+  min-height: 100vh;
+}
+
+/* Schematic: atmospheric texture, recedes into bg */
+.schematic-bg {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.20 !important;
+  filter: blur(2.5px) saturate(0.60) brightness(1.20) !important;
+  animation: sch-drift 36s ease-in-out infinite !important;
+}
+@keyframes sch-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(-10px, -6px); }
+}
+
+/* Depth orbs */
+.depth-orbs {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+.depth-orb {
+  position: absolute !important;
+  border-radius: 50% !important;
+  filter: blur(110px) !important;
+  will-change: transform;
+}
+.depth-orb.o1 {
+  width: 720px !important; height: 720px !important;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 65%) !important;
+  top: -200px !important; left: -160px !important;
+  opacity: 0.38 !important;
+  animation: orb-drift-1 34s ease-in-out infinite !important;
+}
+.depth-orb.o2 {
+  width: 640px !important; height: 640px !important;
+  background: radial-gradient(circle, #6366F1 0%, transparent 65%) !important;
+  bottom: -160px !important; right: -160px !important;
+  opacity: 0.32 !important;
+  animation: orb-drift-2 40s ease-in-out infinite !important;
+}
+.depth-orb.o3 {
+  width: 480px !important; height: 480px !important;
+  background: radial-gradient(circle, #0891B2 0%, transparent 65%) !important;
+  top: 42% !important; left: 38% !important;
+  opacity: 0.16 !important;
+  animation: orb-drift-3 28s ease-in-out infinite !important;
+}
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0, 0); }
+  33%       { transform: translate(60px, 80px); }
+  66%       { transform: translate(90px, 20px); }
+}
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0, 0); }
+  33%       { transform: translate(-80px, -60px); }
+  66%       { transform: translate(-40px, -100px); }
+}
+@keyframes orb-drift-3 {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50%       { transform: translate(-30%, -65%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb, .schematic-bg { animation: none !important; }
+}
+
+/* Content layers above bg */
+.page, .topbar-inner, .app-toolbar-inner,
+.topbar, .app-toolbar {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 2. GLASS CARD SYSTEM                                            */
+/*    All surfaces: frosted glass floating on dark canvas          */
+/* -------------------------------------------------------------- */
+:root {
+  --glass-bg:      rgba(255, 255, 255, 0.82);
+  --glass-border:  rgba(255, 255, 255, 0.72);
+  --glass-blur:    blur(32px) saturate(190%) brightness(1.02);
+  --glass-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.90) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 4px 8px -2px rgba(0, 0, 0, 0.22),
+    0 12px 32px -8px rgba(0, 0, 0, 0.32),
+    0 32px 80px -20px rgba(99, 102, 241, 0.22),
+    0 64px 140px -40px rgba(6, 182, 212, 0.12);
+}
+
+/* Cards */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: #0F172A !important;
+}
+
+/* Hero — slightly more opaque, bigger shadow */
+.hero {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(36px) saturate(200%) brightness(1.02) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(1.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.80) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.30) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.28),
+    0 16px 48px -12px rgba(0, 0, 0, 0.38),
+    0 48px 120px -24px rgba(99, 102, 241, 0.32),
+    0 96px 200px -48px rgba(6, 182, 212, 0.18) !important;
+  color: #0F172A !important;
+}
+
+/* Dynamic rows in editor */
+.dyn-row {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 8px -2px rgba(0, 0, 0, 0.16),
+    0 8px 24px -8px rgba(0, 0, 0, 0.20) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 3. TOPBAR / TOOLBAR — light glass over dark                     */
+/* -------------------------------------------------------------- */
+.topbar, .app-toolbar {
+  background: rgba(255, 255, 255, 0.80) !important;
+  backdrop-filter: blur(32px) saturate(190%) brightness(1.02) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(1.02) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.28),
+    0 12px 40px -12px rgba(0, 0, 0, 0.32) !important;
+}
+
+/* Section nav (output right rail) */
+.section-nav {
+  background: rgba(255, 255, 255, 0.80) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.68) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.90) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.26) !important;
+}
+
+/* Preview pane — declarative (JS inline wins but keep this for fallback) */
+.preview-pane {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.68) !important;
+  box-shadow: -12px 0 56px -12px rgba(0, 0, 0, 0.38) !important;
+}
+.preview-pane .preview-header {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Search / filter */
+.search-wrap input, .sort-select {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(20px) !important;
+}
+.search-wrap input:focus, .sort-select:focus {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(6, 182, 212, 0.22),
+    0 4px 12px -4px rgba(6, 182, 212, 0.28) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 4. BUTTONS                                                      */
+/* -------------------------------------------------------------- */
+/* Primary — cyan→indigo gradient */
+.btn.primary, button.btn.primary,
+a.btn.primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.28) inset,
+    0 4px 12px -4px rgba(6, 182, 212, 0.55),
+    0 8px 24px -8px rgba(99, 102, 241, 0.45) !important;
+}
+.btn.primary:hover, button.btn.primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.28) inset,
+    0 8px 24px -4px rgba(6, 182, 212, 0.65),
+    0 16px 48px -8px rgba(99, 102, 241, 0.55) !important;
+}
+
+/* Secondary — glass */
+.btn:not(.primary), button.btn:not(.primary), a.btn:not(.primary) {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #334155 !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.90) inset,
+    0 2px 6px -2px rgba(0,0,0,0.14) !important;
+}
+.btn:not(.primary):hover, button.btn:not(.primary):hover {
+  background: rgba(255, 255, 255, 0.96) !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 4px 12px -2px rgba(0,0,0,0.18) !important;
+}
+
+/* Footer delete button */
+.foot button {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #64748B !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.90) inset,
+    0 2px 6px -2px rgba(0,0,0,0.14) !important;
+}
+.foot button:hover {
+  background: rgba(254, 226, 226, 0.88) !important;
+  color: #B91C1C !important;
+  border-color: rgba(220, 38, 38, 0.50) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Small add / del row buttons */
+.add-btn {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #334155 !important;
+}
+.add-btn:hover {
+  background: rgba(255, 255, 255, 0.96) !important;
+  transform: translateY(-1px) !important;
+}
+.del-btn:hover {
+  color: #B91C1C !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 5. CHIPS                                                        */
+/* -------------------------------------------------------------- */
+.chip {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(255, 255, 255, 0.68) !important;
+  color: #334155 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.10) !important;
+  transition:
+    background 160ms cubic-bezier(0.16,1,0.3,1),
+    transform  120ms cubic-bezier(0.16,1,0.3,1),
+    box-shadow 160ms cubic-bezier(0.16,1,0.3,1) !important;
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.96) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 6. FORM INPUTS                                                  */
+/* -------------------------------------------------------------- */
+input, textarea, select {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(0,0,0,0.10) !important;
+  color: #0F172A !important;
+}
+input:focus, textarea:focus, select:focus {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(6, 182, 212, 0.50) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(6, 182, 212, 0.20),
+    0 4px 12px -4px rgba(6, 182, 212, 0.25) !important;
+  outline: none !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 7. HOVER LIFT (cards that should lift)                          */
+/* -------------------------------------------------------------- */
+.card:hover, .bet:hover, .product:hover,
+.risk-card:hover, .kpi:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.92) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 8px 20px -4px rgba(0, 0, 0, 0.32),
+    0 24px 64px -12px rgba(0, 0, 0, 0.42),
+    0 48px 120px -24px rgba(99, 102, 241, 0.30),
+    0 96px 200px -48px rgba(6, 182, 212, 0.18) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 8. UNIFIED TRANSITION SYSTEM                                    */
+/* -------------------------------------------------------------- */
+:root {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 120ms;
+  --t-base: 220ms;
+  --t-slow: 380ms;
+}
+*, *::before, *::after {
+  transition-timing-function: var(--ease) !important;
+}
+.btn, button, a.btn,
+.chip, input, textarea, select, .seg label span {
+  transition:
+    background  var(--t-fast) var(--ease),
+    color       var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow  var(--t-base) var(--ease),
+    transform   var(--t-fast) var(--ease) !important;
+}
+.card, .bet, .product, .risk-card, .kpi {
+  transition:
+    transform   var(--t-base) var(--ease),
+    box-shadow  var(--t-slow) var(--ease),
+    background  var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 9. BORDER RADIUS SYSTEM                                         */
+/* -------------------------------------------------------------- */
+.hero { border-radius: 22px !important; }
+.sec, .card { border-radius: 18px !important; }
+.bet, .product, .panel, .ribbon,
+.risk-card, .kpi, .masthead, .foot { border-radius: 16px !important; }
+.dyn-row { border-radius: 12px !important; }
+.btn, button.btn, a.btn { border-radius: 10px !important; }
+.btn-tiny { border-radius: 8px !important; }
+.chip { border-radius: 999px !important; }
+
+/* Button text fit */
+.btn, button.btn, a.btn, .add-btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 10. SECTION HEADING CLEANUP                                     */
+/* -------------------------------------------------------------- */
+/* Remove old accent bar (stale from earlier bold.py pass) */
+.section .section-head::before,
+.sec .sec-head::before {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 11. MISC UI ELEMENTS                                            */
+/* -------------------------------------------------------------- */
+/* Reading progress */
+.reading-progress {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+.reading-progress .bar, .progress-bar {
+  background: linear-gradient(90deg, #06B6D4, #6366F1) !important;
+}
+
+/* Toast */
+.toast {
+  background: rgba(15, 23, 42, 0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 8px 24px -4px rgba(0,0,0,0.40),
+    0 16px 48px -16px rgba(0,0,0,0.50) !important;
+}
+
+/* Seg controls */
+.seg {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.60) !important;
+}
+.seg label input:checked + span,
+.seg label span.active {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12) !important;
+  color: #0F172A !important;
+}
+
+/* Drag handles */
+.drag-handle { color: rgba(100, 116, 139, 0.48) !important; }
+.drag-handle:hover { color: #0891B2 !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.20);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.35);
+  background-clip: content-box;
+}
+
+/* -------------------------------------------------------------- */
+/* 12. RESPONSIVE                                                  */
+/* -------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  #preview-toggle-btn { display: none !important; }
+  body.preview-on .page,
+  body.preview-on .topbar,
+  body.preview-on .app-toolbar {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+@media (max-width: 720px) {
+  .hero { padding: 44px 24px 36px !important; }
+  .page { padding-left: 18px !important; padding-right: 18px !important; }
+  .kpi { padding: 18px !important; }
+  .topbar-inner, .app-toolbar-inner { padding: 12px 18px !important; }
+}
+
+
+/* ============================================================
+   ✦ AURORA LIGHT — Final Authoritative Theme
+   Bright. Vibrant. Modern. Fresh.
+   ============================================================ */
+
+/* ---- 1. RESET ALL PRIOR DARK STATE ---- */
+html, body {
+  background: #FAF7F2 !important;
+  background-image: none !important;
+  color: #0F172A !important;
+  min-height: 100vh;
+}
+
+/* Allow body::before so we can use it for noise grain (was killed earlier) */
+body::before {
+  display: block !important;
+  content: '' !important;
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  opacity: 0.35 !important;
+  mix-blend-mode: overlay !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.7 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>") !important;
+}
+
+/* Schematic — softened for cream bg, kept for engineering vibe */
+.schematic-bg {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.18 !important;
+  filter: blur(0.5px) saturate(1.1) brightness(0.9) !important;
+  animation: sch-drift 36s ease-in-out infinite !important;
+}
+@keyframes sch-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(-8px, -5px); }
+}
+
+/* ---- 2. VIBRANT AURORA ORBS ---- */
+.depth-orbs {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+.depth-orb {
+  position: absolute !important;
+  border-radius: 50% !important;
+  will-change: transform;
+}
+.depth-orb.o1 {
+  width: 760px !important; height: 760px !important;
+  background: radial-gradient(circle, #38BDF8 0%, rgba(56,189,248,0) 65%) !important;
+  top: -240px !important; left: -200px !important;
+  opacity: 0.55 !important;
+  filter: blur(70px) !important;
+  animation: aurora-1 28s ease-in-out infinite !important;
+}
+.depth-orb.o2 {
+  width: 680px !important; height: 680px !important;
+  background: radial-gradient(circle, #FB7185 0%, rgba(251,113,133,0) 65%) !important;
+  bottom: -220px !important; right: -200px !important;
+  opacity: 0.50 !important;
+  filter: blur(70px) !important;
+  animation: aurora-2 32s ease-in-out infinite !important;
+}
+.depth-orb.o3 {
+  width: 580px !important; height: 580px !important;
+  background: radial-gradient(circle, #34D399 0%, rgba(52,211,153,0) 65%) !important;
+  top: 38% !important; left: 45% !important;
+  opacity: 0.42 !important;
+  filter: blur(75px) !important;
+  animation: aurora-3 26s ease-in-out infinite !important;
+}
+/* Bonus 4th orb via ::before on the orbs container for more vibrance */
+.depth-orbs::before {
+  content: '' !important;
+  position: absolute !important;
+  width: 540px !important;
+  height: 540px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, #C084FC 0%, rgba(192,132,252,0) 65%) !important;
+  top: 55% !important;
+  left: 5% !important;
+  opacity: 0.40 !important;
+  filter: blur(75px) !important;
+  animation: aurora-4 34s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes aurora-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(120px, 90px) scale(1.08); }
+  66%       { transform: translate(60px, 140px) scale(0.96); }
+}
+@keyframes aurora-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-100px, -110px) scale(1.05); }
+  66%       { transform: translate(-140px, -50px) scale(1.10); }
+}
+@keyframes aurora-3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%       { transform: translate(-30%, -65%) scale(1.10); }
+}
+@keyframes aurora-4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(90px, -70px) scale(0.94); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb, .depth-orbs::before, .schematic-bg { animation: none !important; }
+}
+
+/* ---- 3. CONTENT LAYERS ABOVE ATMOSPHERE ---- */
+.page, .topbar-inner, .app-toolbar-inner,
+.topbar, .app-toolbar {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* ---- 4. GLASS CARD SYSTEM ---- */
+:root {
+  --glass-bg:        rgba(255, 255, 255, 0.62);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-border:    rgba(255, 255, 255, 0.85);
+  --glass-blur:      blur(40px) saturate(220%) brightness(1.05);
+
+  --shadow-glass:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.50) inset,
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 16px 48px -12px rgba(15, 23, 42, 0.10),
+    0 32px 80px -24px rgba(56, 189, 248, 0.18),
+    0 48px 120px -32px rgba(192, 132, 252, 0.12);
+
+  --shadow-glass-hover:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.50) inset,
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -4px rgba(15, 23, 42, 0.10),
+    0 24px 64px -12px rgba(15, 23, 42, 0.14),
+    0 48px 120px -24px rgba(56, 189, 248, 0.28),
+    0 80px 180px -40px rgba(251, 113, 133, 0.20);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 120ms;
+  --t-base: 220ms;
+  --t-slow: 380ms;
+}
+
+/* Cards — frosted glass on bright bg */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--shadow-glass) !important;
+  color: #0F172A !important;
+}
+
+/* Hero — slightly more opaque for prominence */
+.hero {
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: blur(48px) saturate(220%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(1.05) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.98) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.60) inset,
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 16px 48px -12px rgba(15, 23, 42, 0.10),
+    0 48px 120px -24px rgba(56, 189, 248, 0.30),
+    0 96px 200px -40px rgba(251, 113, 133, 0.20),
+    0 120px 240px -48px rgba(192, 132, 252, 0.14) !important;
+  color: #0F172A !important;
+}
+
+/* Dynamic rows — slightly less opaque, less aggressive shadow */
+.dyn-row {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 8px -2px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Topbar / toolbar — light glass, slightly tinted with cream */
+.topbar, .app-toolbar {
+  background: rgba(250, 247, 242, 0.72) !important;
+  backdrop-filter: blur(36px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 12px 40px -12px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Section nav (output right rail) */
+.section-nav {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Preview pane (declarative — JS inline still wins for position) */
+.preview-pane {
+  background: rgba(250, 247, 242, 0.85) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow: -16px 0 56px -16px rgba(15, 23, 42, 0.20) !important;
+}
+.preview-pane .preview-header {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Search / sort */
+.search-wrap input, .sort-select {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(20px) !important;
+  color: #0F172A !important;
+}
+.search-wrap input::placeholder { color: #64748B !important; }
+.search-wrap input:focus, .sort-select:focus {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(56, 189, 248, 0.22),
+    0 4px 12px -4px rgba(56, 189, 248, 0.30) !important;
+  outline: none !important;
+}
+
+/* ---- 5. TYPOGRAPHY: high contrast on bright bg ---- */
+body, .page, p, span, div, td, th, li {
+  color: #0F172A !important;
+}
+h1, h2, h3, h4, h5, h6 { color: #0F172A !important; }
+
+/* Muted text — must be readable on cream bg */
+.muted, .desc, .label,
+.section-head .desc, .sec-head .desc,
+small, .small, .meta, .helper {
+  color: #475569 !important;
+}
+
+/* Section numbers (the cyan dot) */
+.section-head .num, .sec-head .num {
+  color: #0891B2 !important;
+}
+
+/* "Total" badge / count indicators */
+.total-badge, [class*="total"] {
+  color: #475569 !important;
+}
+
+/* Section heading — kill old accent bar, keep dot */
+.section .section-head::before,
+.sec .sec-head::before {
+  display: none !important;
+}
+
+/* ---- 6. BUTTONS — vibrant gradients ---- */
+/* Primary: 3-stop gradient cyan→violet→coral */
+.btn.primary, button.btn.primary, a.btn.primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #A78BFA 55%, #FB7185 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.30) inset,
+    0 4px 12px -4px rgba(56, 189, 248, 0.55),
+    0 8px 24px -8px rgba(167, 139, 250, 0.50),
+    0 12px 36px -12px rgba(251, 113, 133, 0.40) !important;
+}
+.btn.primary:hover, button.btn.primary:hover, a.btn.primary:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.05) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 8px 24px -4px rgba(56, 189, 248, 0.65),
+    0 16px 48px -8px rgba(167, 139, 250, 0.55),
+    0 24px 64px -16px rgba(251, 113, 133, 0.45) !important;
+}
+
+/* Secondary: clean glass */
+.btn:not(.primary), button.btn:not(.primary), a.btn:not(.primary) {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #1E293B !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 2px 6px -2px rgba(15, 23, 42, 0.10) !important;
+}
+.btn:not(.primary):hover, button.btn:not(.primary):hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 1) inset,
+    0 4px 12px -2px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* Footer delete button */
+.foot button {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #64748B !important;
+}
+.foot button:hover {
+  background: rgba(254, 226, 226, 0.90) !important;
+  color: #B91C1C !important;
+  border-color: rgba(220, 38, 38, 0.50) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Add / del row buttons */
+.add-btn {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #1E293B !important;
+}
+.add-btn:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ---- 7. CHIPS ---- */
+.chip {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #1E293B !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.98) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* ---- 8. INPUTS ---- */
+input, textarea, select {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(15, 23, 42, 0.10) !important;
+  color: #0F172A !important;
+}
+input:focus, textarea:focus, select:focus {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(56, 189, 248, 0.20),
+    0 4px 12px -4px rgba(56, 189, 248, 0.25) !important;
+  outline: none !important;
+}
+
+/* Title input in topbar */
+.title-input {
+  color: #0F172A !important;
+  background: transparent !important;
+}
+.title-input:hover { background: rgba(255, 255, 255, 0.50) !important; }
+
+/* Save state indicator */
+.save-state {
+  background: rgba(255, 255, 255, 0.65) !important;
+  color: #475569 !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+}
+
+/* Back-arrow link in topbar */
+.topbar a.back, .app-toolbar a.back {
+  color: #475569 !important;
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+}
+.topbar a.back:hover, .app-toolbar a.back:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #0F172A !important;
+}
+
+/* ---- 9. HOVER LIFT ---- */
+.card:hover, .bet:hover, .product:hover,
+.risk-card:hover, .kpi:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--shadow-glass-hover) !important;
+}
+
+/* ---- 10. UNIFIED TRANSITIONS ---- */
+*, *::before, *::after {
+  transition-timing-function: var(--ease) !important;
+}
+.btn, button, a.btn, .chip, input, textarea, select {
+  transition:
+    background var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-base) var(--ease),
+    transform var(--t-fast) var(--ease) !important;
+}
+.card, .bet, .product, .risk-card, .kpi {
+  transition:
+    transform var(--t-base) var(--ease),
+    box-shadow var(--t-slow) var(--ease),
+    background var(--t-base) var(--ease) !important;
+}
+
+/* ---- 11. BORDER RADIUS SYSTEM ---- */
+.hero { border-radius: 24px !important; }
+.sec, .card { border-radius: 20px !important; }
+.bet, .product, .panel, .ribbon,
+.risk-card, .kpi, .masthead, .foot { border-radius: 18px !important; }
+.dyn-row { border-radius: 14px !important; }
+.btn, button.btn, a.btn { border-radius: 12px !important; }
+.btn-tiny { border-radius: 10px !important; }
+.chip { border-radius: 999px !important; }
+
+/* Button consistent layout */
+.btn, button.btn, a.btn, .add-btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+
+/* ---- 12. MISC ---- */
+.reading-progress {
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+.reading-progress .bar, .progress-bar {
+  background: linear-gradient(90deg, #06B6D4, #A78BFA, #FB7185) !important;
+}
+
+.toast {
+  background: rgba(15, 23, 42, 0.94) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 8px 24px -4px rgba(15, 23, 42, 0.30),
+    0 16px 48px -16px rgba(15, 23, 42, 0.40) !important;
+}
+
+.seg {
+  background: rgba(255, 255, 255, 0.50) !important;
+  border: 1px solid rgba(255, 255, 255, 0.60) !important;
+}
+.seg label input:checked + span,
+.seg label span.active {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.10) !important;
+  color: #0F172A !important;
+}
+
+.drag-handle { color: rgba(100, 116, 139, 0.50) !important; }
+.drag-handle:hover { color: #06B6D4 !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.32);
+  background-clip: content-box;
+}
+
+/* ---- 13. RESPONSIVE ---- */
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  #preview-toggle-btn { display: none !important; }
+}
+@media (max-width: 720px) {
+  .hero { padding: 44px 24px 36px !important; }
+  .page { padding-left: 18px !important; padding-right: 18px !important; }
+}
+
+
+/* ============================================================
+   ✦ SMOOTHNESS PASS — Apple-level scroll, minimal effects
+   This block is LAST. Wins everything.
+   ============================================================ */
+
+/* ---- 1. TOAST / CONFIRM DIALOG: force white text ---- */
+/* Rule must be specific enough to beat the broad div selector */
+.toast,
+.toast *,
+.toast .toast-msg,
+.toast .toast-msg *,
+.toast .toast-actions *,
+.toast .toast-btn,
+.toast .toast-title,
+.toast .toast-icon {
+  color: #ffffff !important;
+}
+
+.toast {
+  background: rgba(15, 23, 42, 0.94) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow:
+    0 8px 24px -4px rgba(15, 23, 42, 0.30),
+    0 16px 48px -16px rgba(15, 23, 42, 0.40) !important;
+}
+
+/* Toast buttons must keep their colors */
+.toast .toast-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+  color: #ffffff !important;
+}
+.toast .toast-btn:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+}
+.toast .toast-btn.primary {
+  background: linear-gradient(135deg, #06B6D4, #6366F1) !important;
+  border: none !important;
+}
+.toast .toast-btn.danger {
+  background: #DC2626 !important;
+  border-color: #DC2626 !important;
+  color: #ffffff !important;
+}
+.toast .toast-btn.danger:hover {
+  background: #B91C1C !important;
+  border-color: #B91C1C !important;
+}
+
+/* ---- 2. KILL CURSOR-TRACKING SPOTLIGHT ---- */
+/* The ::before radial gradient was the most expensive paint —
+   it repainted on every mousemove inside cards. */
+.card::before,
+.bet::before,
+.product::before,
+.risk-card::before,
+.sec::before,
+.kpi::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* ---- 3. KILL JS 3D TILT ---- */
+/* Override the transform set by the tilt JS so it has no effect.
+   The JS still runs but its transforms are clobbered. */
+.card, .bet, .product, .risk-card, .sec, .kpi {
+  transform: none !important;
+}
+/* Allow only hover lift via specific transform */
+.card:hover, .bet:hover, .product:hover, .risk-card:hover, .kpi:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* ---- 4. REDUCE BACKDROP-FILTER (the #1 scroll perf win) ---- */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+.hero {
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+}
+.topbar, .app-toolbar {
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+}
+.preview-pane {
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+}
+.dyn-row {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* ---- 5. REDUCE SHADOW LAYERS (6+ → 3) ---- */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -4px rgba(15, 23, 42, 0.06),
+    0 16px 40px -12px rgba(15, 23, 42, 0.08) !important;
+}
+.hero {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 24px 64px -16px rgba(15, 23, 42, 0.10) !important;
+}
+.card:hover, .bet:hover, .product:hover, .risk-card:hover, .kpi:hover {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 16px -4px rgba(15, 23, 42, 0.10),
+    0 24px 64px -12px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* ---- 6. ORBS — fewer, slower, GPU-accelerated ---- */
+.depth-orb,
+.depth-orbs::before {
+  will-change: transform !important;
+  transform: translate3d(0, 0, 0);
+}
+/* Slow each animation ~2.4× */
+.depth-orb.o1 { animation-duration: 65s !important; filter: blur(85px) !important; }
+.depth-orb.o2 { animation-duration: 75s !important; filter: blur(85px) !important; }
+.depth-orb.o3 { animation-duration: 60s !important; filter: blur(85px) !important; }
+.depth-orbs::before { animation-duration: 80s !important; filter: blur(85px) !important; }
+
+/* ---- 7. KILL ANIMATED SCHEMATIC PULSES ---- */
+/* The animateMotion mpath was running 4 separate timelines per page.
+   The static schematic is the engineering visual — it doesn't need to move. */
+.schematic-bg circle[fill="#06B6D4"],
+.schematic-bg circle[fill="#6366F1"],
+.schematic-bg circle[fill="#0891B2"] {
+  display: none !important;
+}
+.schematic-bg animateMotion,
+.schematic-bg animate {
+  begin: never !important;
+}
+.schematic-bg {
+  animation: none !important;
+  filter: blur(0.5px) saturate(0.85) brightness(0.95) !important;
+  opacity: 0.16 !important;
+}
+
+/* ---- 8. KILL NOISE GRAIN OVERLAY ---- */
+/* mix-blend-mode: overlay is expensive on scroll. Drop it. */
+body::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* ---- 9. SMOOTH TRANSITIONS — slower, more deliberate ---- */
+:root {
+  --t-fast: 160ms;
+  --t-base: 280ms;
+  --t-slow: 420ms;
+}
+/* Smaller hover translate */
+.card:hover, .bet:hover, .product:hover,
+.risk-card:hover, .kpi:hover {
+  transform: translateY(-1px) !important;
+}
+/* Buttons: subtle lift */
+.btn:hover, button.btn:hover, a.btn:hover,
+.btn.primary:hover, button.btn.primary:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* ---- 10. SCROLL BEHAVIOR ---- */
+html {
+  scroll-behavior: smooth !important;
+  /* Improve text rendering during scroll */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- 11. CONTAIN PAINT/LAYOUT ---- */
+/* Tells browser these elements don't affect outside layout — major scroll win */
+.sec, .card, .bet, .product, .risk-card, .kpi {
+  contain: layout paint;
+}
+
+/* ---- 12. RESPECT REDUCED MOTION ---- */
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb, .depth-orbs::before, .schematic-bg {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---- 13. FALLBACK: ensure ALL text on cards is readable ---- */
+/* Belt-and-braces: any text inside cards/sections is dark slate */
+.sec p, .sec span, .sec div, .sec li,
+.card p, .card span, .card div, .card li,
+.bet p, .bet span, .bet div,
+.product p, .product span, .product div,
+.hero p, .hero span, .hero div,
+.kpi p, .kpi span, .kpi div {
+  color: inherit;
+}
+
+/* But toast/dialog text MUST stay white — re-assert */
+.toast, .toast * { color: #ffffff !important; }
+
+</style>
+</head>
+
+<body>
+<script>
+(function() {
+  // Immediate preview-mode setup. Runs before render so no flash of toolbar.
+  try {
+    var qs = new URLSearchParams(window.location.search);
+    if (qs.get('preview') === '1') {
+      document.documentElement.classList.add('is-preview');
+      // Inject style to hide toolbar + heavy chrome ASAP
+      var s = document.createElement('style');
+      s.textContent = '.is-preview .app-toolbar, .is-preview .reading-progress, .is-preview .section-nav { display: none !important; }' +
+                      '.is-preview .page { padding-top: 24px !important; }' +
+                      '.is-preview body { background: transparent !important; }';
+      document.head.appendChild(s);
+    }
+  } catch(e) {}
+})();
+</script>
+  <svg class="schematic-bg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <pattern id="dot-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <circle cx="20" cy="20" r="1" fill="#0891B2" opacity="0.16"/>
+      </pattern>
+      <linearGradient id="trace-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#0891B2" stop-opacity="0.30"/>
+        <stop offset="50%" stop-color="#06B6D4" stop-opacity="0.45"/>
+        <stop offset="100%" stop-color="#6366F1" stop-opacity="0.30"/>
+      </linearGradient>
+      <radialGradient id="bg-glow" cx="30%" cy="30%" r="60%">
+        <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.10"/>
+        <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="bg-glow-2" cx="75%" cy="65%" r="50%">
+        <stop offset="0%" stop-color="#6366F1" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <rect width="100%" height="100%" fill="url(#bg-glow)"/>
+    <rect width="100%" height="100%" fill="url(#bg-glow-2)"/>
+    <rect width="100%" height="100%" fill="url(#dot-grid)"/>
+
+    <g font-family="ui-monospace, &quot;SF Mono&quot;, Menlo, monospace" stroke-linecap="square">
+
+      <!-- IC U1 — large MCU top-left -->
+      <g opacity="0.50">
+        <rect x="120" y="180" width="120" height="80" rx="3" fill="none" stroke="#0891B2" stroke-width="1"/>
+        <circle cx="135" cy="195" r="2.5" fill="none" stroke="#0891B2" stroke-width="0.6"/>
+        <text x="180" y="226" font-size="13" fill="#0891B2" text-anchor="middle" font-weight="600">MCU</text>
+        <text x="180" y="244" font-size="9" fill="#0891B2" text-anchor="middle" opacity="0.7">U1 · 32-bit</text>
+        <g stroke="#0891B2" stroke-width="0.8">
+          <line x1="120" y1="200" x2="105" y2="200"/>
+          <line x1="120" y1="215" x2="105" y2="215"/>
+          <line x1="120" y1="230" x2="105" y2="230"/>
+          <line x1="120" y1="245" x2="105" y2="245"/>
+          <line x1="240" y1="200" x2="255" y2="200"/>
+          <line x1="240" y1="215" x2="255" y2="215"/>
+          <line x1="240" y1="230" x2="255" y2="230"/>
+          <line x1="240" y1="245" x2="255" y2="245"/>
+        </g>
+      </g>
+
+      <!-- IC U2 — RAM top-right -->
+      <g opacity="0.45">
+        <rect x="1620" y="160" width="100" height="60" rx="2" fill="none" stroke="#0891B2" stroke-width="1"/>
+        <text x="1670" y="195" font-size="11" fill="#0891B2" text-anchor="middle" font-weight="600">RAM</text>
+        <text x="1670" y="208" font-size="8" fill="#0891B2" text-anchor="middle" opacity="0.7">U2 · 64K</text>
+        <g stroke="#0891B2" stroke-width="0.8">
+          <line x1="1620" y1="175" x2="1605" y2="175"/>
+          <line x1="1620" y1="190" x2="1605" y2="190"/>
+          <line x1="1620" y1="205" x2="1605" y2="205"/>
+          <line x1="1720" y1="175" x2="1735" y2="175"/>
+          <line x1="1720" y1="190" x2="1735" y2="190"/>
+          <line x1="1720" y1="205" x2="1735" y2="205"/>
+        </g>
+      </g>
+
+      <!-- Voltage regulator middle-left -->
+      <g opacity="0.42">
+        <circle cx="220" cy="540" r="22" fill="none" stroke="#0891B2" stroke-width="1"/>
+        <circle cx="220" cy="540" r="14" fill="none" stroke="#0891B2" stroke-width="0.6" stroke-dasharray="3 2"/>
+        <text x="220" y="544" font-size="9" fill="#0891B2" text-anchor="middle" font-weight="600">3V3</text>
+        <text x="220" y="585" font-size="9" fill="#0891B2" text-anchor="middle" opacity="0.7">VREG</text>
+      </g>
+
+      <!-- Crystal oscillator -->
+      <g opacity="0.40">
+        <rect x="450" y="160" width="40" height="22" rx="2" fill="none" stroke="#0891B2" stroke-width="0.8"/>
+        <line x1="460" y1="160" x2="460" y2="148" stroke="#0891B2" stroke-width="0.8"/>
+        <line x1="480" y1="160" x2="480" y2="148" stroke="#0891B2" stroke-width="0.8"/>
+        <text x="470" y="200" font-size="9" fill="#0891B2" text-anchor="middle">16.0 MHz</text>
+      </g>
+
+      <!-- Resistor R1 -->
+      <g opacity="0.45">
+        <path d="M 760 480 L 780 480 L 785 472 L 795 488 L 805 472 L 815 488 L 820 480 L 840 480"
+              fill="none" stroke="#0891B2" stroke-width="0.9"/>
+        <text x="800" y="505" font-size="9" fill="#0891B2" text-anchor="middle">10kΩ R1</text>
+      </g>
+
+      <!-- Capacitor C1 -->
+      <g opacity="0.42">
+        <line x1="1100" y1="590" x2="1100" y2="610" stroke="#0891B2" stroke-width="1.2"/>
+        <line x1="1112" y1="585" x2="1112" y2="615" stroke="#0891B2" stroke-width="1.2"/>
+        <line x1="1090" y1="600" x2="1100" y2="600" stroke="#0891B2" stroke-width="0.8"/>
+        <line x1="1112" y1="600" x2="1122" y2="600" stroke="#0891B2" stroke-width="0.8"/>
+        <text x="1106" y="635" font-size="9" fill="#0891B2" text-anchor="middle">100nF C1</text>
+      </g>
+
+      <!-- HSM / Crypto block bottom-right -->
+      <g opacity="0.50">
+        <rect x="1480" y="780" width="160" height="100" rx="4" fill="none" stroke="#0891B2" stroke-width="1.2"/>
+        <line x1="1480" y1="810" x2="1640" y2="810" stroke="#0891B2" stroke-width="0.6"/>
+        <text x="1560" y="802" font-size="11" fill="#0891B2" text-anchor="middle" font-weight="600">HSM · CRYPTO</text>
+        <text x="1500" y="830" font-size="8" fill="#0891B2" opacity="0.7">AES-256</text>
+        <text x="1500" y="845" font-size="8" fill="#0891B2" opacity="0.7">ECDSA-P384</text>
+        <text x="1500" y="860" font-size="8" fill="#0891B2" opacity="0.7">SHA-3</text>
+        <text x="1500" y="875" font-size="8" fill="#0891B2" opacity="0.7">TRNG</text>
+        <g stroke="#0891B2" stroke-width="0.6" fill="none">
+          <rect x="1590" y="830" width="36" height="36" rx="2"/>
+          <line x1="1598" y1="838" x2="1618" y2="838"/>
+          <line x1="1598" y1="846" x2="1618" y2="846"/>
+          <line x1="1598" y1="854" x2="1618" y2="854"/>
+        </g>
+      </g>
+
+      <!-- Connector header bottom-left -->
+      <g opacity="0.42">
+        <rect x="100" y="820" width="14" height="80" fill="none" stroke="#0891B2" stroke-width="0.8"/>
+        <g fill="#0891B2">
+          <circle cx="107" cy="833" r="2"/>
+          <circle cx="107" cy="850" r="2"/>
+          <circle cx="107" cy="867" r="2"/>
+          <circle cx="107" cy="884" r="2"/>
+        </g>
+        <text x="107" y="918" font-size="8" fill="#0891B2" text-anchor="middle">J1 · DEBUG</text>
+      </g>
+
+      <!-- TRACES: orthogonal routing connecting components -->
+      <g fill="none" stroke="url(#trace-grad)" stroke-width="1.5" stroke-linecap="square">
+        <!-- MCU U1 → RAM U2 (long top horizontal trace) -->
+        <path id="trace-1" d="M 255 215 L 1450 215 L 1450 175 L 1605 175"/>
+        <!-- VREG → MCU power -->
+        <path id="trace-2" d="M 198 540 L 150 540 L 150 245 L 105 245"/>
+        <!-- MCU → R1 → HSM data path -->
+        <path id="trace-3" d="M 255 245 L 690 245 L 690 480 L 760 480"/>
+        <path id="trace-4" d="M 840 480 L 1100 480 L 1100 590"/>
+        <path id="trace-5" d="M 1112 600 L 1340 600 L 1340 820 L 1480 820"/>
+        <!-- Crystal → MCU -->
+        <path id="trace-6" d="M 460 182 L 460 230 L 255 230"/>
+        <!-- J1 debug → MCU (slow diagnostic) -->
+        <path id="trace-7" d="M 114 850 L 320 850 L 320 645 L 105 645 L 105 215 L 105 215"/>
+      </g>
+
+      <!-- ANIMATED CURRENT PULSES traveling along traces -->
+      <g>
+        <circle r="3.2" fill="#06B6D4" opacity="0.95">
+          <animateMotion dur="5.5s" repeatCount="indefinite">
+            <mpath href="#trace-1"/>
+          </animateMotion>
+        </circle>
+        <circle r="5" fill="none" stroke="#06B6D4" stroke-width="1" opacity="0.6">
+          <animateMotion dur="5.5s" repeatCount="indefinite">
+            <mpath href="#trace-1"/>
+          </animateMotion>
+          <animate attributeName="r" values="5;9;5" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0;0.6" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle r="2.6" fill="#06B6D4" opacity="0.85">
+          <animateMotion dur="4s" begin="-1.5s" repeatCount="indefinite">
+            <mpath href="#trace-3"/>
+          </animateMotion>
+        </circle>
+
+        <circle r="2.6" fill="#6366F1" opacity="0.85">
+          <animateMotion dur="6s" begin="-2.5s" repeatCount="indefinite">
+            <mpath href="#trace-5"/>
+          </animateMotion>
+        </circle>
+
+        <circle r="2.4" fill="#0891B2" opacity="0.7">
+          <animateMotion dur="3.5s" begin="-0.8s" repeatCount="indefinite">
+            <mpath href="#trace-2"/>
+          </animateMotion>
+        </circle>
+      </g>
+
+      <!-- DIMENSION LINE under MCU -->
+      <g stroke="#0891B2" stroke-width="0.5" fill="#0891B2" opacity="0.40">
+        <line x1="120" y1="285" x2="240" y2="285"/>
+        <line x1="120" y1="280" x2="120" y2="290"/>
+        <line x1="240" y1="280" x2="240" y2="290"/>
+        <text x="180" y="300" font-size="8.5" text-anchor="middle" stroke="none" font-family="ui-monospace, monospace">120.0</text>
+      </g>
+
+      <!-- Crosshair reference markers -->
+      <g stroke="#06B6D4" stroke-width="0.7" opacity="0.55">
+        <g transform="translate(720, 720)">
+          <line x1="-7" y1="0" x2="7" y2="0"/>
+          <line x1="0" y1="-7" x2="0" y2="7"/>
+          <circle r="9" fill="none" stroke-width="0.5"/>
+        </g>
+        <g transform="translate(1280, 320)">
+          <line x1="-6" y1="0" x2="6" y2="0"/>
+          <line x1="0" y1="-6" x2="0" y2="6"/>
+          <circle r="8" fill="none" stroke-width="0.5"/>
+        </g>
+        <g transform="translate(420, 950)">
+          <line x1="-5" y1="0" x2="5" y2="0"/>
+          <line x1="0" y1="-5" x2="0" y2="5"/>
+        </g>
+      </g>
+
+      <!-- Header label -->
+      <g opacity="0.30">
+        <text x="50" y="30" font-size="9" fill="#0891B2" font-family="ui-monospace, monospace">SCH-001 · ROADMAP-PCB · REV 1.2</text>
+      </g>
+      <g opacity="0.30">
+        <text x="1810" y="1180" font-size="9" fill="#0891B2" font-family="ui-monospace, monospace" text-anchor="end">SHEET 1/1</text>
+      </g>
+    </g>
+  </svg>
+  <div class="depth-orbs"><div class="depth-orb o1"></div><div class="depth-orb o2"></div><div class="depth-orb o3"></div></div>
+
+<!-- App toolbar — only visible in browser; stripped from downloaded HTML -->
+<div class="app-toolbar">
+  <div class="app-toolbar-inner">
+    <a href="index.html" class="back"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a>
+    <span class="spacer"></span>
+    <a href="#" class="btn" id="edit-btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>Edit</a>
+    <button id="print-btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></span>Print</button>
+    <button class="primary" id="download-btn"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>Download HTML</button>
+  </div>
+</div>
+
+<div class="page" id="render-target"></div>
+
+<script>
+/* ============================================================
+   STORAGE
+   ============================================================ */
+const STORAGE_KEY = 'roadmap-builder.roadmaps';
+function loadAll() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+const all = loadAll();
+const roadmap = all.find(r => r.id === id);
+
+const target = document.getElementById('render-target');
+
+if (!roadmap) {
+  target.innerHTML = `
+    <div class="notfound">
+      <h2>Roadmap not found</h2>
+      <p>This roadmap doesn't exist or has been deleted.</p>
+      <p style="margin-top:18px;"><a href="index.html">← Back to home</a></p>
+    </div>
+  `;
+  document.getElementById('edit-btn').style.display = 'none';
+  document.getElementById('download-btn').style.display = 'none';
+  document.getElementById('print-btn').style.display = 'none';
+} else {
+  document.getElementById('edit-btn').href = `editor.html?id=${roadmap.id}`;
+  document.title = (roadmap.name || 'Roadmap') + ' · Roadmap';
+  render(roadmap);
+}
+
+/* ============================================================
+   ESCAPE HELPER
+   ============================================================ */
+function esc(s) {
+  const div = document.createElement('div');
+  div.textContent = s == null ? '' : String(s);
+  return div.innerHTML;
+}
+
+/* ============================================================
+   ACCENT WORD HIGHLIGHTER
+   ============================================================ */
+function applyAccent(headline, accent) {
+  if (!accent || !accent.trim()) return esc(headline);
+  const escapedAccent = accent.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp('\\b(' + escapedAccent + ')\\b', 'i');
+  const html = esc(headline);
+  return html.replace(re, '<span class="accent">$1</span>');
+}
+
+/* ============================================================
+   SECTION RENDERERS
+   ============================================================ */
+function renderMasthead(d) {
+  const m = d.masthead || {};
+  if (!m.company && !m.tagline && !m.date && !m.version) return '';
+  return `
+    <header class="masthead rise d1">
+      <div class="brand">${esc(m.company || 'Untitled')}${m.tagline ? `<span>${esc(m.tagline)}</span>` : ''}</div>
+      <div class="meta">${esc(m.date || '')}${m.date && m.version ? ' · ' : ''}${esc(m.version || '')}</div>
+    </header>
+  `;
+}
+
+function renderHero(d) {
+  const h = d.hero || {};
+  if (!h.eyebrow && !h.headline && !h.lede) return '';
+  return `
+    <section class="hero rise d2">
+      ${h.eyebrow ? `<div class="eyebrow">${esc(h.eyebrow)}</div>` : ''}
+      ${h.headline ? `<h1>${applyAccent(h.headline, h.accentWord)}</h1>` : ''}
+      ${h.lede ? `<p class="lede">${esc(h.lede)}</p>` : ''}
+    </section>
+  `;
+}
+
+function renderKpis(d) {
+  const k = d.kpis || [];
+  if (k.length === 0) return '';
+  const cols = Math.min(k.length, 6);
+  return `
+    <section class="kpis rise d3" style="grid-template-columns: repeat(${cols}, 1fr);">
+      ${k.map(item => `
+        <div class="kpi">
+          <div class="num">${esc(item.value)}${item.subscript ? `<small>${esc(item.subscript)}</small>` : ''}</div>
+          <div class="label">${esc(item.label)}</div>
+        </div>
+      `).join('')}
+    </section>
+  `;
+}
+
+function renderBets(d) {
+  const b = d.bets || [];
+  if (b.length === 0) return '';
+  const cols = Math.min(b.length, 3);
+  return `
+    <section class="section rise d4">
+      <div class="section-head">
+        <div class="num">01</div>
+        <div class="title">The ${b.length === 1 ? 'bet' : (b.length === 2 ? 'two bets' : (b.length === 3 ? 'three bets' : `${b.length} bets`))}</div>
+        <div class="desc">Everything else is in service of these outcomes.</div>
+      </div>
+      <div class="bets" style="grid-template-columns: repeat(${cols}, 1fr);">
+        ${b.map((bet, i) => `
+          <article class="bet">
+            <div class="num">${String(i+1).padStart(2,'0')} / ${String(b.length).padStart(2,'0')}</div>
+            ${bet.verb ? `<div class="verb">${esc(bet.verb)}</div>` : ''}
+            ${bet.headline ? `<h3>${esc(bet.headline)}</h3>` : ''}
+            ${bet.why ? `<p class="why">${esc(bet.why)}</p>` : ''}
+          </article>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderProducts(d) {
+  const p = d.products || [];
+  if (p.length === 0) return '';
+  const cols = Math.min(p.length, 5);
+  return `
+    <section class="section rise d5">
+      <div class="section-head">
+        <div class="num">02</div>
+        <div class="title">${p.length === 1 ? 'The product' : `The ${p.length} products`}</div>
+        <div class="desc">Status, capacity, next milestone, why it matters now.</div>
+      </div>
+      <div class="products" style="grid-template-columns: repeat(${cols}, 1fr);">
+        ${p.map(prod => {
+          const rag = prod.rag || 'A';
+          const ragLabel = rag === 'G' ? 'On track' : (rag === 'R' ? 'At risk' : 'Caution');
+          return `
+            <article class="product" data-rag="${rag}">
+              <div class="name">${esc(prod.name)}</div>
+              <div class="pills">
+                ${prod.stage ? `<span class="pill stage">${esc(prod.stage)}</span>` : ''}
+                <span class="pill rag-${rag}"><span class="dot"></span>${ragLabel}</span>
+              </div>
+              ${prod.capacity ? `<div class="field"><div class="key">Capacity</div><div class="val">${esc(prod.capacity)}</div></div>` : ''}
+              ${prod.nextMilestone ? `<div class="field"><div class="key">Next milestone</div><div class="val">${esc(prod.nextMilestone)}</div></div>` : ''}
+              ${prod.whyNow ? `<div class="field"><div class="key">Why now</div><div class="val muted">${esc(prod.whyNow)}</div></div>` : ''}
+            </article>
+          `;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderActions(d) {
+  const a = d.actions || [];
+  if (a.length === 0) return '';
+  return `
+    <section class="section rise d6">
+      <div class="section-head">
+        <div class="num">03</div>
+        <div class="title">Next 30 days</div>
+        <div class="desc">If any of these slip, the quarterly plan slips with them.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h4>Critical actions</h4>
+          <span class="count">${a.length} ITEM${a.length===1?'':'S'}</span>
+        </div>
+        ${a.map(act => `
+          <div class="row">
+            <div class="date">${esc(act.date || '—')}</div>
+            <div class="body">
+              <div class="what">${esc(act.what)}</div>
+              ${act.who ? `<div class="who">${esc(act.who)}</div>` : ''}
+            </div>
+            <div class="badge ${(act.priority || 'p0').toLowerCase()}">${esc(act.priority || 'P0')}</div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderFooter(rm) {
+  const updated = rm.updatedAt ? new Date(rm.updatedAt).toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' }) : '';
+  return `
+    <footer class="foot">
+      <div class="left">
+        <strong>Single-page roadmap.</strong> Generated with Roadmap Builder. To update, return to the editor and modify any section.
+      </div>
+      <div class="right">
+        ${updated ? `Last updated ${esc(updated)}<br>` : ''}
+        Configurable · Printable<br>
+        ${esc(rm.name || '')}
+      </div>
+    </footer>
+  `;
+}
+
+/* ============================================================
+   ASSEMBLE
+   ============================================================ */
+function render(rm) {
+  const d = rm.data || {};
+  const html =
+    renderMasthead(d) +
+    renderHero(d) +
+    renderKpis(d) +
+    renderBets(d) +
+    renderProducts(d) +
+    renderActions(d) +
+    renderFooter(rm);
+
+  if (!html.trim()) {
+    target.innerHTML = `
+      <div class="notfound">
+        <h2>This roadmap is empty</h2>
+        <p>Open the editor and fill in some sections.</p>
+        <p style="margin-top:18px;"><a href="editor.html?id=${rm.id}">→ Edit roadmap</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  target.innerHTML = html;
+}
+
+/* ============================================================
+   DOWNLOAD AS SELF-CONTAINED HTML
+   This is the trick: clone the current page, strip the toolbar
+   and scripts, serialize to a string, save as a Blob.
+   ============================================================ */
+function downloadHTML() {
+  if (!roadmap) return;
+
+  // Clone the live document
+  const docClone = document.documentElement.cloneNode(true);
+
+  // Remove the app toolbar (it's only for editing)
+  docClone.querySelectorAll('.app-toolbar').forEach(el => el.remove());
+
+  // Remove all script tags (downloaded file should be inert)
+  docClone.querySelectorAll('script').forEach(el => el.remove());
+
+  // Update the title to match the roadmap name
+  const titleEl = docClone.querySelector('title');
+  if (titleEl) titleEl.textContent = roadmap.name || 'Roadmap';
+
+  // Build the full HTML string
+  const html = '<!DOCTYPE html>\n' + docClone.outerHTML;
+
+  // Create blob and trigger download
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = (roadmap.name || 'roadmap').replace(/[^a-z0-9_\-]+/gi, '_').replace(/^_+|_+$/g, '') || 'roadmap';
+  a.href = url;
+  a.download = `${safeName}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ============================================================
+   WIRE BUTTONS
+   ============================================================ */
+const dlBtn = document.getElementById('download-btn');
+const printBtn = document.getElementById('print-btn');
+if (dlBtn) dlBtn.onclick = downloadHTML;
+if (printBtn) printBtn.onclick = () => window.print();
+
+// ============================================================
+// TOAST NOTIFICATION SYSTEM
+// ============================================================
+(function() {
+  let container = null;
+  function ensureContainer() {
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    return container;
+  }
+
+  const ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    confirm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
+
+  function show(opts) {
+    if (typeof opts === 'string') opts = { message: opts };
+    const o = Object.assign({
+      message: '', type: 'info', duration: 3000,
+      actions: null, onDismiss: null
+    }, opts);
+
+    const c = ensureContainer();
+    const el = document.createElement('div');
+    el.className = 'toast ' + o.type;
+
+    const iconSvg = ICONS[o.type] || ICONS.info;
+    el.innerHTML = '<div class="toast-icon">' + iconSvg + '</div><div class="toast-msg">' + escapeHtmlSafe(o.message) + '</div>';
+
+    if (o.actions && o.actions.length) {
+      const msgDiv = el.querySelector('.toast-msg');
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'toast-actions';
+      o.actions.forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = 'toast-btn ' + (a.variant || '');
+        btn.textContent = a.label;
+        btn.onclick = () => { dismiss(); if (a.onClick) a.onClick(); };
+        actionsDiv.appendChild(btn);
+      });
+      msgDiv.appendChild(actionsDiv);
+    }
+
+    if (o.duration > 0) {
+      const progress = document.createElement('div');
+      progress.className = 'toast-progress';
+      progress.style.animationDuration = o.duration + 'ms';
+      el.appendChild(progress);
+    }
+
+    c.appendChild(el);
+
+    let dismissTimer = null;
+    function dismiss() {
+      if (dismissTimer) clearTimeout(dismissTimer);
+      el.classList.add('removing');
+      setTimeout(() => {
+        if (el.parentNode) el.parentNode.removeChild(el);
+        if (o.onDismiss) o.onDismiss();
+      }, 300);
+    }
+    if (o.duration > 0) {
+      dismissTimer = setTimeout(dismiss, o.duration);
+    }
+
+    el.addEventListener('mouseenter', () => {
+      const p = el.querySelector('.toast-progress');
+      if (p) p.style.animationPlayState = 'paused';
+      if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+    });
+    el.addEventListener('mouseleave', () => {
+      if (o.duration > 0 && !el.classList.contains('removing')) {
+        const p = el.querySelector('.toast-progress');
+        if (p) p.style.animationPlayState = 'running';
+        dismissTimer = setTimeout(dismiss, 1500);
+      }
+    });
+
+    return { dismiss };
+  }
+
+  function escapeHtmlSafe(s) {
+    const d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  // Confirm-style toast with action buttons
+  function confirm(message, opts) {
+    opts = opts || {};
+    return show({
+      message: message,
+      type: 'confirm',
+      duration: 0,
+      actions: [
+        { label: opts.cancelLabel || 'Cancel', variant: '', onClick: opts.onCancel || (()=>{}) },
+        { label: opts.confirmLabel || 'Confirm', variant: opts.danger ? 'danger' : 'primary', onClick: opts.onConfirm || (()=>{}) }
+      ]
+    });
+  }
+
+  window.toast = function(msg, type, duration) {
+    if (typeof msg === 'object') return show(msg);
+    return show({ message: msg, type: type || 'info', duration: duration });
+  };
+  window.toast.success = (msg, dur) => show({ message: msg, type: 'success', duration: dur || 2400 });
+  window.toast.error   = (msg, dur) => show({ message: msg, type: 'error',   duration: dur || 4000 });
+  window.toast.info    = (msg, dur) => show({ message: msg, type: 'info',    duration: dur || 3000 });
+  window.toast.confirm = confirm;
+})();
+
+// ============================================================
+// VIEW TRANSITIONS HELPER
+// ============================================================
+function navigate(url) {
+  if (document.startViewTransition) {
+    document.startViewTransition(() => { window.location.href = url; });
+  } else {
+    window.location.href = url;
+  }
+}
+
+// ============================================================
+// READING PROGRESS BAR
+// ============================================================
+(function() {
+  const bar = document.createElement('div');
+  bar.className = 'reading-progress';
+  document.body.appendChild(bar);
+  function update() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop;
+    const total = h.scrollHeight - h.clientHeight;
+    const pct = total > 0 ? (scrolled / total) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+// ============================================================
+// SECTION SCROLLSPY NAV
+// ============================================================
+(function() {
+  // Wait for render to complete
+  setTimeout(() => {
+    const sections = Array.from(document.querySelectorAll('.section'));
+    if (sections.length === 0) return;
+
+    // Build nav (always — even without IO, click-to-scroll still works)
+    const nav = document.createElement('nav');
+    nav.className = 'section-nav';
+    sections.forEach((sec, i) => {
+      const id = 'sec-' + i;
+      sec.id = id;
+      const titleEl = sec.querySelector('.title');
+      const title = titleEl ? titleEl.textContent : ('Section ' + (i+1));
+      const a = document.createElement('a');
+      a.href = '#' + id;
+      a.dataset.target = id;
+      a.innerHTML = '<span class="label">' + title + '</span>';
+      a.onclick = (e) => {
+        e.preventDefault();
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      nav.appendChild(a);
+    });
+    document.body.appendChild(nav);
+
+    // Show nav after a beat
+    setTimeout(() => nav.classList.add('visible'), 800);
+
+    // Scrollspy (conditional on IntersectionObserver)
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const id = e.target.id;
+            nav.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.dataset.target === id));
+          }
+        });
+      }, { rootMargin: '-40% 0px -55% 0px' });
+      sections.forEach(s => observer.observe(s));
+    } else {
+      // Fallback: highlight first section
+      const firstA = nav.querySelector('a');
+      if (firstA) firstA.classList.add('active');
+    }
+  }, 100);
+})();
+
+// ============================================================
+// REVEAL-ON-SCROLL
+// ============================================================
+(function() {
+  setTimeout(() => {
+    const items = document.querySelectorAll('.section, .kpis, .panel');
+    items.forEach(el => el.classList.add('reveal'));
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      items.forEach(el => observer.observe(el));
+    } else {
+      // No IO: just show everything immediately
+      items.forEach(el => el.classList.add('visible'));
+    }
+  }, 80);
+})();
+
+// ============================================================
+// ANIMATED KPI COUNTERS
+// ============================================================
+(function() {
+  if (typeof IntersectionObserver === 'undefined') return;
+  setTimeout(() => {
+    const nums = document.querySelectorAll('.kpi .num');
+    nums.forEach(numEl => {
+      const text = numEl.firstChild ? numEl.firstChild.textContent : '';
+      const numericMatch = text.match(/^-?\d+$/);
+      if (!numericMatch) return; // skip non-numeric (like "Q3" or "₹4-8L")
+
+      const target = parseInt(numericMatch[0], 10);
+      const small = numEl.querySelector('small');
+      // Hold target rendered; replace number when in view
+      numEl.firstChild.textContent = '0';
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            observer.disconnect();
+            numEl.classList.add('counting');
+            const start = performance.now();
+            const duration = 1100;
+            function tick(now) {
+              const t = Math.min((now - start) / duration, 1);
+              const eased = 1 - Math.pow(1 - t, 4);
+              const current = Math.floor(target * eased);
+              numEl.firstChild.textContent = current;
+              if (t < 1) requestAnimationFrame(tick);
+              else {
+                numEl.firstChild.textContent = target;
+                setTimeout(() => numEl.classList.remove('counting'), 400);
+              }
+            }
+            requestAnimationFrame(tick);
+          }
+        });
+      }, { threshold: 0.5 });
+      observer.observe(numEl);
+    });
+  }, 120);
+})();
+
+// ============================================================
+// CLICK-TO-COPY ON KEY ELEMENTS
+// ============================================================
+(function() {
+  setTimeout(() => {
+    document.querySelectorAll('.bet h3, .product .name, .row .body .what').forEach(el => {
+      el.classList.add('copyable');
+      el.title = 'Click to copy';
+      el.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(el.textContent.trim());
+          el.classList.add('copied');
+          window.toast && window.toast.success('Copied to clipboard');
+          setTimeout(() => el.classList.remove('copied'), 1000);
+        } catch(e) {
+          window.toast && window.toast.error('Could not copy');
+        }
+      };
+    });
+  }, 200);
+})();
+
+
+// Override toolbar nav links with view-transition
+setTimeout(() => {
+  document.querySelectorAll('a[href="index.html"]').forEach(a => {
+    a.onclick = (e) => { e.preventDefault(); navigate('index.html'); };
+  });
+  const editBtn = document.getElementById('edit-btn');
+  if (editBtn) editBtn.onclick = (e) => { e.preventDefault(); navigate(editBtn.href); };
+}, 100);
+
+// Show toast after download
+const _origDownload = downloadHTML;
+window.downloadHTML = function() {
+  _origDownload();
+  window.toast && window.toast.success('HTML downloaded');
+};
+const dlBtn2 = document.getElementById('download-btn');
+if (dlBtn2) dlBtn2.onclick = downloadHTML;
+
+
+// ============================================================
+// LIVE PREVIEW: listen for parent updates, signal ready
+// ============================================================
+(function() {
+  // Use whatever render function is current (wrapped with quarters/decisions/risks)
+  function currentRender() {
+    return (typeof window.render === 'function') ? window.render : render;
+  }
+
+  window.addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'preview-update' || !e.data.roadmap) return;
+    try {
+      currentRender()(e.data.roadmap);
+    } catch(err) {
+      console.error('[preview] render failed:', err);
+    }
+  });
+
+  // Tell parent we're ready (only after first render is complete)
+  function signalReady() {
+    if (window.parent && window.parent !== window) {
+      try { window.parent.postMessage({ type: 'preview-ready' }, '*'); } catch(e) {}
+    }
+  }
+  // Fire on load + as a fallback after a short delay (in case load already passed)
+  if (document.readyState === 'complete') {
+    setTimeout(signalReady, 0);
+  } else {
+    window.addEventListener('load', signalReady);
+    setTimeout(signalReady, 250);  // belt-and-braces
+  }
+})();
+
+// ============================================================
+// RENDER NEW SECTIONS — quarters, decisions, risks
+// (These are merged into existing render() flow via override)
+// ============================================================
+function renderQuarters(d) {
+  const q = d.quarters || [];
+  if (q.length === 0) return '';
+  const cols = Math.min(q.length, 4);
+  return `
+    <section class="section rise d6">
+      <div class="section-head">
+        <div class="num">04</div>
+        <div class="title">${q.length === 1 ? 'Quarterly milestone' : `${q.length}-quarter timeline`}</div>
+        <div class="desc">Strategic themes by quarter.</div>
+      </div>
+      <div class="ribbon" style="grid-template-columns: repeat(${cols}, 1fr);">
+        ${q.map(qtr => {
+          const bullets = (qtr.bullets || '').split('\n').map(b => b.trim()).filter(Boolean);
+          return `
+            <div class="q">
+              <div class="marker">
+                <span class="label">${esc(qtr.label || '—')}</span>
+                ${qtr.span ? `<span class="span">${esc(qtr.span)}</span>` : ''}
+              </div>
+              ${qtr.theme ? `<h5>${esc(qtr.theme)}</h5>` : ''}
+              ${bullets.length > 0 ? `
+                <ul class="points">
+                  ${bullets.map(b => `<li>${esc(b)}</li>`).join('')}
+                </ul>
+              ` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderDecisions(d) {
+  const decs = d.decisions || [];
+  if (decs.length === 0) return '';
+  return `
+    <section class="section rise d6">
+      <div class="section-head">
+        <div class="num">05</div>
+        <div class="title">Open decisions</div>
+        <div class="desc">Each blocks downstream work until closed.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h4>Decisions log</h4>
+          <span class="count">${decs.length} OPEN</span>
+        </div>
+        ${decs.map(dec => `
+          <div class="row decision-row">
+            <div class="date">${esc(dec.deadline || '—')}</div>
+            <div class="body">
+              <div class="what">${esc(dec.decision || '')}</div>
+              ${dec.owner ? `<div class="who">${esc(dec.owner)}</div>` : ''}
+              ${dec.defaultIfUndecided ? `<div class="default-line"><span class="default-label">Default:</span> ${esc(dec.defaultIfUndecided)}</div>` : ''}
+            </div>
+            <div class="badge p1">OPEN</div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderRisks(d) {
+  const rs = d.risks || [];
+  if (rs.length === 0) return '';
+  const LEVEL_LABELS = { L: 'Low', M: 'Medium', H: 'High', C: 'Critical' };
+  const LEVEL_CLS = { L: 'lvl-low', M: 'lvl-med', H: 'lvl-high', C: 'lvl-crit' };
+  return `
+    <section class="section rise d6">
+      <div class="section-head">
+        <div class="num">06</div>
+        <div class="title">${rs.length === 1 ? 'Top risk' : `Top ${rs.length} risks`}</div>
+        <div class="desc">Likelihood × Impact + mitigation.</div>
+      </div>
+      <div class="risks-grid">
+        ${rs.map(r => `
+          <article class="risk-card">
+            <div class="risk-head">${esc(r.risk || '')}</div>
+            <div class="risk-meta">
+              <span class="risk-pill ${LEVEL_CLS[r.likelihood] || 'lvl-med'}">L: ${LEVEL_LABELS[r.likelihood] || '—'}</span>
+              <span class="risk-pill ${LEVEL_CLS[r.impact] || 'lvl-med'}">I: ${LEVEL_LABELS[r.impact] || '—'}</span>
+            </div>
+            ${r.mitigation ? `<div class="risk-mit"><span class="risk-mit-label">Mitigation</span>${esc(r.mitigation)}</div>` : ''}
+          </article>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+// Hook these into the main render — wrap the existing render
+(function() {
+  if (typeof window.__originalRender !== 'undefined') return; // already wrapped
+  window.__originalRender = render;
+  window.render = function(rm) {
+    const d = (rm && rm.data) || {};
+    // Build the original sections
+    const html =
+      renderMasthead(d) +
+      renderHero(d) +
+      renderKpis(d) +
+      renderBets(d) +
+      renderProducts(d) +
+      renderActions(d) +
+      renderQuarters(d) +
+      renderDecisions(d) +
+      renderRisks(d) +
+      renderFooter(rm);
+
+    if (!html.trim()) {
+      target.innerHTML = `
+        <div class="notfound">
+          <h2>This roadmap is empty</h2>
+          <p>Open the editor and fill in some sections.</p>
+          <p style="margin-top:18px;"><a href="editor.html?id=${rm.id}">→ Edit roadmap</a></p>
+        </div>
+      `;
+      return;
+    }
+    target.innerHTML = html;
+  };
+
+  // If already rendered with original, re-render with new
+  if (roadmap && typeof window.render === 'function') {
+    window.render(roadmap);
+  }
+})();
+
+
+// ============================================================
+// STRATEGIC HORIZON — inject topographic backdrop into hero
+// ============================================================
+(function() {
+  const TOPO_HTML = `<svg class="topo-bg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="topo-fade-bold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0891B2" stop-opacity="0.10"/>
+            <stop offset="50%" stop-color="#0891B2" stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="#0891B2" stop-opacity="0.55"/>
+          </linearGradient>
+        </defs>
+        <g stroke="url(#topo-fade-bold)" fill="none" stroke-linecap="round" stroke-width="1">
+          <path d="M -100 320 Q 200 308 400 322 T 800 314 T 1500 322"/>
+          <path d="M -100 350 Q 240 332 480 354 T 880 342 T 1500 354"/>
+          <path d="M -100 380 Q 200 358 420 384 T 840 370 T 1500 384"/>
+          <path d="M -100 410 Q 280 388 560 414 T 960 400 T 1500 414"/>
+          <path d="M -100 440 Q 220 418 460 444 T 880 430 T 1500 444"/>
+          <path d="M -100 470 Q 300 448 580 474 T 980 460 T 1500 474"/>
+          <path d="M -100 500 Q 240 478 480 504 T 880 490 T 1500 504"/>
+          <path d="M -100 530 Q 320 508 600 534 T 1000 520 T 1500 534"/>
+        </g>
+        <g fill="none" stroke="#0891B2" stroke-linecap="round" stroke-width="1.4">
+          <path d="M -50 540 Q 400 480 700 410 T 1500 280" opacity="0.32"/>
+          <path d="M -50 540 Q 400 510 700 460 T 1500 360" opacity="0.24"/>
+          <path d="M -50 540 Q 450 530 700 490 T 1500 430" opacity="0.18"/>
+        </g>
+        <path id="primary-traj" d="M -50 540 Q 400 460 700 380 T 1500 240" fill="none" stroke="#0891B2" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <g class="waypoints">
+          <g>
+            <circle cx="200" cy="510" r="6" fill="#0891B2" opacity="0.85"/>
+            <circle cx="200" cy="510" r="13" fill="none" stroke="#0891B2" stroke-width="1.2" opacity="0.45"/>
+            <circle cx="200" cy="510" r="22" fill="none" stroke="#0891B2" stroke-width="0.6" opacity="0.18"/>
+          </g>
+          <g>
+            <circle cx="700" cy="380" r="7" fill="#0891B2" opacity="0.85"/>
+            <circle cx="700" cy="380" r="14" fill="none" stroke="#0891B2" stroke-width="1.2" opacity="0.45"/>
+            <circle cx="700" cy="380" r="24" fill="none" stroke="#0891B2" stroke-width="0.6" opacity="0.18"/>
+          </g>
+          <g>
+            <circle cx="1100" cy="290" r="6" fill="#0891B2" opacity="0.85"/>
+            <circle cx="1100" cy="290" r="13" fill="none" stroke="#0891B2" stroke-width="1.2" opacity="0.45"/>
+            <circle cx="1100" cy="290" r="22" fill="none" stroke="#0891B2" stroke-width="0.6" opacity="0.18"/>
+          </g>
+        </g>
+        <g class="pulse-group">
+          <circle r="5" fill="#0891B2">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M -50 540 Q 400 460 700 380 T 1500 240"/>
+          </circle>
+          <circle r="12" fill="none" stroke="#0891B2" stroke-width="1.5" opacity="0.6">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M -50 540 Q 400 460 700 380 T 1500 240"/>
+            <animate attributeName="r" values="12;22;12" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+      </svg>`;
+  function injectTopo() {
+    const hero = document.querySelector('.hero');
+    if (hero && !hero.querySelector('.topo-bg')) {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = TOPO_HTML;
+      hero.insertBefore(wrap.firstElementChild, hero.firstChild);
+    }
+  }
+  // After initial render
+  setTimeout(injectTopo, 30);
+  // After preview-update re-renders, re-inject
+  window.addEventListener('message', e => {
+    if (e.data && e.data.type === 'preview-update') {
+      setTimeout(injectTopo, 30);
+    }
+  });
+})();
+
+
+// ============================================================
+// 3D CURSOR TILT + SPOTLIGHT — applied to glass cards
+// ============================================================
+(function() {
+  const TILT_SELECTOR = '.card, .bet, .product, .risk-card, .kpi';
+  const MAX_TILT = 5;  // degrees
+
+  function wire(el) {
+    if (el.dataset.tiltWired) return;
+    el.dataset.tiltWired = '1';
+
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const rotY = ((x - cx) / cx) * MAX_TILT;
+      const rotX = -((y - cy) / cy) * MAX_TILT;
+      el.style.transform = `perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-3px)`;
+      el.style.setProperty('--mx', `${(x / rect.width) * 100}%`);
+      el.style.setProperty('--my', `${(y / rect.height) * 100}%`);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  }
+
+  function wireAll() {
+    document.querySelectorAll(TILT_SELECTOR).forEach(wire);
+  }
+
+  // Skip tilt if user prefers reduced motion
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  wireAll();
+
+  // Re-wire after dynamic content changes (search filter, drag-drop, etc.)
+  const observer = new MutationObserver(() => {
+    clearTimeout(window._tiltDebounce);
+    window._tiltDebounce = setTimeout(wireAll, 50);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+
+// === Override prior tilt with gentler version ===
+(function() {
+  // Remove the old wired-tilt flag so we can re-wire with calmer values
+  document.querySelectorAll('[data-tilt-wired="1"]').forEach(el => {
+    delete el.dataset.tiltWired;
+    // Clear any inflight transform
+    el.style.transform = '';
+  });
+
+  const SELECTOR = '.card, .bet, .product, .risk-card, .kpi';
+  const MAX_TILT = 2.2; // was 5
+
+  function wire(el) {
+    if (el.dataset.calmTilt) return;
+    el.dataset.calmTilt = '1';
+
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const rotY = ((x - cx) / cx) * MAX_TILT;
+      const rotX = -((y - cy) / cy) * MAX_TILT;
+      el.style.transform = `perspective(1400px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-2px)`;
+      el.style.setProperty('--mx', `${(x / rect.width) * 100}%`);
+      el.style.setProperty('--my', `${(y / rect.height) * 100}%`);
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  }
+
+  function wireAll() { document.querySelectorAll(SELECTOR).forEach(wire); }
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  wireAll();
+  const obs = new MutationObserver(() => {
+    clearTimeout(window._calmTiltDebounce);
+    window._calmTiltDebounce = setTimeout(wireAll, 60);
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+})();
+
+</script>
+</body>
+</html>

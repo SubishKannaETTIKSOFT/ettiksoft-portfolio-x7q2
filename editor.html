@@ -1,0 +1,5121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap Builder · Editor</title>
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230891B2%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* Surfaces — clean, no warmth */
+  --bg: #FFFFFF;
+  --surface: #FAFAFA;
+  --surface-2: #F4F4F5;
+
+  /* Text — zinc scale */
+  --ink: #09090B;
+  --muted: #52525B;
+  --faint: #A1A1AA;
+  --hairline: #E4E4E7;
+  --hairline-strong: #D4D4D8;
+
+  /* Brand: vivid cyan */
+  --brand: #0891B2;
+  --brand-hover: #0E7490;
+  --brand-soft: #ECFEFF;
+  --brand-fg: #155E75;
+
+  /* Status: vivid, modern */
+  --go: #16A34A;
+  --go-soft: #DCFCE7;
+  --go-fg: #15803D;
+  --decide: #D97706;
+  --decide-soft: #FEF3C7;
+  --decide-fg: #B45309;
+  --risk: #DC2626;
+  --risk-soft: #FEE2E2;
+  --risk-fg: #B91C1C;
+
+  /* Type — Geist family */
+  --display: 'Geist', system-ui, -apple-system, sans-serif;
+  --body: 'Geist', system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Spacing rhythm */
+  --gutter: 24px;
+  --section: 56px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--hairline);
+}
+.topbar-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.topbar a.back {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 7px 10px;
+  margin-left: -10px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+.topbar a.back:hover { color: var(--ink); background: var(--surface-2); }
+
+.topbar .title-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  padding: 7px 10px;
+  border-radius: 6px;
+  min-width: 0;
+  outline: none;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+.topbar .title-input:hover { background: var(--surface-2); }
+.topbar .title-input:focus {
+  background: var(--bg);
+  box-shadow: 0 0 0 2px var(--brand-soft);
+}
+
+.topbar .save-state {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.topbar .save-state.saving { background: var(--decide-soft); color: var(--decide-fg); }
+.topbar .save-state.saved { background: var(--go-soft); color: var(--go-fg); }
+
+.topbar .btn {
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.topbar .btn:hover { border-color: var(--hairline-strong); background: var(--surface); }
+.topbar .btn.primary {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+.topbar .btn.primary:hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+  color: white;
+}
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 36px 32px 80px;
+}
+@media (max-width: 720px) {
+  .topbar-inner, .page { padding-left: 18px; padding-right: 18px; }
+}
+
+/* ============================================================
+   FORM SECTIONS
+   ============================================================ */
+.sec {
+  margin-top: 32px;
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 28px 32px 24px;
+}
+.sec:first-of-type { margin-top: 8px; }
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.sec-head .num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand);
+}
+.sec-head .title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+}
+.sec-head .hint {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-left: auto;
+  text-align: right;
+  max-width: 380px;
+}
+
+/* ============================================================
+   FORM FIELDS
+   ============================================================ */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+.field:last-child { margin-bottom: 0; }
+.field > label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.field > .help {
+  font-size: 12px;
+  color: var(--faint);
+  margin-top: 2px;
+}
+
+input[type="text"], input[type="date"], textarea, select {
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 10px 12px;
+  outline: none;
+  transition: all 0.15s ease;
+  border-radius: 6px;
+  width: 100%;
+}
+input::placeholder, textarea::placeholder { color: var(--faint); }
+input:hover, textarea:hover, select:hover {
+  border-color: var(--hairline-strong);
+  background: var(--bg);
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--brand);
+  background: var(--bg);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+.row-grid { display: grid; gap: 12px; }
+.row-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.row-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 720px) {
+  .row-grid.cols-2, .row-grid.cols-3 { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   DYNAMIC ROWS
+   ============================================================ */
+.dyn-list { display: flex; flex-direction: column; gap: 12px; }
+.dyn-row {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: 18px 20px 16px;
+  position: relative;
+  transition: border-color 0.18s ease;
+}
+.dyn-row:hover { border-color: var(--hairline-strong); }
+.dyn-row .row-num {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--faint);
+}
+.dyn-row .del-btn {
+  position: absolute;
+  top: 30px;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+.dyn-row .del-btn:hover {
+  background: var(--risk-soft);
+  border-color: var(--risk);
+  color: var(--risk-fg);
+}
+
+.add-btn {
+  margin-top: 16px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 11px 16px;
+  background: transparent;
+  color: var(--brand);
+  border: 1px dashed var(--brand);
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: all 0.18s ease;
+}
+.add-btn:hover {
+  background: var(--brand-soft);
+  border-style: solid;
+}
+
+.empty-list {
+  text-align: center;
+  padding: 22px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+/* ============================================================
+   SEGMENTED CONTROLS
+   ============================================================ */
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+.seg label { position: relative; cursor: pointer; }
+.seg label input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label span {
+  display: inline-block;
+  padding: 6px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+.seg label:hover span { color: var(--ink); }
+.seg label input:checked + span { background: var(--ink); color: white; }
+.seg.rag label.go input:checked + span { background: var(--go); color: white; }
+.seg.rag label.amber input:checked + span { background: var(--decide); color: white; }
+.seg.rag label.red input:checked + span { background: var(--risk); color: white; }
+.seg.prio label.p0 input:checked + span { background: var(--risk); color: white; }
+.seg.prio label.p1 input:checked + span { background: var(--decide); color: white; }
+.seg.prio label.p2 input:checked + span { background: var(--brand); color: white; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.foot .info {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--faint);
+}
+.foot button {
+  font-family: var(--body);
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 8px 14px;
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.foot button:hover {
+  color: var(--risk-fg);
+  border-color: var(--risk);
+  background: var(--risk-soft);
+}
+
+/* not-found */
+.notfound {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--muted);
+}
+.notfound h2 {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.notfound a { color: var(--brand); }
+
+/* ============================================================
+   POLISH — background graphics + smooth transitions
+   ============================================================ */
+
+/* Subtle dot-grid background — Linear/Vercel inspired */
+body {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(9, 9, 11, 0.045) 1px, transparent 0);
+  background-size: 24px 24px;
+  background-attachment: fixed;
+}
+
+/* Soft gradient mesh that lives just behind the hero */
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1400px;
+  height: 700px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 30% 40%, rgba(8, 145, 178, 0.06), transparent 60%),
+    radial-gradient(ellipse 500px 350px at 70% 60%, rgba(22, 163, 74, 0.04), transparent 60%);
+  filter: blur(40px);
+}
+
+/* Smooth easing curve for everything that moves */
+* { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Page entrance */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.page, .topbar, .app-toolbar { animation: page-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.app-toolbar, .topbar { animation-duration: 0.35s; }
+
+/* Refined focus ring — animates in */
+@keyframes focus-ring {
+  from { box-shadow: 0 0 0 0 var(--brand-soft); }
+  to { box-shadow: 0 0 0 3px var(--brand-soft); }
+}
+input:focus, textarea:focus, select:focus, button:focus-visible, .title-input:focus {
+  animation: focus-ring 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+  outline: none;
+}
+
+/* Button press micro-interaction */
+button:active:not(:disabled), .btn:active, .btn-tiny:active {
+  transform: scale(0.97);
+  transition-duration: 0.06s;
+}
+
+/* Smooth dynamic-row entrance */
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(-4px); max-height: 0; }
+  to { opacity: 1; transform: none; max-height: 600px; }
+}
+.dyn-row {
+  animation: row-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Card hover — subtle elevation with brand glow */
+.card, .bet, .product {
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.3s, transform 0.2s;
+}
+.card:hover, .product:hover {
+  box-shadow: 0 8px 24px -12px rgba(8, 145, 178, 0.18);
+  transform: translateY(-1px);
+}
+.bet:hover {
+  box-shadow: 0 12px 32px -16px rgba(8, 145, 178, 0.22);
+  transform: translateY(-2px);
+}
+
+/* Section header — accent dot on the section number */
+.section-head .num, .sec-head .num {
+  position: relative;
+  padding-left: 14px;
+}
+.section-head .num::before, .sec-head .num::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--brand);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+/* Add-row button — animated dashed border */
+.add-btn {
+  position: relative;
+  overflow: hidden;
+}
+.add-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(8, 145, 178, 0.08), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.add-btn:hover::after { transform: translateX(100%); }
+
+/* Smooth segmented control transitions */
+.seg label span { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Save state pulse on save */
+@keyframes save-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.save-state.saving { animation: save-pulse 0.8s ease-in-out infinite; }
+
+/* Toolbar button hover lift */
+.app-toolbar button:hover, .app-toolbar a.btn:hover,
+.topbar .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.08);
+}
+
+/* KPI number subtle hover */
+.kpi { transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.kpi:hover .num { color: var(--brand); transition: color 0.25s; }
+
+/* Smooth scroll behavior */
+html { scroll-behavior: smooth; }
+
+/* Selection color matching brand */
+::selection { background: var(--brand-soft); color: var(--brand-fg); }
+
+
+/* Inline icon system */
+.icn { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.icn svg { display: block; }
+.btn, .btn-tiny, .back, .add-btn { display: inline-flex; align-items: center; gap: 7px; }
+.add-btn { justify-content: center; }
+
+
+/* ============================================================
+   ENHANCED ANIMATIONS — gradient mesh drift
+   ============================================================ */
+@keyframes mesh-drift {
+  0%   { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+  33%  { transform: translateX(-48%) translateY(-20px) rotate(2deg); }
+  66%  { transform: translateX(-52%) translateY(15px) rotate(-2deg); }
+  100% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+}
+body::before {
+  animation: mesh-drift 24s ease-in-out infinite;
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: calc(100vw - 48px);
+}
+.toast {
+  pointer-events: auto;
+  background: var(--ink);
+  color: white;
+  padding: 14px 18px;
+  border-radius: 10px;
+  box-shadow:
+    0 12px 32px -8px rgba(0,0,0,0.28),
+    0 0 0 1px rgba(255,255,255,0.05);
+  font-family: var(--body);
+  font-size: 13.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 280px;
+  max-width: 420px;
+  animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  overflow: hidden;
+}
+.toast.removing {
+  animation: toast-out 0.3s cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+.toast .toast-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+.toast .toast-msg {
+  flex: 1;
+  line-height: 1.4;
+}
+.toast .toast-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.toast .toast-btn {
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.toast .toast-btn:hover { background: rgba(255,255,255,0.22); }
+.toast .toast-btn.primary {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.toast .toast-btn.primary:hover { background: var(--brand-hover); border-color: var(--brand-hover); }
+.toast .toast-btn.danger {
+  background: var(--risk);
+  border-color: var(--risk);
+}
+.toast .toast-btn.danger:hover { background: #B91C1C; border-color: #B91C1C; }
+.toast.success .toast-icon { color: var(--go); }
+.toast.error .toast-icon { color: var(--risk); }
+.toast.info .toast-icon { color: var(--brand); }
+.toast.confirm .toast-icon { color: var(--decide); }
+
+/* Progress bar at bottom of toast for auto-dismiss */
+.toast .toast-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.3);
+  width: 100%;
+  transform-origin: left;
+  animation: toast-progress linear forwards;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px) scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes toast-out {
+  to { opacity: 0; transform: translateX(20px) scale(0.9); }
+}
+@keyframes toast-progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* ============================================================
+   VIEW TRANSITIONS (modern browsers)
+   ============================================================ */
+@view-transition { navigation: auto; }
+::view-transition-old(root) {
+  animation: 0.18s cubic-bezier(0.4, 0, 1, 1) both fade-out;
+}
+::view-transition-new(root) {
+  animation: 0.32s cubic-bezier(0, 0, 0.2, 1) both fade-in;
+}
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+
+/* ============================================================
+   DRAG-AND-DROP REORDERING
+   ============================================================ */
+.dyn-row {
+  position: relative;
+  padding-left: 36px !important;  /* room for grab handle */
+  transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.drag-handle {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  color: var(--faint);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.drag-handle:hover { color: var(--ink); background: var(--surface-2); }
+.drag-handle:active { cursor: grabbing; }
+.dyn-row.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+  box-shadow: 0 12px 32px -8px rgba(0,0,0,0.18);
+}
+.dyn-row.drop-target-above::before,
+.dyn-row.drop-target-below::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 3px;
+  background: var(--brand);
+  border-radius: 2px;
+  z-index: 5;
+  box-shadow: 0 0 8px rgba(8,145,178,0.5);
+}
+.dyn-row.drop-target-above::before { top: -8px; }
+.dyn-row.drop-target-below::after { bottom: -8px; }
+
+/* ============================================================
+   EMPTY STATE ILLUSTRATION
+   ============================================================ */
+.empty-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 36px 24px !important;
+}
+.empty-list svg.empty-art {
+  width: 72px;
+  height: 56px;
+  color: var(--hairline-strong);
+  opacity: 0.7;
+}
+
+/* Keyboard shortcut hint */
+.kbd {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  color: var(--muted);
+  display: inline-block;
+  margin: 0 2px;
+}
+
+
+/* ============================================================
+   QUICK-PICK CHIPS
+   ============================================================ */
+.chip-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.chip-row .chip-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  padding: 5px 0;
+  margin-right: 2px;
+  align-self: center;
+}
+.chip {
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  color: var(--muted);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  font-feature-settings: 'cv02', 'cv03', 'cv04';
+}
+.chip:hover {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+  color: var(--brand-fg);
+  transform: translateY(-1px);
+}
+.chip:active { transform: scale(0.96); }
+.chip.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+.chip-row.dynamic .chip { animation: chip-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.chip-row.dynamic .chip:nth-child(1) { animation-delay: 0.02s; }
+.chip-row.dynamic .chip:nth-child(2) { animation-delay: 0.05s; }
+.chip-row.dynamic .chip:nth-child(3) { animation-delay: 0.08s; }
+.chip-row.dynamic .chip:nth-child(4) { animation-delay: 0.11s; }
+.chip-row.dynamic .chip:nth-child(5) { animation-delay: 0.14s; }
+@keyframes chip-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: none; }
+}
+.chip-row .empty-hint {
+  font-size: 11.5px;
+  color: var(--faint);
+  font-style: italic;
+  padding: 5px 0;
+}
+
+/* Likelihood/Impact 4-step segmented */
+.seg.lvl label.low input:checked + span    { background: var(--go); color: white; }
+.seg.lvl label.med input:checked + span    { background: var(--brand); color: white; }
+.seg.lvl label.high input:checked + span   { background: var(--decide); color: white; }
+.seg.lvl label.crit input:checked + span   { background: var(--risk); color: white; }
+
+/* ============================================================
+   LIVE PREVIEW PANE
+   ============================================================ */
+.preview-pane {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 45vw;
+  max-width: 800px;
+  min-width: 480px;
+  height: 100vh;
+  z-index: 60;
+  background: var(--surface-2);
+  border-left: 1px solid var(--hairline);
+  box-shadow: -16px 0 48px -16px rgba(0, 0, 0, 0.12);
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+.preview-pane.visible { transform: none; }
+
+.preview-header {
+  flex-shrink: 0;
+  padding: 14px 20px 13px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.preview-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--brand);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.preview-title .live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--go);
+  animation: live-pulse 1.6s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5);
+}
+@keyframes live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+  50% { box-shadow: 0 0 0 5px rgba(22, 163, 74, 0); }
+}
+.preview-actions {
+  display: flex;
+  gap: 6px;
+}
+.preview-actions button {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: 5px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.preview-actions button:hover {
+  color: var(--ink);
+  border-color: var(--hairline-strong);
+  background: var(--surface);
+}
+
+.preview-iframe {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: white;
+}
+
+.preview-skel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--faint);
+  font-size: 13px;
+  background: var(--bg);
+}
+.preview-skel .spinner {
+  width: 24px; height: 24px;
+  border: 2px solid var(--hairline);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* When preview is on, shrink the page content */
+body.preview-on .topbar-inner,
+body.preview-on .page {
+  margin-right: 45vw;
+  max-width: none;
+  transition: margin-right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.preview-on .page {
+  padding-right: 24px;
+}
+
+/* Hide preview on small screens */
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  body.preview-on .topbar-inner,
+  body.preview-on .page { margin-right: 0; }
+  #preview-toggle-btn { display: none !important; }
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--hairline);
+  margin: 0 4px;
+}
+
+
+/* ============================================================
+   BOLD VISUAL UPGRADE — v3
+   No more invisible decoration. Make it actually look alive.
+   ============================================================ */
+
+/* Visible cyan blueprint grid (replaces invisible dot grid) */
+body {
+  background-image:
+    linear-gradient(to right, rgba(8, 145, 178, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(8, 145, 178, 0.07) 1px, transparent 1px) !important;
+  background-size: 56px 56px !important;
+  background-attachment: fixed !important;
+}
+
+/* Gradient mesh — 3-4x more visible, fills more of viewport */
+body::before {
+  background:
+    radial-gradient(ellipse 1000px 700px at 15% 25%, rgba(8, 145, 178, 0.22), transparent 60%),
+    radial-gradient(ellipse 800px 550px at 85% 35%, rgba(22, 163, 74, 0.13), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 50% 80%, rgba(217, 119, 6, 0.06), transparent 60%) !important;
+  width: 100vw !important;
+  height: 90vh !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  filter: blur(36px) !important;
+  opacity: 1 !important;
+}
+@keyframes mesh-drift-bold {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  33% { transform: translateX(-30px) translateY(-15px) scale(1.04); }
+  66% { transform: translateX(20px) translateY(12px) scale(0.98); }
+}
+body::before { animation: mesh-drift-bold 28s ease-in-out infinite !important; }
+
+/* Hero gets a subtle tinted backdrop band (visible) */
+.hero {
+  background: linear-gradient(180deg,
+    rgba(8, 145, 178, 0.05) 0%,
+    rgba(8, 145, 178, 0.02) 70%,
+    transparent 100%);
+  border-radius: 12px;
+  margin-left: -16px;
+  margin-right: -16px;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+/* Topographic SVG — bigger, bleeds beyond hero edges */
+.topo-bg {
+  inset: -8% -5% -8% -5% !important;
+  width: 110% !important;
+  height: 116% !important;
+}
+
+/* Section accent bars — visible cyan markers above each section heading */
+.section .section-head,
+.sec .sec-head {
+  position: relative;
+}
+.section .section-head::before,
+.sec .sec-head::before {
+  content: '';
+  position: absolute;
+  top: -22px;
+  left: 0;
+  width: 56px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand) 0%, rgba(8, 145, 178, 0.15) 100%);
+  border-radius: 2px;
+}
+
+/* Stronger card hovers — visible lift, shadow, cyan ring */
+.card:hover {
+  border-color: var(--brand) !important;
+  box-shadow:
+    0 16px 40px -8px rgba(8, 145, 178, 0.25),
+    0 0 0 1px rgba(8, 145, 178, 0.45) !important;
+  transform: translateY(-3px) !important;
+}
+.bet:hover {
+  border-color: var(--brand) !important;
+  background: var(--brand-soft) !important;
+  box-shadow: 0 18px 48px -10px rgba(8, 145, 178, 0.30) !important;
+  transform: translateY(-3px) !important;
+}
+.product:hover {
+  border-color: var(--brand) !important;
+  box-shadow:
+    0 14px 36px -10px rgba(8, 145, 178, 0.22),
+    0 0 0 1px rgba(8, 145, 178, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Slightly bolder buttons */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary {
+  box-shadow: 0 4px 12px -2px rgba(8, 145, 178, 0.30) !important;
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  box-shadow: 0 8px 20px -4px rgba(8, 145, 178, 0.45) !important;
+}
+
+/* Make existing dot pattern (was 4.5%) and animation drift PARENT pause-aware */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; }
+}
+
+
+/* ============================================================
+   GLASS + DEPTH — design portfolio mode
+   Replaces the muted cyan-on-white aesthetic with layered
+   translucent surfaces over a colorful aurora background.
+   ============================================================ */
+
+/* Reset prior body backgrounds, replace with light cream + aurora */
+body {
+  background: #FAFAF7 !important;
+  background-image: none !important;
+  background-attachment: initial !important;
+  color: #0F172A !important;
+}
+body::before { display: none !important; }
+
+/* AURORA — colorful drifting blobs */
+.aurora {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px) saturate(140%);
+  opacity: 0.65;
+  will-change: transform;
+}
+.aurora-blob.ab1 {
+  width: 720px; height: 720px;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 60%);
+  top: -280px; left: -160px;
+  animation: drift1 22s ease-in-out infinite;
+}
+.aurora-blob.ab2 {
+  width: 620px; height: 620px;
+  background: radial-gradient(circle, #8B5CF6 0%, transparent 60%);
+  top: 5%; right: -180px;
+  animation: drift2 26s ease-in-out infinite;
+  opacity: 0.55;
+}
+.aurora-blob.ab3 {
+  width: 800px; height: 600px;
+  background: radial-gradient(circle, #EC4899 0%, transparent 60%);
+  bottom: -100px; left: 18%;
+  animation: drift3 30s ease-in-out infinite;
+  opacity: 0.45;
+}
+.aurora-blob.ab4 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #F59E0B 0%, transparent 60%);
+  bottom: -150px; right: 14%;
+  animation: drift4 24s ease-in-out infinite;
+  opacity: 0.50;
+}
+.aurora-grain {
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+  opacity: 0.25;
+  mix-blend-mode: overlay;
+}
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(60px, 30px) scale(1.08); }
+  66% { transform: translate(-30px, 60px) scale(0.95); }
+}
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-80px, 40px) scale(1.12); }
+}
+@keyframes drift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -50px) scale(0.92); }
+  66% { transform: translate(-60px, 20px) scale(1.05); }
+}
+@keyframes drift4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -40px) scale(1.10); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob { animation: none !important; }
+}
+
+/* Page above aurora */
+.page, .topbar, .app-toolbar, .preview-pane {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   GLASS TOPBAR
+   ============================================================ */
+.topbar, .app-toolbar {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.6) inset,
+    0 1px 0 0 rgba(15, 23, 42, 0.04),
+    0 8px 32px -8px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ============================================================
+   GLASS SECTIONS / CARDS
+   ============================================================ */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card,
+.preview-header {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 4px 0 rgba(15, 23, 42, 0.04),
+    0 12px 32px -12px rgba(15, 23, 42, 0.16),
+    0 32px 64px -32px rgba(15, 23, 42, 0.22) !important;
+  position: relative;
+  overflow: visible;
+}
+
+/* Cursor highlight — radial spotlight following mouse */
+.card, .bet, .product, .risk-card, .sec {
+  --mx: 50%;
+  --my: 50%;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.card::after, .bet::after, .product::after, .risk-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 280px at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.55),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.card:hover::after, .bet:hover::after, .product:hover::after, .risk-card:hover::after {
+  opacity: 1;
+}
+
+/* Card hover: real lift + colored glow */
+.card:hover, .product:hover, .risk-card:hover {
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 4px 0 rgba(15, 23, 42, 0.06),
+    0 20px 48px -8px rgba(15, 23, 42, 0.18),
+    0 40px 80px -32px rgba(6, 182, 212, 0.35),
+    0 60px 120px -48px rgba(139, 92, 246, 0.30) !important;
+}
+.bet:hover {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 24px 56px -8px rgba(15, 23, 42, 0.20),
+    0 48px 100px -32px rgba(6, 182, 212, 0.40),
+    0 72px 140px -48px rgba(139, 92, 246, 0.35) !important;
+}
+
+/* ============================================================
+   HERO — big floating glass with gradient text
+   ============================================================ */
+.hero {
+  background: rgba(255, 255, 255, 0.40) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 28px !important;
+  padding: 72px 56px 64px !important;
+  margin: 8px 0 32px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -2px rgba(15, 23, 42, 0.06),
+    0 24px 60px -12px rgba(15, 23, 42, 0.16),
+    0 48px 96px -32px rgba(139, 92, 246, 0.28),
+    0 64px 120px -48px rgba(6, 182, 212, 0.30) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.hero h1 {
+  font-size: clamp(48px, 7vw, 88px) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 0.96 !important;
+  color: #0F172A !important;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, #06B6D4 0%, #8B5CF6 60%, #EC4899 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+}
+.hero .lede {
+  font-size: 17px !important;
+  color: #475569 !important;
+  max-width: 640px !important;
+  line-height: 1.55 !important;
+  margin-top: 22px !important;
+}
+.hero .eyebrow {
+  background: rgba(255, 255, 255, 0.65) !important;
+  color: #155E75 !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 6px -1px rgba(15, 23, 42, 0.08);
+  padding: 5px 12px !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================
+   SECTION HEADERS — bigger, bolder
+   ============================================================ */
+.section-head .title, .sec-head .title {
+  font-size: 30px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.032em !important;
+  color: #0F172A !important;
+}
+.section-head .num, .sec-head .num {
+  font-size: 13px !important;
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  font-weight: 700 !important;
+}
+.section-head .num::before, .sec-head .num::before {
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6) !important;
+  width: 8px !important; height: 8px !important;
+  box-shadow:
+    0 0 0 4px rgba(6, 182, 212, 0.15),
+    0 0 12px rgba(139, 92, 246, 0.4) !important;
+}
+.section-head::before { display: none !important; }
+
+/* ============================================================
+   GLASS BUTTONS
+   ============================================================ */
+.btn, .topbar .btn, .app-toolbar button, .app-toolbar a.btn,
+button.btn, .add-btn {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 6px -1px rgba(15, 23, 42, 0.06),
+    0 8px 16px -8px rgba(15, 23, 42, 0.12) !important;
+  color: #0F172A !important;
+  font-weight: 500 !important;
+  border-radius: 10px !important;
+}
+.btn:hover, .topbar .btn:hover, .app-toolbar button:hover, .app-toolbar a.btn:hover {
+  background: rgba(255, 255, 255, 0.75) !important;
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 10px -2px rgba(15, 23, 42, 0.10),
+    0 12px 28px -8px rgba(6, 182, 212, 0.30) !important;
+}
+
+/* PRIMARY = gradient glass pill */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #0E7490 100%) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.45) inset,
+    0 2px 6px -1px rgba(6, 182, 212, 0.45),
+    0 8px 24px -4px rgba(6, 182, 212, 0.50) !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  background: linear-gradient(135deg, #0891B2 0%, #0E7490 50%, #155E75 100%) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.55) inset,
+    0 4px 12px -2px rgba(6, 182, 212, 0.55),
+    0 16px 36px -8px rgba(6, 182, 212, 0.65),
+    0 24px 60px -16px rgba(139, 92, 246, 0.40) !important;
+  transform: translateY(-2px);
+  color: white !important;
+}
+.btn-tiny {
+  background: rgba(255, 255, 255, 0.50) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset, 0 2px 4px -1px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* ============================================================
+   GLASS INPUTS
+   ============================================================ */
+input[type="text"], input[type="date"], textarea, select,
+.search-wrap input, .sort-select, .topbar .title-input {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(12px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+  color: #0F172A !important;
+  border-radius: 10px !important;
+}
+input:focus, textarea:focus, select:focus,
+.search-wrap input:focus, .sort-select:focus {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: #06B6D4 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 0 0 4px rgba(6, 182, 212, 0.15),
+    0 4px 16px -4px rgba(6, 182, 212, 0.30) !important;
+}
+
+/* Chips → glass */
+.chip {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+  color: #475569 !important;
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border-color: #06B6D4 !important;
+  color: #0E7490 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -2px rgba(6, 182, 212, 0.30) !important;
+}
+.chip.active {
+  background: linear-gradient(135deg, #06B6D4, #0891B2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: white !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
+    0 4px 12px -2px rgba(6, 182, 212, 0.45) !important;
+}
+
+/* ============================================================
+   KPI STRIP — nested glass divisions
+   ============================================================ */
+.kpis {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  gap: 12px !important;
+  display: grid;
+}
+.kpi {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.12) !important;
+}
+.kpi:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 16px 40px -8px rgba(6, 182, 212, 0.30) !important;
+}
+.kpi .num {
+  background: linear-gradient(135deg, #0F172A 0%, #475569 100%) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  font-size: 40px !important;
+}
+.kpi .num small {
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================
+   PRODUCT TOP STRIPE → gradient
+   ============================================================ */
+.product::before {
+  height: 4px !important;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.product[data-rag="R"]::before { background: linear-gradient(90deg, #DC2626, #EC4899) !important; }
+.product[data-rag="A"]::before { background: linear-gradient(90deg, #F59E0B, #FB923C) !important; }
+.product[data-rag="G"]::before { background: linear-gradient(90deg, #10B981, #06B6D4) !important; }
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead {
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+.masthead .brand {
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #0F172A, #475569) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================
+   TOPOGRAPHIC HORIZON — softer (aurora is the star now)
+   ============================================================ */
+.topo-bg {
+  opacity: 0.55 !important;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================================
+   TOAST → glass
+   ============================================================ */
+.toast {
+  background: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.1) inset,
+    0 16px 40px -8px rgba(15, 23, 42, 0.30),
+    0 32px 80px -16px rgba(15, 23, 42, 0.40) !important;
+}
+
+/* Empty state → softer */
+.empty {
+  background: rgba(255, 255, 255, 0.40) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px dashed rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset !important;
+}
+
+
+/* ============================================================
+   CALM PASS — restraint and bug fixes
+   Overrides earlier glass.py rules. Less color, fewer elements.
+   ============================================================ */
+
+/* === FIX: gradient-text bug ===
+   Earlier rules set background-clip: text but later rules in the
+   stylesheet were re-asserting `color`. With !important on
+   text-fill-color and background-clip, the gradient now actually
+   shows through as text instead of as a solid bar. */
+.hero h1 .accent {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+
+/* Brand wordmark stays solid — no gradient. The gradient block
+   in the screenshots was the bug; just use a normal color. */
+.masthead .brand {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+/* KPI numbers — solid dark, not gradient. Subscript stays cyan-only. */
+.kpi .num {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0F172A !important;
+}
+.kpi .num small {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #06B6D4 !important;
+  font-weight: 600 !important;
+}
+
+/* Section number — solid cyan, no gradient. Reads cleaner. */
+.section-head .num, .sec-head .num {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0891B2 !important;
+}
+.section-head .num::before, .sec-head .num::before {
+  background: #06B6D4 !important;
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15) !important;
+}
+
+/* Section title — solid dark. Big and bold but not gradient. */
+.section-head .title, .sec-head .title {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: #0F172A !important;
+}
+
+/* === AURORA: down to two colors === */
+.aurora-blob.ab1 {
+  width: 600px !important; height: 600px !important;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 65%) !important;
+  opacity: 0.40 !important;
+  animation-duration: 32s !important;
+}
+.aurora-blob.ab2 {
+  width: 540px !important; height: 540px !important;
+  background: radial-gradient(circle, #A78BFA 0%, transparent 65%) !important;
+  opacity: 0.32 !important;
+  animation-duration: 36s !important;
+}
+/* Drop pink and amber entirely */
+.aurora-blob.ab3, .aurora-blob.ab4 { display: none !important; }
+
+/* Grain stays but quieter */
+.aurora-grain { opacity: 0.15 !important; }
+
+/* === HIDE topographic horizon in hero === */
+/* The topo SVG was competing with the title — turn it off in hero. */
+.hero .topo-bg { display: none !important; }
+/* Output static download keeps the topo visible elsewhere if injected */
+
+/* === SHADOWS: dial back the colored glows === */
+.hero {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -2px rgba(15, 23, 42, 0.05),
+    0 16px 40px -12px rgba(15, 23, 42, 0.10),
+    0 32px 60px -32px rgba(99, 102, 241, 0.15) !important;
+}
+.card:hover, .product:hover, .risk-card:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 12px 28px -8px rgba(15, 23, 42, 0.10),
+    0 24px 48px -24px rgba(99, 102, 241, 0.18) !important;
+}
+.bet:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 16px 36px -8px rgba(15, 23, 42, 0.12),
+    0 32px 64px -24px rgba(99, 102, 241, 0.20) !important;
+}
+
+/* Primary button: simpler shadow */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.40) inset,
+    0 2px 6px -1px rgba(6, 182, 212, 0.30),
+    0 8px 20px -6px rgba(6, 182, 212, 0.40) !important;
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.50) inset,
+    0 4px 10px -2px rgba(6, 182, 212, 0.40),
+    0 12px 28px -6px rgba(6, 182, 212, 0.50) !important;
+}
+
+/* === Smoother card hover transition === */
+.card, .bet, .product, .risk-card, .kpi {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* === Tone down 3D tilt: was 5deg max, now 2.5deg === */
+/* (Handled in JS — see below) */
+
+
+/* ============================================================
+   POLISH — KPI fit + button match + more glass
+   ============================================================ */
+
+/* === KPI VALUES: responsive size + single-line ===
+   Fixes ₹4-8L wrapping by capping max font-size and forcing nowrap. */
+.kpi .num {
+  font-size: clamp(26px, 2.4vw, 36px) !important;
+  letter-spacing: -0.030em !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+}
+.kpi .num small {
+  font-size: clamp(10.5px, 0.95vw, 13px) !important;
+  margin-left: 0 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  font-weight: 600 !important;
+}
+.kpi {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.kpi .label {
+  font-size: 12.5px !important;
+  line-height: 1.4 !important;
+}
+
+/* === PRIMARY BUTTON: cyan→indigo gradient matching accent text === */
+.btn.primary, .topbar .btn.primary, .app-toolbar .primary,
+button.btn.primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  /* Glass shine on top edge + colored shadow underneath */
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.55) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.05) inset,
+    0 2px 6px -1px rgba(99, 102, 241, 0.28),
+    0 8px 20px -4px rgba(6, 182, 212, 0.36),
+    0 16px 40px -12px rgba(99, 102, 241, 0.40) !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.10) !important;
+  position: relative;
+  overflow: hidden;
+}
+.btn.primary::before, .topbar .btn.primary::before,
+.app-toolbar .primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0) 45%);
+  pointer-events: none;
+}
+.btn.primary:hover, .topbar .btn.primary:hover, .app-toolbar .primary:hover {
+  background: linear-gradient(135deg, #0891B2 0%, #4F46E5 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.62) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.06) inset,
+    0 4px 10px -2px rgba(99, 102, 241, 0.40),
+    0 16px 32px -6px rgba(6, 182, 212, 0.50),
+    0 24px 56px -12px rgba(99, 102, 241, 0.50) !important;
+}
+
+/* === ACCENT-TEXT GRADIENT: same cyan→indigo so it now matches button === */
+.hero h1 .accent {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* === MORE GLASS === */
+
+/* Masthead — subtle glass band */
+.masthead {
+  background: rgba(255, 255, 255, 0.30) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  padding: 14px 22px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.65) inset,
+    0 6px 18px -8px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Footer — glass treatment */
+.foot {
+  background: rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 16px !important;
+  padding: 22px 26px !important;
+  margin-top: 56px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Reading progress bar — give it a subtle glass shimmer */
+.reading-progress {
+  background: linear-gradient(90deg, #06B6D4 0%, #6366F1 100%) !important;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.55) !important;
+}
+
+/* Live preview header — glass */
+.preview-header {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+}
+.preview-pane {
+  background: rgba(250, 250, 247, 0.65) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+}
+
+/* Section nav (right rail) — better glass */
+.section-nav {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* === Slightly more transparent glass everywhere so aurora shows ===
+   Was 0.55, now 0.48 — aurora shows through cards a bit more clearly. */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card {
+  background: rgba(255, 255, 255, 0.48) !important;
+}
+
+/* Save state pill — glass */
+.topbar .save-state {
+  backdrop-filter: blur(12px) saturate(180%) !important;
+}
+
+
+/* ============================================================
+   FINAL CONSOLIDATION
+   Applies last → wins specificity battles
+   ============================================================ */
+
+/* === UNIFIED TIMING SYSTEM ===
+   One easing curve, three durations: fast (110), base (220), slow (380)
+   This stops the page from feeling like multiple apps stitched together. */
+:root {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 110ms;
+  --t-base: 220ms;
+  --t-slow: 380ms;
+}
+* { transition-timing-function: var(--ease) !important; }
+
+/* Standardize the most common transitions */
+.btn, .btn-tiny, button, .chip, .seg label span,
+.del-btn, .add-btn, .topbar a.back, .app-toolbar a.back,
+input, textarea, select {
+  transition: background var(--t-base), color var(--t-base),
+              border-color var(--t-base), box-shadow var(--t-base),
+              transform var(--t-fast) !important;
+}
+
+.card, .bet, .product, .risk-card, .kpi, .sec, .panel, .ribbon {
+  transition: transform var(--t-base) var(--ease),
+              box-shadow var(--t-slow) var(--ease),
+              background var(--t-base) var(--ease),
+              border-color var(--t-base) var(--ease) !important;
+}
+
+/* === REMOVE the old section-accent bar ===
+   It was a cyan slash above each heading from an earlier visual direction.
+   In the glass aesthetic it just looks like leftover debris. */
+.section .section-head::before,
+.sec .sec-head::before {
+  display: none !important;
+}
+
+/* But KEEP the small cyan dot before the section number — that one belongs */
+.section-head .num::before, .sec-head .num::before {
+  display: inline-block !important;
+  position: absolute !important;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50%;
+  background: #06B6D4 !important;
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.16) !important;
+  content: '';
+}
+
+/* === UNIFORM BORDER RADIUS ===
+   Mid-size surfaces all 14-16px; pills 999px; small chips 6-10px. */
+.card, .bet, .product, .risk-card, .panel, .ribbon, .sec,
+.kpi, .empty, .foot, .preview-pane .preview-header {
+  border-radius: 16px !important;
+}
+.hero { border-radius: 22px !important; }
+.btn, button.btn { border-radius: 10px !important; }
+.btn-tiny { border-radius: 8px !important; }
+.chip { border-radius: 999px !important; }
+.dyn-row { border-radius: 12px !important; }
+
+/* === EDITOR FOOTER DELETE BUTTON: gets glass too ===
+   Was the only button still in the old flat style. */
+.foot button {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  color: #475569 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 6px -1px rgba(15, 23, 42, 0.06) !important;
+}
+.foot button:hover {
+  background: rgba(254, 226, 226, 0.7) !important;
+  color: #B91C1C !important;
+  border-color: rgba(220, 38, 38, 0.5) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 4px 12px -2px rgba(220, 38, 38, 0.20) !important;
+  transform: translateY(-1px);
+}
+
+/* === BUTTON TEXT FIT GUARANTEES ===
+   White-space and min-width prevent any button label from wrapping
+   or getting clipped. */
+.btn, .btn-tiny, .topbar .btn, .app-toolbar button, .app-toolbar a.btn,
+button.btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+.btn .icn, .btn-tiny .icn, button.btn .icn {
+  display: inline-flex !important;
+  flex-shrink: 0 !important;
+  line-height: 0 !important;
+}
+.add-btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+
+/* === TOPBAR ALIGNMENT — all elements vertically centered ===
+   Across topbar (editor) and app-toolbar (output), keep heights
+   consistent so buttons don't appear to jump between elements. */
+.topbar-inner, .app-toolbar-inner {
+  align-items: center !important;
+}
+.topbar .btn, .topbar a.btn, .topbar button,
+.app-toolbar .btn, .app-toolbar a.btn, .app-toolbar button {
+  height: 36px !important;
+  padding: 0 14px !important;
+}
+.topbar .save-state {
+  height: 26px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0 10px !important;
+}
+.app-toolbar a.back, .topbar a.back {
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0 10px !important;
+}
+
+/* === HERO PADDING SANITY ===
+   Earlier additions stacked padding (16px from one rule + 56px from another).
+   Single source of truth: */
+.hero {
+  padding: 64px 48px 56px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+@media (max-width: 720px) {
+  .hero { padding: 44px 24px 36px !important; }
+}
+
+/* === KPI STRIP: ensure subscript breathes from value ===
+   Already responsive but the gap was missing on flex */
+.kpi { padding: 22px 22px 20px !important; }
+.kpi .num {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 7px !important;
+  flex-wrap: nowrap !important;
+  min-width: 0 !important;
+}
+.kpi .label {
+  margin-top: 6px !important;
+  white-space: normal !important;
+}
+
+/* === ACTION ROW LAYOUT (output) === */
+.row {
+  align-items: center !important;
+  gap: 18px !important;
+}
+.row .body { min-width: 0; }
+.row .body .what {
+  word-break: break-word !important;
+}
+.row .badge {
+  align-self: center !important;
+}
+
+/* === DYNAMIC ROWS in editor — consistent inner padding === */
+.dyn-row {
+  padding: 18px 18px 16px 38px !important;
+  gap: 14px;
+}
+.dyn-row .row-num {
+  top: 10px !important;
+  right: 14px !important;
+  font-size: 10.5px !important;
+}
+.dyn-row .del-btn {
+  top: 26px !important;
+  right: 10px !important;
+}
+
+/* === SEG (segmented controls): consistent height === */
+.seg {
+  height: 32px !important;
+  align-items: center !important;
+  display: inline-flex !important;
+}
+.seg label span {
+  height: 26px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0 12px !important;
+}
+
+/* === FOCUS RING: standardized === */
+input:focus, textarea:focus, select:focus,
+.search-wrap input:focus, .sort-select:focus,
+.title-input:focus {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 0 0 3px rgba(6, 182, 212, 0.18),
+    0 4px 14px -4px rgba(6, 182, 212, 0.30) !important;
+  animation: none !important;
+}
+
+/* === PRIMARY BUTTON: ensure shine renders correctly === */
+.btn.primary, button.btn.primary,
+.topbar .btn.primary, .app-toolbar .primary {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate;
+}
+.btn.primary > * { position: relative; z-index: 2; }
+
+/* === FOOT (footer) layout consistency === */
+.foot {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 14px !important;
+}
+
+/* === SECTIONS: even spacing === */
+.section { padding-top: 56px !important; }
+.section + .section { padding-top: 48px !important; }
+.section-head, .sec-head { margin-bottom: 24px !important; padding-bottom: 16px !important; }
+
+/* === MOBILE: ensure preview pane is hidden, hero scales === */
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  body.preview-on .topbar-inner,
+  body.preview-on .page,
+  body.preview-on .app-toolbar-inner {
+    margin-right: 0 !important;
+    max-width: none !important;
+  }
+}
+@media (max-width: 720px) {
+  .topbar-inner, .app-toolbar-inner { padding: 12px 18px !important; }
+  .page { padding-left: 18px !important; padding-right: 18px !important; }
+  .kpi { padding: 18px 18px 16px !important; }
+  .kpi .num { font-size: 26px !important; }
+  .section-head, .sec-head { flex-wrap: wrap; }
+  .section-head .desc, .sec-head .desc {
+    margin-left: 0 !important;
+    text-align: left !important;
+    max-width: 100% !important;
+    width: 100%;
+    margin-top: 4px;
+  }
+}
+
+/* === ACCENT TEXT: prevent ascenders from being clipped === */
+.hero h1 .accent {
+  padding-bottom: 0.05em !important;
+  display: inline-block;
+}
+
+/* === MASTHEAD: tidy the brand line === */
+.masthead .brand { font-size: 16px !important; }
+.masthead .meta { font-size: 11.5px !important; white-space: nowrap !important; }
+
+/* === Scrollbar hint (subtle) === */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.15);
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(15, 23, 42, 0.25); background-clip: content-box; }
+
+
+/* ============================================================
+   ENGINEERING SCHEMATIC BACKDROP
+   Replaces the colorful aurora with a circuit/PCB schematic.
+   Glass cards refract the traces underneath.
+   ============================================================ */
+
+/* Hide the colorful aurora — schematic takes over */
+.aurora { display: none !important; }
+
+/* Schematic SVG fills the viewport, sits behind everything */
+.schematic-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Slow drift on the schematic so it feels alive */
+@keyframes sch-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-12px, -8px); }
+}
+.schematic-bg { animation: sch-drift 32s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .schematic-bg, .schematic-bg circle { animation: none !important; }
+}
+
+/* Body becomes plain cream, no gradient — schematic is the visual */
+body {
+  background: #FAFAF7 !important;
+  background-image: none !important;
+}
+body::before { display: none !important; }
+
+/* ============================================================
+   FIX: PREVIEW PANE position regression
+   Earlier glass.py grouped .preview-pane with .page (position:relative).
+   Force position:fixed with !important so it slides in from the right
+   instead of stacking at the bottom.
+   ============================================================ */
+.preview-pane {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 80 !important;
+  width: 45vw !important;
+  max-width: 800px !important;
+  min-width: 480px !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  background: rgba(250, 250, 247, 0.78) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 0 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.5) inset,
+    -16px 0 56px -16px rgba(15, 23, 42, 0.18) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(100%) !important;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.preview-pane.visible {
+  transform: translateX(0) !important;
+}
+
+/* When preview is on, shrink page content to leave room */
+body.preview-on .topbar,
+body.preview-on .app-toolbar {
+  padding-right: 45vw !important;
+  transition: padding-right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.preview-on .page {
+  margin-right: 45vw !important;
+  max-width: none !important;
+  transition: margin-right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  body.preview-on .topbar,
+  body.preview-on .app-toolbar,
+  body.preview-on .page { padding-right: 0 !important; margin-right: 0 !important; }
+  #preview-toggle-btn { display: none !important; }
+}
+
+/* Glass surfaces now refract the schematic — slightly bump opacity
+   so the cards stay readable over the busier backdrop */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card {
+  background: rgba(255, 255, 255, 0.62) !important;
+}
+.hero {
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+.kpi {
+  background: rgba(255, 255, 255, 0.62) !important;
+}
+.topbar, .app-toolbar {
+  background: rgba(250, 250, 247, 0.65) !important;
+}
+
+/* The is-preview class on output (when iframe-embedded) keeps schematic visible */
+.is-preview body { background: transparent !important; }
+
+
+/* ============================================================
+   DARK PORTRAIT-MODE BACKGROUND
+   Body: deep navy. Schematic blurred & dimmed → recedes.
+   3 soft glowing orbs add atmospheric depth.
+   Glass cards stay bright at 0.96 opacity → "in-focus subject".
+   ============================================================ */
+
+html, body {
+  background: #0B1020 !important;
+  background-image: none !important;
+}
+
+/* Schematic recedes into background atmosphere */
+.schematic-bg {
+  opacity: 0.30 !important;
+  filter: blur(2.5px) saturate(0.7) brightness(1.15) !important;
+  z-index: 0 !important;
+}
+
+/* Atmospheric depth orbs — large, blurred, slowly drifting */
+.depth-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.depth-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform;
+}
+.depth-orb.o1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 70%);
+  top: -180px; left: -160px;
+  opacity: 0.40;
+  animation: depth-drift-1 36s ease-in-out infinite;
+}
+.depth-orb.o2 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #6366F1 0%, transparent 70%);
+  bottom: -120px; right: -120px;
+  opacity: 0.35;
+  animation: depth-drift-2 40s ease-in-out infinite;
+}
+.depth-orb.o3 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #0891B2 0%, transparent 70%);
+  top: 45%; left: 40%;
+  opacity: 0.18;
+  animation: depth-drift-3 32s ease-in-out infinite;
+}
+@keyframes depth-drift-1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(80px, 60px); }
+}
+@keyframes depth-drift-2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-70px, -90px); }
+}
+@keyframes depth-drift-3 {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(-30%, -65%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb { animation: none !important; }
+}
+
+/* === BRIGHT FOREGROUND (the "in-focus" subject) === */
+.sec, .card, .bet, .product, .panel, .ribbon, .risk-card, .empty {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.40),
+    0 16px 48px -12px rgba(0, 0, 0, 0.50),
+    0 32px 96px -24px rgba(99, 102, 241, 0.35) !important;
+}
+
+.hero {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.45),
+    0 24px 64px -12px rgba(0, 0, 0, 0.55),
+    0 48px 128px -24px rgba(99, 102, 241, 0.40) !important;
+}
+
+.kpi {
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+.masthead {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.30) !important;
+}
+
+.foot {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.30) !important;
+}
+
+/* === TOPBAR — light glass over dark, suspended UI === */
+.topbar, .app-toolbar {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.40) !important;
+}
+
+/* === SECTION NAV (right rail on output) — dark mode adjustment === */
+.section-nav {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* === DYN-ROW (editor inputs) — keep bright === */
+.dyn-row {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+}
+
+/* === SEARCH wrapper / sort select on home === */
+.search-wrap, .sort-select {
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* === EMPTY STATE === */
+.empty {
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* === Toast notifications stay bright === */
+.toast {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow:
+    0 8px 24px -4px rgba(0, 0, 0, 0.40),
+    0 16px 48px -16px rgba(0, 0, 0, 0.50) !important;
+}
+
+/* === Reading progress bar visible on dark === */
+.reading-progress {
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+.reading-progress .bar {
+  background: linear-gradient(90deg, #06B6D4 0%, #6366F1 100%) !important;
+}
+
+/* === Preview pane (declarative fallback — JS inline still wins) === */
+.preview-pane {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.7) !important;
+}
+.preview-pane .preview-header {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+
+/* ================================================================
+   ✦  ROADMAP BUILDER — FINAL VISUAL POLISH
+      Authoritative. Resolves all previous stacked overrides.
+   ================================================================ */
+
+/* -------------------------------------------------------------- */
+/* 0. RESET COMPETING RULES                                        */
+/* -------------------------------------------------------------- */
+body::before,
+body::after {
+  display: none !important;
+  content: none !important;
+}
+.aurora {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 1. DARK PORTRAIT FOUNDATION                                     */
+/*    Slate-900 — deep navy, not pitch black                       */
+/* -------------------------------------------------------------- */
+html, body {
+  background: #0F172A !important;
+  background-image: none !important;
+  min-height: 100vh;
+}
+
+/* Schematic: atmospheric texture, recedes into bg */
+.schematic-bg {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.20 !important;
+  filter: blur(2.5px) saturate(0.60) brightness(1.20) !important;
+  animation: sch-drift 36s ease-in-out infinite !important;
+}
+@keyframes sch-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(-10px, -6px); }
+}
+
+/* Depth orbs */
+.depth-orbs {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+.depth-orb {
+  position: absolute !important;
+  border-radius: 50% !important;
+  filter: blur(110px) !important;
+  will-change: transform;
+}
+.depth-orb.o1 {
+  width: 720px !important; height: 720px !important;
+  background: radial-gradient(circle, #06B6D4 0%, transparent 65%) !important;
+  top: -200px !important; left: -160px !important;
+  opacity: 0.38 !important;
+  animation: orb-drift-1 34s ease-in-out infinite !important;
+}
+.depth-orb.o2 {
+  width: 640px !important; height: 640px !important;
+  background: radial-gradient(circle, #6366F1 0%, transparent 65%) !important;
+  bottom: -160px !important; right: -160px !important;
+  opacity: 0.32 !important;
+  animation: orb-drift-2 40s ease-in-out infinite !important;
+}
+.depth-orb.o3 {
+  width: 480px !important; height: 480px !important;
+  background: radial-gradient(circle, #0891B2 0%, transparent 65%) !important;
+  top: 42% !important; left: 38% !important;
+  opacity: 0.16 !important;
+  animation: orb-drift-3 28s ease-in-out infinite !important;
+}
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0, 0); }
+  33%       { transform: translate(60px, 80px); }
+  66%       { transform: translate(90px, 20px); }
+}
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0, 0); }
+  33%       { transform: translate(-80px, -60px); }
+  66%       { transform: translate(-40px, -100px); }
+}
+@keyframes orb-drift-3 {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50%       { transform: translate(-30%, -65%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb, .schematic-bg { animation: none !important; }
+}
+
+/* Content layers above bg */
+.page, .topbar-inner, .app-toolbar-inner,
+.topbar, .app-toolbar {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 2. GLASS CARD SYSTEM                                            */
+/*    All surfaces: frosted glass floating on dark canvas          */
+/* -------------------------------------------------------------- */
+:root {
+  --glass-bg:      rgba(255, 255, 255, 0.82);
+  --glass-border:  rgba(255, 255, 255, 0.72);
+  --glass-blur:    blur(32px) saturate(190%) brightness(1.02);
+  --glass-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.90) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 4px 8px -2px rgba(0, 0, 0, 0.22),
+    0 12px 32px -8px rgba(0, 0, 0, 0.32),
+    0 32px 80px -20px rgba(99, 102, 241, 0.22),
+    0 64px 140px -40px rgba(6, 182, 212, 0.12);
+}
+
+/* Cards */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: #0F172A !important;
+}
+
+/* Hero — slightly more opaque, bigger shadow */
+.hero {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(36px) saturate(200%) brightness(1.02) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(1.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.80) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.30) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.28),
+    0 16px 48px -12px rgba(0, 0, 0, 0.38),
+    0 48px 120px -24px rgba(99, 102, 241, 0.32),
+    0 96px 200px -48px rgba(6, 182, 212, 0.18) !important;
+  color: #0F172A !important;
+}
+
+/* Dynamic rows in editor */
+.dyn-row {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 8px -2px rgba(0, 0, 0, 0.16),
+    0 8px 24px -8px rgba(0, 0, 0, 0.20) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 3. TOPBAR / TOOLBAR — light glass over dark                     */
+/* -------------------------------------------------------------- */
+.topbar, .app-toolbar {
+  background: rgba(255, 255, 255, 0.80) !important;
+  backdrop-filter: blur(32px) saturate(190%) brightness(1.02) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(1.02) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(0, 0, 0, 0.28),
+    0 12px 40px -12px rgba(0, 0, 0, 0.32) !important;
+}
+
+/* Section nav (output right rail) */
+.section-nav {
+  background: rgba(255, 255, 255, 0.80) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.68) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.90) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.26) !important;
+}
+
+/* Preview pane — declarative (JS inline wins but keep this for fallback) */
+.preview-pane {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.68) !important;
+  box-shadow: -12px 0 56px -12px rgba(0, 0, 0, 0.38) !important;
+}
+.preview-pane .preview-header {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Search / filter */
+.search-wrap input, .sort-select {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(20px) !important;
+}
+.search-wrap input:focus, .sort-select:focus {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(6, 182, 212, 0.22),
+    0 4px 12px -4px rgba(6, 182, 212, 0.28) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 4. BUTTONS                                                      */
+/* -------------------------------------------------------------- */
+/* Primary — cyan→indigo gradient */
+.btn.primary, button.btn.primary,
+a.btn.primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #6366F1 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.28) inset,
+    0 4px 12px -4px rgba(6, 182, 212, 0.55),
+    0 8px 24px -8px rgba(99, 102, 241, 0.45) !important;
+}
+.btn.primary:hover, button.btn.primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.28) inset,
+    0 8px 24px -4px rgba(6, 182, 212, 0.65),
+    0 16px 48px -8px rgba(99, 102, 241, 0.55) !important;
+}
+
+/* Secondary — glass */
+.btn:not(.primary), button.btn:not(.primary), a.btn:not(.primary) {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #334155 !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.90) inset,
+    0 2px 6px -2px rgba(0,0,0,0.14) !important;
+}
+.btn:not(.primary):hover, button.btn:not(.primary):hover {
+  background: rgba(255, 255, 255, 0.96) !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 4px 12px -2px rgba(0,0,0,0.18) !important;
+}
+
+/* Footer delete button */
+.foot button {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #64748B !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.90) inset,
+    0 2px 6px -2px rgba(0,0,0,0.14) !important;
+}
+.foot button:hover {
+  background: rgba(254, 226, 226, 0.88) !important;
+  color: #B91C1C !important;
+  border-color: rgba(220, 38, 38, 0.50) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Small add / del row buttons */
+.add-btn {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #334155 !important;
+}
+.add-btn:hover {
+  background: rgba(255, 255, 255, 0.96) !important;
+  transform: translateY(-1px) !important;
+}
+.del-btn:hover {
+  color: #B91C1C !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 5. CHIPS                                                        */
+/* -------------------------------------------------------------- */
+.chip {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(255, 255, 255, 0.68) !important;
+  color: #334155 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.10) !important;
+  transition:
+    background 160ms cubic-bezier(0.16,1,0.3,1),
+    transform  120ms cubic-bezier(0.16,1,0.3,1),
+    box-shadow 160ms cubic-bezier(0.16,1,0.3,1) !important;
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.96) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 6. FORM INPUTS                                                  */
+/* -------------------------------------------------------------- */
+input, textarea, select {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(0,0,0,0.10) !important;
+  color: #0F172A !important;
+}
+input:focus, textarea:focus, select:focus {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(6, 182, 212, 0.50) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(6, 182, 212, 0.20),
+    0 4px 12px -4px rgba(6, 182, 212, 0.25) !important;
+  outline: none !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 7. HOVER LIFT (cards that should lift)                          */
+/* -------------------------------------------------------------- */
+.card:hover, .bet:hover, .product:hover,
+.risk-card:hover, .kpi:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.92) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 8px 20px -4px rgba(0, 0, 0, 0.32),
+    0 24px 64px -12px rgba(0, 0, 0, 0.42),
+    0 48px 120px -24px rgba(99, 102, 241, 0.30),
+    0 96px 200px -48px rgba(6, 182, 212, 0.18) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 8. UNIFIED TRANSITION SYSTEM                                    */
+/* -------------------------------------------------------------- */
+:root {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 120ms;
+  --t-base: 220ms;
+  --t-slow: 380ms;
+}
+*, *::before, *::after {
+  transition-timing-function: var(--ease) !important;
+}
+.btn, button, a.btn,
+.chip, input, textarea, select, .seg label span {
+  transition:
+    background  var(--t-fast) var(--ease),
+    color       var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow  var(--t-base) var(--ease),
+    transform   var(--t-fast) var(--ease) !important;
+}
+.card, .bet, .product, .risk-card, .kpi {
+  transition:
+    transform   var(--t-base) var(--ease),
+    box-shadow  var(--t-slow) var(--ease),
+    background  var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease) !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 9. BORDER RADIUS SYSTEM                                         */
+/* -------------------------------------------------------------- */
+.hero { border-radius: 22px !important; }
+.sec, .card { border-radius: 18px !important; }
+.bet, .product, .panel, .ribbon,
+.risk-card, .kpi, .masthead, .foot { border-radius: 16px !important; }
+.dyn-row { border-radius: 12px !important; }
+.btn, button.btn, a.btn { border-radius: 10px !important; }
+.btn-tiny { border-radius: 8px !important; }
+.chip { border-radius: 999px !important; }
+
+/* Button text fit */
+.btn, button.btn, a.btn, .add-btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 10. SECTION HEADING CLEANUP                                     */
+/* -------------------------------------------------------------- */
+/* Remove old accent bar (stale from earlier bold.py pass) */
+.section .section-head::before,
+.sec .sec-head::before {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------- */
+/* 11. MISC UI ELEMENTS                                            */
+/* -------------------------------------------------------------- */
+/* Reading progress */
+.reading-progress {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+.reading-progress .bar, .progress-bar {
+  background: linear-gradient(90deg, #06B6D4, #6366F1) !important;
+}
+
+/* Toast */
+.toast {
+  background: rgba(15, 23, 42, 0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 8px 24px -4px rgba(0,0,0,0.40),
+    0 16px 48px -16px rgba(0,0,0,0.50) !important;
+}
+
+/* Seg controls */
+.seg {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.60) !important;
+}
+.seg label input:checked + span,
+.seg label span.active {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12) !important;
+  color: #0F172A !important;
+}
+
+/* Drag handles */
+.drag-handle { color: rgba(100, 116, 139, 0.48) !important; }
+.drag-handle:hover { color: #0891B2 !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.20);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.35);
+  background-clip: content-box;
+}
+
+/* -------------------------------------------------------------- */
+/* 12. RESPONSIVE                                                  */
+/* -------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  #preview-toggle-btn { display: none !important; }
+  body.preview-on .page,
+  body.preview-on .topbar,
+  body.preview-on .app-toolbar {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+@media (max-width: 720px) {
+  .hero { padding: 44px 24px 36px !important; }
+  .page { padding-left: 18px !important; padding-right: 18px !important; }
+  .kpi { padding: 18px !important; }
+  .topbar-inner, .app-toolbar-inner { padding: 12px 18px !important; }
+}
+
+
+/* ============================================================
+   ✦ AURORA LIGHT — Final Authoritative Theme
+   Bright. Vibrant. Modern. Fresh.
+   ============================================================ */
+
+/* ---- 1. RESET ALL PRIOR DARK STATE ---- */
+html, body {
+  background: #FAF7F2 !important;
+  background-image: none !important;
+  color: #0F172A !important;
+  min-height: 100vh;
+}
+
+/* Allow body::before so we can use it for noise grain (was killed earlier) */
+body::before {
+  display: block !important;
+  content: '' !important;
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  opacity: 0.35 !important;
+  mix-blend-mode: overlay !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.7 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>") !important;
+}
+
+/* Schematic — softened for cream bg, kept for engineering vibe */
+.schematic-bg {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.18 !important;
+  filter: blur(0.5px) saturate(1.1) brightness(0.9) !important;
+  animation: sch-drift 36s ease-in-out infinite !important;
+}
+@keyframes sch-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(-8px, -5px); }
+}
+
+/* ---- 2. VIBRANT AURORA ORBS ---- */
+.depth-orbs {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+.depth-orb {
+  position: absolute !important;
+  border-radius: 50% !important;
+  will-change: transform;
+}
+.depth-orb.o1 {
+  width: 760px !important; height: 760px !important;
+  background: radial-gradient(circle, #38BDF8 0%, rgba(56,189,248,0) 65%) !important;
+  top: -240px !important; left: -200px !important;
+  opacity: 0.55 !important;
+  filter: blur(70px) !important;
+  animation: aurora-1 28s ease-in-out infinite !important;
+}
+.depth-orb.o2 {
+  width: 680px !important; height: 680px !important;
+  background: radial-gradient(circle, #FB7185 0%, rgba(251,113,133,0) 65%) !important;
+  bottom: -220px !important; right: -200px !important;
+  opacity: 0.50 !important;
+  filter: blur(70px) !important;
+  animation: aurora-2 32s ease-in-out infinite !important;
+}
+.depth-orb.o3 {
+  width: 580px !important; height: 580px !important;
+  background: radial-gradient(circle, #34D399 0%, rgba(52,211,153,0) 65%) !important;
+  top: 38% !important; left: 45% !important;
+  opacity: 0.42 !important;
+  filter: blur(75px) !important;
+  animation: aurora-3 26s ease-in-out infinite !important;
+}
+/* Bonus 4th orb via ::before on the orbs container for more vibrance */
+.depth-orbs::before {
+  content: '' !important;
+  position: absolute !important;
+  width: 540px !important;
+  height: 540px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, #C084FC 0%, rgba(192,132,252,0) 65%) !important;
+  top: 55% !important;
+  left: 5% !important;
+  opacity: 0.40 !important;
+  filter: blur(75px) !important;
+  animation: aurora-4 34s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes aurora-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(120px, 90px) scale(1.08); }
+  66%       { transform: translate(60px, 140px) scale(0.96); }
+}
+@keyframes aurora-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-100px, -110px) scale(1.05); }
+  66%       { transform: translate(-140px, -50px) scale(1.10); }
+}
+@keyframes aurora-3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%       { transform: translate(-30%, -65%) scale(1.10); }
+}
+@keyframes aurora-4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(90px, -70px) scale(0.94); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb, .depth-orbs::before, .schematic-bg { animation: none !important; }
+}
+
+/* ---- 3. CONTENT LAYERS ABOVE ATMOSPHERE ---- */
+.page, .topbar-inner, .app-toolbar-inner,
+.topbar, .app-toolbar {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* ---- 4. GLASS CARD SYSTEM ---- */
+:root {
+  --glass-bg:        rgba(255, 255, 255, 0.62);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-border:    rgba(255, 255, 255, 0.85);
+  --glass-blur:      blur(40px) saturate(220%) brightness(1.05);
+
+  --shadow-glass:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.50) inset,
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 16px 48px -12px rgba(15, 23, 42, 0.10),
+    0 32px 80px -24px rgba(56, 189, 248, 0.18),
+    0 48px 120px -32px rgba(192, 132, 252, 0.12);
+
+  --shadow-glass-hover:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.50) inset,
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -4px rgba(15, 23, 42, 0.10),
+    0 24px 64px -12px rgba(15, 23, 42, 0.14),
+    0 48px 120px -24px rgba(56, 189, 248, 0.28),
+    0 80px 180px -40px rgba(251, 113, 133, 0.20);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 120ms;
+  --t-base: 220ms;
+  --t-slow: 380ms;
+}
+
+/* Cards — frosted glass on bright bg */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--shadow-glass) !important;
+  color: #0F172A !important;
+}
+
+/* Hero — slightly more opaque for prominence */
+.hero {
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: blur(48px) saturate(220%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(1.05) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.98) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.60) inset,
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 16px 48px -12px rgba(15, 23, 42, 0.10),
+    0 48px 120px -24px rgba(56, 189, 248, 0.30),
+    0 96px 200px -40px rgba(251, 113, 133, 0.20),
+    0 120px 240px -48px rgba(192, 132, 252, 0.14) !important;
+  color: #0F172A !important;
+}
+
+/* Dynamic rows — slightly less opaque, less aggressive shadow */
+.dyn-row {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 8px -2px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Topbar / toolbar — light glass, slightly tinted with cream */
+.topbar, .app-toolbar {
+  background: rgba(250, 247, 242, 0.72) !important;
+  backdrop-filter: blur(36px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 12px 40px -12px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Section nav (output right rail) */
+.section-nav {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 24px -8px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Preview pane (declarative — JS inline still wins for position) */
+.preview-pane {
+  background: rgba(250, 247, 242, 0.85) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow: -16px 0 56px -16px rgba(15, 23, 42, 0.20) !important;
+}
+.preview-pane .preview-header {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Search / sort */
+.search-wrap input, .sort-select {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(20px) !important;
+  color: #0F172A !important;
+}
+.search-wrap input::placeholder { color: #64748B !important; }
+.search-wrap input:focus, .sort-select:focus {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(56, 189, 248, 0.22),
+    0 4px 12px -4px rgba(56, 189, 248, 0.30) !important;
+  outline: none !important;
+}
+
+/* ---- 5. TYPOGRAPHY: high contrast on bright bg ---- */
+body, .page, p, span, div, td, th, li {
+  color: #0F172A !important;
+}
+h1, h2, h3, h4, h5, h6 { color: #0F172A !important; }
+
+/* Muted text — must be readable on cream bg */
+.muted, .desc, .label,
+.section-head .desc, .sec-head .desc,
+small, .small, .meta, .helper {
+  color: #475569 !important;
+}
+
+/* Section numbers (the cyan dot) */
+.section-head .num, .sec-head .num {
+  color: #0891B2 !important;
+}
+
+/* "Total" badge / count indicators */
+.total-badge, [class*="total"] {
+  color: #475569 !important;
+}
+
+/* Section heading — kill old accent bar, keep dot */
+.section .section-head::before,
+.sec .sec-head::before {
+  display: none !important;
+}
+
+/* ---- 6. BUTTONS — vibrant gradients ---- */
+/* Primary: 3-stop gradient cyan→violet→coral */
+.btn.primary, button.btn.primary, a.btn.primary {
+  background: linear-gradient(135deg, #06B6D4 0%, #A78BFA 55%, #FB7185 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.30) inset,
+    0 4px 12px -4px rgba(56, 189, 248, 0.55),
+    0 8px 24px -8px rgba(167, 139, 250, 0.50),
+    0 12px 36px -12px rgba(251, 113, 133, 0.40) !important;
+}
+.btn.primary:hover, button.btn.primary:hover, a.btn.primary:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.05) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 8px 24px -4px rgba(56, 189, 248, 0.65),
+    0 16px 48px -8px rgba(167, 139, 250, 0.55),
+    0 24px 64px -16px rgba(251, 113, 133, 0.45) !important;
+}
+
+/* Secondary: clean glass */
+.btn:not(.primary), button.btn:not(.primary), a.btn:not(.primary) {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #1E293B !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 2px 6px -2px rgba(15, 23, 42, 0.10) !important;
+}
+.btn:not(.primary):hover, button.btn:not(.primary):hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 1) inset,
+    0 4px 12px -2px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* Footer delete button */
+.foot button {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #64748B !important;
+}
+.foot button:hover {
+  background: rgba(254, 226, 226, 0.90) !important;
+  color: #B91C1C !important;
+  border-color: rgba(220, 38, 38, 0.50) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Add / del row buttons */
+.add-btn {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #1E293B !important;
+}
+.add-btn:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ---- 7. CHIPS ---- */
+.chip {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  color: #1E293B !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.98) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* ---- 8. INPUTS ---- */
+input, textarea, select {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(15, 23, 42, 0.10) !important;
+  color: #0F172A !important;
+}
+input:focus, textarea:focus, select:focus {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 0 0 3px rgba(56, 189, 248, 0.20),
+    0 4px 12px -4px rgba(56, 189, 248, 0.25) !important;
+  outline: none !important;
+}
+
+/* Title input in topbar */
+.title-input {
+  color: #0F172A !important;
+  background: transparent !important;
+}
+.title-input:hover { background: rgba(255, 255, 255, 0.50) !important; }
+
+/* Save state indicator */
+.save-state {
+  background: rgba(255, 255, 255, 0.65) !important;
+  color: #475569 !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+}
+
+/* Back-arrow link in topbar */
+.topbar a.back, .app-toolbar a.back {
+  color: #475569 !important;
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+}
+.topbar a.back:hover, .app-toolbar a.back:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #0F172A !important;
+}
+
+/* ---- 9. HOVER LIFT ---- */
+.card:hover, .bet:hover, .product:hover,
+.risk-card:hover, .kpi:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--shadow-glass-hover) !important;
+}
+
+/* ---- 10. UNIFIED TRANSITIONS ---- */
+*, *::before, *::after {
+  transition-timing-function: var(--ease) !important;
+}
+.btn, button, a.btn, .chip, input, textarea, select {
+  transition:
+    background var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-base) var(--ease),
+    transform var(--t-fast) var(--ease) !important;
+}
+.card, .bet, .product, .risk-card, .kpi {
+  transition:
+    transform var(--t-base) var(--ease),
+    box-shadow var(--t-slow) var(--ease),
+    background var(--t-base) var(--ease) !important;
+}
+
+/* ---- 11. BORDER RADIUS SYSTEM ---- */
+.hero { border-radius: 24px !important; }
+.sec, .card { border-radius: 20px !important; }
+.bet, .product, .panel, .ribbon,
+.risk-card, .kpi, .masthead, .foot { border-radius: 18px !important; }
+.dyn-row { border-radius: 14px !important; }
+.btn, button.btn, a.btn { border-radius: 12px !important; }
+.btn-tiny { border-radius: 10px !important; }
+.chip { border-radius: 999px !important; }
+
+/* Button consistent layout */
+.btn, button.btn, a.btn, .add-btn {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
+}
+
+/* ---- 12. MISC ---- */
+.reading-progress {
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+.reading-progress .bar, .progress-bar {
+  background: linear-gradient(90deg, #06B6D4, #A78BFA, #FB7185) !important;
+}
+
+.toast {
+  background: rgba(15, 23, 42, 0.94) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 8px 24px -4px rgba(15, 23, 42, 0.30),
+    0 16px 48px -16px rgba(15, 23, 42, 0.40) !important;
+}
+
+.seg {
+  background: rgba(255, 255, 255, 0.50) !important;
+  border: 1px solid rgba(255, 255, 255, 0.60) !important;
+}
+.seg label input:checked + span,
+.seg label span.active {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.10) !important;
+  color: #0F172A !important;
+}
+
+.drag-handle { color: rgba(100, 116, 139, 0.50) !important; }
+.drag-handle:hover { color: #06B6D4 !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.32);
+  background-clip: content-box;
+}
+
+/* ---- 13. RESPONSIVE ---- */
+@media (max-width: 1100px) {
+  .preview-pane { display: none !important; }
+  #preview-toggle-btn { display: none !important; }
+}
+@media (max-width: 720px) {
+  .hero { padding: 44px 24px 36px !important; }
+  .page { padding-left: 18px !important; padding-right: 18px !important; }
+}
+
+
+/* When preview is open, prevent topbar buttons from being clipped.
+   The title-input is greedy (flex:1) — constrain it. */
+body.preview-on .topbar .title-input {
+  max-width: 240px !important;
+  flex-shrink: 1 !important;
+}
+body.preview-on .topbar .save-state {
+  display: none !important;
+}
+body.preview-on .topbar .btn,
+body.preview-on .topbar button.btn,
+body.preview-on .topbar a.btn {
+  flex-shrink: 0 !important;
+  min-width: auto !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 1280px) {
+  body.preview-on .topbar .title-input { max-width: 180px !important; }
+}
+
+
+/* ============================================================
+   ✦ SMOOTHNESS PASS — Apple-level scroll, minimal effects
+   This block is LAST. Wins everything.
+   ============================================================ */
+
+/* ---- 1. TOAST / CONFIRM DIALOG: force white text ---- */
+/* Rule must be specific enough to beat the broad div selector */
+.toast,
+.toast *,
+.toast .toast-msg,
+.toast .toast-msg *,
+.toast .toast-actions *,
+.toast .toast-btn,
+.toast .toast-title,
+.toast .toast-icon {
+  color: #ffffff !important;
+}
+
+.toast {
+  background: rgba(15, 23, 42, 0.94) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow:
+    0 8px 24px -4px rgba(15, 23, 42, 0.30),
+    0 16px 48px -16px rgba(15, 23, 42, 0.40) !important;
+}
+
+/* Toast buttons must keep their colors */
+.toast .toast-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+  color: #ffffff !important;
+}
+.toast .toast-btn:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+}
+.toast .toast-btn.primary {
+  background: linear-gradient(135deg, #06B6D4, #6366F1) !important;
+  border: none !important;
+}
+.toast .toast-btn.danger {
+  background: #DC2626 !important;
+  border-color: #DC2626 !important;
+  color: #ffffff !important;
+}
+.toast .toast-btn.danger:hover {
+  background: #B91C1C !important;
+  border-color: #B91C1C !important;
+}
+
+/* ---- 2. KILL CURSOR-TRACKING SPOTLIGHT ---- */
+/* The ::before radial gradient was the most expensive paint —
+   it repainted on every mousemove inside cards. */
+.card::before,
+.bet::before,
+.product::before,
+.risk-card::before,
+.sec::before,
+.kpi::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* ---- 3. KILL JS 3D TILT ---- */
+/* Override the transform set by the tilt JS so it has no effect.
+   The JS still runs but its transforms are clobbered. */
+.card, .bet, .product, .risk-card, .sec, .kpi {
+  transform: none !important;
+}
+/* Allow only hover lift via specific transform */
+.card:hover, .bet:hover, .product:hover, .risk-card:hover, .kpi:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* ---- 4. REDUCE BACKDROP-FILTER (the #1 scroll perf win) ---- */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+.hero {
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+}
+.topbar, .app-toolbar {
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+}
+.preview-pane {
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+}
+.dyn-row {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* ---- 5. REDUCE SHADOW LAYERS (6+ → 3) ---- */
+.sec, .card, .bet, .product, .panel,
+.risk-card, .kpi, .empty, .masthead, .foot {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 12px -4px rgba(15, 23, 42, 0.06),
+    0 16px 40px -12px rgba(15, 23, 42, 0.08) !important;
+}
+.hero {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 4px 16px -4px rgba(15, 23, 42, 0.06),
+    0 24px 64px -16px rgba(15, 23, 42, 0.10) !important;
+}
+.card:hover, .bet:hover, .product:hover, .risk-card:hover, .kpi:hover {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 16px -4px rgba(15, 23, 42, 0.10),
+    0 24px 64px -12px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* ---- 6. ORBS — fewer, slower, GPU-accelerated ---- */
+.depth-orb,
+.depth-orbs::before {
+  will-change: transform !important;
+  transform: translate3d(0, 0, 0);
+}
+/* Slow each animation ~2.4× */
+.depth-orb.o1 { animation-duration: 65s !important; filter: blur(85px) !important; }
+.depth-orb.o2 { animation-duration: 75s !important; filter: blur(85px) !important; }
+.depth-orb.o3 { animation-duration: 60s !important; filter: blur(85px) !important; }
+.depth-orbs::before { animation-duration: 80s !important; filter: blur(85px) !important; }
+
+/* ---- 7. KILL ANIMATED SCHEMATIC PULSES ---- */
+/* The animateMotion mpath was running 4 separate timelines per page.
+   The static schematic is the engineering visual — it doesn't need to move. */
+.schematic-bg circle[fill="#06B6D4"],
+.schematic-bg circle[fill="#6366F1"],
+.schematic-bg circle[fill="#0891B2"] {
+  display: none !important;
+}
+.schematic-bg animateMotion,
+.schematic-bg animate {
+  begin: never !important;
+}
+.schematic-bg {
+  animation: none !important;
+  filter: blur(0.5px) saturate(0.85) brightness(0.95) !important;
+  opacity: 0.16 !important;
+}
+
+/* ---- 8. KILL NOISE GRAIN OVERLAY ---- */
+/* mix-blend-mode: overlay is expensive on scroll. Drop it. */
+body::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* ---- 9. SMOOTH TRANSITIONS — slower, more deliberate ---- */
+:root {
+  --t-fast: 160ms;
+  --t-base: 280ms;
+  --t-slow: 420ms;
+}
+/* Smaller hover translate */
+.card:hover, .bet:hover, .product:hover,
+.risk-card:hover, .kpi:hover {
+  transform: translateY(-1px) !important;
+}
+/* Buttons: subtle lift */
+.btn:hover, button.btn:hover, a.btn:hover,
+.btn.primary:hover, button.btn.primary:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* ---- 10. SCROLL BEHAVIOR ---- */
+html {
+  scroll-behavior: smooth !important;
+  /* Improve text rendering during scroll */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- 11. CONTAIN PAINT/LAYOUT ---- */
+/* Tells browser these elements don't affect outside layout — major scroll win */
+.sec, .card, .bet, .product, .risk-card, .kpi {
+  contain: layout paint;
+}
+
+/* ---- 12. RESPECT REDUCED MOTION ---- */
+@media (prefers-reduced-motion: reduce) {
+  .depth-orb, .depth-orbs::before, .schematic-bg {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---- 13. FALLBACK: ensure ALL text on cards is readable ---- */
+/* Belt-and-braces: any text inside cards/sections is dark slate */
+.sec p, .sec span, .sec div, .sec li,
+.card p, .card span, .card div, .card li,
+.bet p, .bet span, .bet div,
+.product p, .product span, .product div,
+.hero p, .hero span, .hero div,
+.kpi p, .kpi span, .kpi div {
+  color: inherit;
+}
+
+/* But toast/dialog text MUST stay white — re-assert */
+.toast, .toast * { color: #ffffff !important; }
+
+</style>
+</head>
+
+<body>
+  <svg class="schematic-bg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <pattern id="dot-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <circle cx="20" cy="20" r="1" fill="#0891B2" opacity="0.16"/>
+      </pattern>
+      <linearGradient id="trace-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#0891B2" stop-opacity="0.30"/>
+        <stop offset="50%" stop-color="#06B6D4" stop-opacity="0.45"/>
+        <stop offset="100%" stop-color="#6366F1" stop-opacity="0.30"/>
+      </linearGradient>
+      <radialGradient id="bg-glow" cx="30%" cy="30%" r="60%">
+        <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.10"/>
+        <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="bg-glow-2" cx="75%" cy="65%" r="50%">
+        <stop offset="0%" stop-color="#6366F1" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <rect width="100%" height="100%" fill="url(#bg-glow)"/>
+    <rect width="100%" height="100%" fill="url(#bg-glow-2)"/>
+    <rect width="100%" height="100%" fill="url(#dot-grid)"/>
+
+    <g font-family="ui-monospace, &quot;SF Mono&quot;, Menlo, monospace" stroke-linecap="square">
+
+      <!-- IC U1 — large MCU top-left -->
+      <g opacity="0.50">
+        <rect x="120" y="180" width="120" height="80" rx="3" fill="none" stroke="#0891B2" stroke-width="1"/>
+        <circle cx="135" cy="195" r="2.5" fill="none" stroke="#0891B2" stroke-width="0.6"/>
+        <text x="180" y="226" font-size="13" fill="#0891B2" text-anchor="middle" font-weight="600">MCU</text>
+        <text x="180" y="244" font-size="9" fill="#0891B2" text-anchor="middle" opacity="0.7">U1 · 32-bit</text>
+        <g stroke="#0891B2" stroke-width="0.8">
+          <line x1="120" y1="200" x2="105" y2="200"/>
+          <line x1="120" y1="215" x2="105" y2="215"/>
+          <line x1="120" y1="230" x2="105" y2="230"/>
+          <line x1="120" y1="245" x2="105" y2="245"/>
+          <line x1="240" y1="200" x2="255" y2="200"/>
+          <line x1="240" y1="215" x2="255" y2="215"/>
+          <line x1="240" y1="230" x2="255" y2="230"/>
+          <line x1="240" y1="245" x2="255" y2="245"/>
+        </g>
+      </g>
+
+      <!-- IC U2 — RAM top-right -->
+      <g opacity="0.45">
+        <rect x="1620" y="160" width="100" height="60" rx="2" fill="none" stroke="#0891B2" stroke-width="1"/>
+        <text x="1670" y="195" font-size="11" fill="#0891B2" text-anchor="middle" font-weight="600">RAM</text>
+        <text x="1670" y="208" font-size="8" fill="#0891B2" text-anchor="middle" opacity="0.7">U2 · 64K</text>
+        <g stroke="#0891B2" stroke-width="0.8">
+          <line x1="1620" y1="175" x2="1605" y2="175"/>
+          <line x1="1620" y1="190" x2="1605" y2="190"/>
+          <line x1="1620" y1="205" x2="1605" y2="205"/>
+          <line x1="1720" y1="175" x2="1735" y2="175"/>
+          <line x1="1720" y1="190" x2="1735" y2="190"/>
+          <line x1="1720" y1="205" x2="1735" y2="205"/>
+        </g>
+      </g>
+
+      <!-- Voltage regulator middle-left -->
+      <g opacity="0.42">
+        <circle cx="220" cy="540" r="22" fill="none" stroke="#0891B2" stroke-width="1"/>
+        <circle cx="220" cy="540" r="14" fill="none" stroke="#0891B2" stroke-width="0.6" stroke-dasharray="3 2"/>
+        <text x="220" y="544" font-size="9" fill="#0891B2" text-anchor="middle" font-weight="600">3V3</text>
+        <text x="220" y="585" font-size="9" fill="#0891B2" text-anchor="middle" opacity="0.7">VREG</text>
+      </g>
+
+      <!-- Crystal oscillator -->
+      <g opacity="0.40">
+        <rect x="450" y="160" width="40" height="22" rx="2" fill="none" stroke="#0891B2" stroke-width="0.8"/>
+        <line x1="460" y1="160" x2="460" y2="148" stroke="#0891B2" stroke-width="0.8"/>
+        <line x1="480" y1="160" x2="480" y2="148" stroke="#0891B2" stroke-width="0.8"/>
+        <text x="470" y="200" font-size="9" fill="#0891B2" text-anchor="middle">16.0 MHz</text>
+      </g>
+
+      <!-- Resistor R1 -->
+      <g opacity="0.45">
+        <path d="M 760 480 L 780 480 L 785 472 L 795 488 L 805 472 L 815 488 L 820 480 L 840 480"
+              fill="none" stroke="#0891B2" stroke-width="0.9"/>
+        <text x="800" y="505" font-size="9" fill="#0891B2" text-anchor="middle">10kΩ R1</text>
+      </g>
+
+      <!-- Capacitor C1 -->
+      <g opacity="0.42">
+        <line x1="1100" y1="590" x2="1100" y2="610" stroke="#0891B2" stroke-width="1.2"/>
+        <line x1="1112" y1="585" x2="1112" y2="615" stroke="#0891B2" stroke-width="1.2"/>
+        <line x1="1090" y1="600" x2="1100" y2="600" stroke="#0891B2" stroke-width="0.8"/>
+        <line x1="1112" y1="600" x2="1122" y2="600" stroke="#0891B2" stroke-width="0.8"/>
+        <text x="1106" y="635" font-size="9" fill="#0891B2" text-anchor="middle">100nF C1</text>
+      </g>
+
+      <!-- HSM / Crypto block bottom-right -->
+      <g opacity="0.50">
+        <rect x="1480" y="780" width="160" height="100" rx="4" fill="none" stroke="#0891B2" stroke-width="1.2"/>
+        <line x1="1480" y1="810" x2="1640" y2="810" stroke="#0891B2" stroke-width="0.6"/>
+        <text x="1560" y="802" font-size="11" fill="#0891B2" text-anchor="middle" font-weight="600">HSM · CRYPTO</text>
+        <text x="1500" y="830" font-size="8" fill="#0891B2" opacity="0.7">AES-256</text>
+        <text x="1500" y="845" font-size="8" fill="#0891B2" opacity="0.7">ECDSA-P384</text>
+        <text x="1500" y="860" font-size="8" fill="#0891B2" opacity="0.7">SHA-3</text>
+        <text x="1500" y="875" font-size="8" fill="#0891B2" opacity="0.7">TRNG</text>
+        <g stroke="#0891B2" stroke-width="0.6" fill="none">
+          <rect x="1590" y="830" width="36" height="36" rx="2"/>
+          <line x1="1598" y1="838" x2="1618" y2="838"/>
+          <line x1="1598" y1="846" x2="1618" y2="846"/>
+          <line x1="1598" y1="854" x2="1618" y2="854"/>
+        </g>
+      </g>
+
+      <!-- Connector header bottom-left -->
+      <g opacity="0.42">
+        <rect x="100" y="820" width="14" height="80" fill="none" stroke="#0891B2" stroke-width="0.8"/>
+        <g fill="#0891B2">
+          <circle cx="107" cy="833" r="2"/>
+          <circle cx="107" cy="850" r="2"/>
+          <circle cx="107" cy="867" r="2"/>
+          <circle cx="107" cy="884" r="2"/>
+        </g>
+        <text x="107" y="918" font-size="8" fill="#0891B2" text-anchor="middle">J1 · DEBUG</text>
+      </g>
+
+      <!-- TRACES: orthogonal routing connecting components -->
+      <g fill="none" stroke="url(#trace-grad)" stroke-width="1.5" stroke-linecap="square">
+        <!-- MCU U1 → RAM U2 (long top horizontal trace) -->
+        <path id="trace-1" d="M 255 215 L 1450 215 L 1450 175 L 1605 175"/>
+        <!-- VREG → MCU power -->
+        <path id="trace-2" d="M 198 540 L 150 540 L 150 245 L 105 245"/>
+        <!-- MCU → R1 → HSM data path -->
+        <path id="trace-3" d="M 255 245 L 690 245 L 690 480 L 760 480"/>
+        <path id="trace-4" d="M 840 480 L 1100 480 L 1100 590"/>
+        <path id="trace-5" d="M 1112 600 L 1340 600 L 1340 820 L 1480 820"/>
+        <!-- Crystal → MCU -->
+        <path id="trace-6" d="M 460 182 L 460 230 L 255 230"/>
+        <!-- J1 debug → MCU (slow diagnostic) -->
+        <path id="trace-7" d="M 114 850 L 320 850 L 320 645 L 105 645 L 105 215 L 105 215"/>
+      </g>
+
+      <!-- ANIMATED CURRENT PULSES traveling along traces -->
+      <g>
+        <circle r="3.2" fill="#06B6D4" opacity="0.95">
+          <animateMotion dur="5.5s" repeatCount="indefinite">
+            <mpath href="#trace-1"/>
+          </animateMotion>
+        </circle>
+        <circle r="5" fill="none" stroke="#06B6D4" stroke-width="1" opacity="0.6">
+          <animateMotion dur="5.5s" repeatCount="indefinite">
+            <mpath href="#trace-1"/>
+          </animateMotion>
+          <animate attributeName="r" values="5;9;5" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0;0.6" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle r="2.6" fill="#06B6D4" opacity="0.85">
+          <animateMotion dur="4s" begin="-1.5s" repeatCount="indefinite">
+            <mpath href="#trace-3"/>
+          </animateMotion>
+        </circle>
+
+        <circle r="2.6" fill="#6366F1" opacity="0.85">
+          <animateMotion dur="6s" begin="-2.5s" repeatCount="indefinite">
+            <mpath href="#trace-5"/>
+          </animateMotion>
+        </circle>
+
+        <circle r="2.4" fill="#0891B2" opacity="0.7">
+          <animateMotion dur="3.5s" begin="-0.8s" repeatCount="indefinite">
+            <mpath href="#trace-2"/>
+          </animateMotion>
+        </circle>
+      </g>
+
+      <!-- DIMENSION LINE under MCU -->
+      <g stroke="#0891B2" stroke-width="0.5" fill="#0891B2" opacity="0.40">
+        <line x1="120" y1="285" x2="240" y2="285"/>
+        <line x1="120" y1="280" x2="120" y2="290"/>
+        <line x1="240" y1="280" x2="240" y2="290"/>
+        <text x="180" y="300" font-size="8.5" text-anchor="middle" stroke="none" font-family="ui-monospace, monospace">120.0</text>
+      </g>
+
+      <!-- Crosshair reference markers -->
+      <g stroke="#06B6D4" stroke-width="0.7" opacity="0.55">
+        <g transform="translate(720, 720)">
+          <line x1="-7" y1="0" x2="7" y2="0"/>
+          <line x1="0" y1="-7" x2="0" y2="7"/>
+          <circle r="9" fill="none" stroke-width="0.5"/>
+        </g>
+        <g transform="translate(1280, 320)">
+          <line x1="-6" y1="0" x2="6" y2="0"/>
+          <line x1="0" y1="-6" x2="0" y2="6"/>
+          <circle r="8" fill="none" stroke-width="0.5"/>
+        </g>
+        <g transform="translate(420, 950)">
+          <line x1="-5" y1="0" x2="5" y2="0"/>
+          <line x1="0" y1="-5" x2="0" y2="5"/>
+        </g>
+      </g>
+
+      <!-- Header label -->
+      <g opacity="0.30">
+        <text x="50" y="30" font-size="9" fill="#0891B2" font-family="ui-monospace, monospace">SCH-001 · ROADMAP-PCB · REV 1.2</text>
+      </g>
+      <g opacity="0.30">
+        <text x="1810" y="1180" font-size="9" fill="#0891B2" font-family="ui-monospace, monospace" text-anchor="end">SHEET 1/1</text>
+      </g>
+    </g>
+  </svg>
+  <div class="depth-orbs"><div class="depth-orb o1"></div><div class="depth-orb o2"></div><div class="depth-orb o3"></div></div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="back"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a>
+    <input type="text" class="title-input" id="title-input" placeholder="Untitled roadmap">
+    <span class="save-state" id="save-state">All changes saved</span>
+    <button class="btn" id="preview-toggle-btn" title="Toggle live preview (Ctrl/Cmd+P)"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="label-text">Preview</span></button>
+    <span class="toolbar-divider"></span>
+    <a href="#" class="btn primary" id="view-output-btn">View output<span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></a>
+  </div>
+</div>
+
+<div class="page" id="main"></div>
+
+<script>
+/* ============================================================
+   STORAGE
+   ============================================================ */
+const STORAGE_KEY = 'roadmap-builder.roadmaps';
+
+function loadAll() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveAll(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+function uuid() {
+  return (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+    : 'r-' + Date.now() + '-' + Math.random().toString(36).slice(2,10);
+}
+
+/* ============================================================
+   LOAD CURRENT ROADMAP
+   ============================================================ */
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+let all = loadAll();
+let roadmap = all.find(r => r.id === id);
+
+if (!roadmap) {
+  document.getElementById('main').innerHTML = `
+    <div class="notfound">
+      <h2>Roadmap not found</h2>
+      <p>This roadmap doesn't exist or has been deleted.</p>
+      <p style="margin-top:18px;"><a href="index.html">← Back to home</a></p>
+    </div>
+  `;
+  document.getElementById('view-output-btn').style.display = 'none';
+  document.getElementById('title-input').style.display = 'none';
+  document.getElementById('save-state').style.display = 'none';
+  throw new Error('Roadmap not found');
+}
+
+// Ensure data shape
+roadmap.data = roadmap.data || {};
+roadmap.data.masthead = roadmap.data.masthead || { company:'', tagline:'', date:'', version:'1.0' };
+roadmap.data.hero = roadmap.data.hero || { eyebrow:'', headline:'', accentWord:'', lede:'' };
+roadmap.data.kpis = roadmap.data.kpis || [];
+roadmap.data.bets = roadmap.data.bets || [];
+roadmap.data.products = roadmap.data.products || [];
+roadmap.data.actions = roadmap.data.actions || [];
+roadmap.data.quarters = roadmap.data.quarters || [];
+roadmap.data.decisions = roadmap.data.decisions || [];
+roadmap.data.risks = roadmap.data.risks || [];
+
+document.getElementById('title-input').value = roadmap.name || '';
+document.getElementById('view-output-btn').href = `output.html?id=${roadmap.id}`;
+
+/* ============================================================
+   AUTO-SAVE
+   ============================================================ */
+let saveTimer = null;
+const saveStateEl = document.getElementById('save-state');
+
+function showSaving() {
+  saveStateEl.textContent = 'Saving…';
+  saveStateEl.className = 'save-state saving';
+}
+function showSaved() {
+  saveStateEl.textContent = 'All changes saved';
+  saveStateEl.className = 'save-state saved';
+  setTimeout(() => { saveStateEl.className = 'save-state'; }, 1400);
+}
+function persist() {
+  roadmap.updatedAt = new Date().toISOString();
+  const idx = all.findIndex(r => r.id === roadmap.id);
+  if (idx >= 0) all[idx] = roadmap;
+  else all.push(roadmap);
+  saveAll(all);
+  showSaved();
+}
+function scheduleSave() {
+  showSaving();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persist, 350);
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function el(tag, attrs = {}, ...children) {
+  const e = document.createElement(tag);
+  for (const k in attrs) {
+    if (k === 'class') e.className = attrs[k];
+    else if (k.startsWith('on')) e[k] = attrs[k];
+    else if (k === 'value') e.value = attrs[k];
+    else if (k === 'checked' || k === 'disabled' || k === 'selected') {
+      // Boolean attributes — set the JS property directly, never the HTML attribute.
+      // (setAttribute('checked', false) creates checked="false" which HTML treats as CHECKED.)
+      if (attrs[k]) e[k] = true;
+    }
+    else if (attrs[k] != null && attrs[k] !== false) e.setAttribute(k, attrs[k]);
+  }
+  for (const c of children) {
+    if (c == null) continue;
+    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+    else e.appendChild(c);
+  }
+  return e;
+}
+
+function field(label, input, help) {
+  const f = el('div', { class: 'field' });
+  f.appendChild(el('label', {}, label));
+  f.appendChild(input);
+  if (help) f.appendChild(el('div', { class: 'help' }, help));
+  return f;
+}
+
+function makeInput(value, onInput, placeholder, type='text') {
+  return el('input', {
+    type,
+    value: value || '',
+    placeholder: placeholder || '',
+    oninput: (e) => { onInput(e.target.value); scheduleSave(); }
+  });
+}
+
+function makeTextarea(value, onInput, placeholder, rows=3) {
+  const t = el('textarea', {
+    placeholder: placeholder || '',
+    rows: String(rows),
+    oninput: (e) => { onInput(e.target.value); scheduleSave(); }
+  });
+  t.value = value || '';
+  return t;
+}
+
+function makeSegmented(name, options, value, onChange) {
+  const seg = el('div', { class: `seg ${name === 'rag' ? 'rag' : (name === 'prio' ? 'prio' : '')}` });
+  const groupName = `${name}-${Math.random().toString(36).slice(2,8)}`;
+  options.forEach(opt => {
+    const labelEl = el('label', { class: opt.cls || '' });
+    const input = el('input', {
+      type: 'radio',
+      name: groupName,
+      value: opt.value,
+      checked: value === opt.value,
+      onchange: () => { onChange(opt.value); scheduleSave(); }
+    });
+    labelEl.appendChild(input);
+    labelEl.appendChild(el('span', {}, opt.label));
+    seg.appendChild(labelEl);
+  });
+  return seg;
+}
+
+
+// ============================================================
+// CHIPS — quick-pick + dynamic suggestions
+// ============================================================
+function makeChipPicker(input, suggestions, opts) {
+  opts = opts || {};
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row' + (opts.dynamic ? ' dynamic' : '');
+  if (opts.label) {
+    const lbl = document.createElement('span');
+    lbl.className = 'chip-label';
+    lbl.textContent = opts.label;
+    chipRow.appendChild(lbl);
+  }
+  function syncActive() {
+    chipRow.querySelectorAll('.chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.value === input.value);
+    });
+  }
+  suggestions.forEach(s => {
+    const value = typeof s === 'string' ? s : s.value;
+    const label = typeof s === 'string' ? s : s.label;
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.textContent = label;
+    chip.dataset.value = value;
+    chip.onclick = (e) => {
+      e.preventDefault();
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+      syncActive();
+    };
+    chipRow.appendChild(chip);
+  });
+  syncActive();
+  input.addEventListener('input', syncActive);
+  return chipRow;
+}
+
+function makeDynamicChipPicker(input, getSuggestions, opts) {
+  opts = opts || {};
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row dynamic';
+  function rebuild() {
+    chipRow.innerHTML = '';
+    if (opts.label) {
+      const lbl = document.createElement('span');
+      lbl.className = 'chip-label';
+      lbl.textContent = opts.label;
+      chipRow.appendChild(lbl);
+    }
+    const sugs = getSuggestions();
+    if (sugs.length === 0) {
+      const hint = document.createElement('span');
+      hint.className = 'empty-hint';
+      hint.textContent = opts.emptyHint || 'No suggestions yet';
+      chipRow.appendChild(hint);
+      return;
+    }
+    sugs.slice(0, 8).forEach(s => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chip';
+      chip.textContent = s;
+      chip.onclick = (e) => {
+        e.preventDefault();
+        input.value = s;
+        input.dispatchEvent(new Event('input'));
+      };
+      chipRow.appendChild(chip);
+    });
+  }
+  rebuild();
+  // Re-fetch on focus (in case suggestions changed)
+  input.addEventListener('focus', rebuild);
+  return chipRow;
+}
+
+// Field with chip picker below
+function fieldChips(label, input, suggestions, opts) {
+  const f = field(label, input, opts && opts.help);
+  f.appendChild(makeChipPicker(input, suggestions, opts));
+  return f;
+}
+function fieldDynamicChips(label, input, getSuggestions, opts) {
+  const f = field(label, input, opts && opts.help);
+  f.appendChild(makeDynamicChipPicker(input, getSuggestions, opts));
+  return f;
+}
+
+// ============================================================
+// SUGGESTION SOURCES
+// ============================================================
+const STAGE_OPTIONS = ['Concept', 'Spec', 'Design', 'In build', 'Beta', 'Pre-GA', 'GA', 'Maintenance', 'Sunset'];
+const VERB_OPTIONS = ['Convert', 'Ship', 'Build', 'Launch', 'Validate', 'Productize', 'Pivot', 'Freeze', 'Decide', 'Acquire'];
+
+function getDateChips() {
+  function fmt(d) {
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+  function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return d; }
+  function addMonths(n) { const d = new Date(); d.setMonth(d.getMonth() + n); return d; }
+  function endOfMonth() { const d = new Date(); d.setMonth(d.getMonth() + 1); d.setDate(0); return d; }
+  return [
+    { value: fmt(new Date()), label: 'Today' },
+    { value: fmt(addDays(1)), label: 'Tomorrow' },
+    { value: fmt(addDays(7)), label: '+1 wk' },
+    { value: fmt(addDays(14)), label: '+2 wks' },
+    { value: fmt(addMonths(1)), label: '+1 mo' },
+    { value: fmt(endOfMonth()), label: 'EOM' }
+  ];
+}
+
+function getUsedOwners() {
+  const owners = new Set();
+  ['actions', 'decisions'].forEach(key => {
+    (roadmap.data[key] || []).forEach(item => {
+      const ownerField = item.who || item.owner;
+      if (ownerField) {
+        ownerField.split(/[,;·]/).forEach(o => {
+          const trimmed = o.trim();
+          if (trimmed) owners.add(trimmed);
+        });
+      }
+    });
+  });
+  return Array.from(owners);
+}
+
+
+// ============================================================
+// NEW SECTION: Quarterly milestones
+// ============================================================
+function renderQuarters() {
+  return dynamicSection({
+    num: '07',
+    title: 'Quarterly milestones',
+    hint: 'Strategic horizon. Themes and key milestones for each quarter.',
+    listKey: 'quarters',
+    addLabel: 'Add quarter',
+    blank: { label: '', span: '', theme: '', bullets: '' },
+    render: (row, item) => {
+      const grid = el('div', { class: 'row-grid cols-2' },
+        field('Quarter label',
+          makeInput(item.label, v => item.label = v, 'e.g. Q3 2026')),
+        field('Date span',
+          makeInput(item.span, v => item.span = v, 'e.g. Jul → Sep'))
+      );
+      row.appendChild(grid);
+      row.appendChild(field('Theme',
+        makeInput(item.theme, v => item.theme = v, 'e.g. Ship and convert')));
+      row.appendChild(field('Bullets — one per line',
+        makeTextarea(item.bullets, v => item.bullets = v,
+          'CYPHERA GA candidate · first paid customer\nHSM commercial model decided\n3 hires onboarded · dashboard repaired', 4)));
+    }
+  });
+}
+
+// ============================================================
+// NEW SECTION: Open decisions
+// ============================================================
+function renderDecisions() {
+  return dynamicSection({
+    num: '08',
+    title: 'Open decisions',
+    hint: 'Decisions awaiting owner sign-off. Each blocks something.',
+    listKey: 'decisions',
+    addLabel: 'Add decision',
+    blank: { decision: '', owner: '', deadline: '', defaultIfUndecided: '' },
+    render: (row, item) => {
+      row.appendChild(field('Decision',
+        makeInput(item.decision, v => item.decision = v,
+          'e.g. Hire 3 engineers in 90 days — go / no-go')));
+
+      const ownerField = fieldDynamicChips('Owner',
+        makeInput(item.owner, v => item.owner = v, 'click below or type'),
+        () => getUsedOwners(),
+        { emptyHint: 'Add an action with an owner; suggestions appear here' });
+
+      const deadlineField = fieldChips('Deadline',
+        makeInput(item.deadline, v => item.deadline = v, 'click below or type'),
+        getDateChips());
+
+      const grid = el('div', { class: 'row-grid cols-2' });
+      grid.appendChild(ownerField);
+      grid.appendChild(deadlineField);
+      row.appendChild(grid);
+
+      row.appendChild(field('Default if undecided',
+        makeTextarea(item.defaultIfUndecided, v => item.defaultIfUndecided = v,
+          'e.g. drop to 2-product roadmap; CYMAS / E-SUMO go into pause', 2)));
+    }
+  });
+}
+
+// ============================================================
+// NEW SECTION: Risks & mitigations
+// ============================================================
+function renderRisks() {
+  const LEVELS = [
+    { value: 'L', label: 'Low',      cls: 'low' },
+    { value: 'M', label: 'Medium',   cls: 'med' },
+    { value: 'H', label: 'High',     cls: 'high' },
+    { value: 'C', label: 'Critical', cls: 'crit' }
+  ];
+  return dynamicSection({
+    num: '09',
+    title: 'Risks & mitigations',
+    hint: 'Top 3-5 risks. Likelihood × Impact × Mitigation.',
+    listKey: 'risks',
+    addLabel: 'Add risk',
+    blank: { risk: '', likelihood: 'M', impact: 'M', mitigation: '' },
+    render: (row, item) => {
+      row.appendChild(field('Risk',
+        makeInput(item.risk, v => item.risk = v,
+          'e.g. CYPHERA evaluation customer does not convert')));
+
+      const likField = el('div', { class: 'field' });
+      likField.appendChild(el('label', {}, 'Likelihood'));
+      const likSeg = makeSegmented('lvl-lik', LEVELS, item.likelihood, v => item.likelihood = v);
+      likSeg.classList.add('lvl');
+      likField.appendChild(likSeg);
+
+      const impField = el('div', { class: 'field' });
+      impField.appendChild(el('label', {}, 'Impact'));
+      const impSeg = makeSegmented('lvl-imp', LEVELS, item.impact, v => item.impact = v);
+      impSeg.classList.add('lvl');
+      impField.appendChild(impSeg);
+
+      const grid = el('div', { class: 'row-grid cols-2' });
+      grid.appendChild(likField);
+      grid.appendChild(impField);
+      row.appendChild(grid);
+
+      row.appendChild(field('Mitigation',
+        makeTextarea(item.mitigation, v => item.mitigation = v,
+          'e.g. Establish weekly check-ins with the eval customer NOW. Run parallel outbound to two more named prospects in case conversion fails.', 3)));
+    }
+  });
+}
+
+/* ============================================================
+   SECTION RENDERERS
+   ============================================================ */
+function renderIdentity() {
+  const sec = el('section', { class: 'sec' });
+  sec.appendChild(el('div', { class: 'sec-head' },
+    el('div', { class: 'num' }, '01'),
+    el('div', { class: 'title' }, 'Identity'),
+    el('div', { class: 'hint' }, 'Top-bar metadata for the roadmap.')
+  ));
+  const m = roadmap.data.masthead;
+
+  const grid = el('div', { class: 'row-grid cols-2' },
+    field('Company / brand',
+      makeInput(m.company, v => m.company = v, 'e.g. ETTIKSOFT')),
+    field('Sub-brand or tagline',
+      makeInput(m.tagline, v => m.tagline = v, 'e.g. · Cybersecurity Portfolio'))
+  );
+
+  const grid2 = el('div', { class: 'row-grid cols-2' },
+    field('Date displayed',
+      makeInput(m.date, v => m.date = v, 'e.g. 06 May 2026 (free text)')),
+    field('Version',
+      makeInput(m.version, v => m.version = v, 'e.g. v1.0'))
+  );
+
+  sec.appendChild(grid);
+  sec.appendChild(grid2);
+  return sec;
+}
+
+function renderHero() {
+  const sec = el('section', { class: 'sec' });
+  sec.appendChild(el('div', { class: 'sec-head' },
+    el('div', { class: 'num' }, '02'),
+    el('div', { class: 'title' }, 'Thesis'),
+    el('div', { class: 'hint' }, 'The single statement that summarizes the strategy. Punchy, verb-led.')
+  ));
+  const h = roadmap.data.hero;
+
+  sec.appendChild(field('Eyebrow (small uppercase line above headline)',
+    makeInput(h.eyebrow, v => h.eyebrow = v, 'e.g. 12-month strategy · India primary'),
+    'Optional. Keep under 8 words.'));
+
+  sec.appendChild(field('Headline',
+    makeInput(h.headline, v => h.headline = v, 'e.g. Ship two products. Decide on one. Freeze two.'),
+    'The one sentence your team can repeat.'));
+
+  sec.appendChild(field('Accent word (highlighted in italic + brand color)',
+    makeInput(h.accentWord, v => h.accentWord = v, 'e.g. one'),
+    'Optional. Type one word from your headline; it will be styled in the brand accent.'));
+
+  sec.appendChild(field('Lede / sub-paragraph',
+    makeTextarea(h.lede, v => h.lede = v, 'A 2–3 sentence elaboration on the thesis. The supporting detail.', 3)));
+
+  return sec;
+}
+
+function dynamicSection(opts) {
+  // opts: { num, title, hint, listKey, addLabel, blank, render }
+  const sec = el('section', { class: 'sec' });
+  sec.appendChild(el('div', { class: 'sec-head' },
+    el('div', { class: 'num' }, opts.num),
+    el('div', { class: 'title' }, opts.title),
+    el('div', { class: 'hint' }, opts.hint)
+  ));
+
+  const list = el('div', { class: 'dyn-list' });
+  sec.appendChild(list);
+
+  function renderRows() {
+    list.innerHTML = '';
+    const items = roadmap.data[opts.listKey];
+    if (items.length === 0) {
+      list.appendChild(el('div', { class: 'empty-list' }, 'No items yet. Click the button below to add the first one.'));
+    } else {
+      items.forEach((item, i) => {
+        const row = el('div', { class: 'dyn-row' });
+        row.appendChild(el('div', { class: 'row-num' }, String(i + 1).padStart(2, '0')));
+        row.appendChild(el('button', {
+          class: 'del-btn',
+          title: 'Remove',
+          onclick: () => {
+            if (!confirm('Remove this item?')) return;
+            items.splice(i, 1);
+            scheduleSave();
+            renderRows();
+          }
+        }, '×'));
+        opts.render(row, item, i);
+        list.appendChild(row);
+      });
+    }
+  }
+
+  const addBtn = el('button', {
+    class: 'add-btn',
+    onclick: () => {
+      roadmap.data[opts.listKey].push(JSON.parse(JSON.stringify(opts.blank)));
+      scheduleSave();
+      renderRows();
+    }
+  }, opts.addLabel);
+  // Prepend a plus icon to the add button
+  const plusIcon = el('span', { class: 'icn' });
+  plusIcon.innerHTML = `<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"14\" height=\"14\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/></svg>`;
+  addBtn.insertBefore(plusIcon, addBtn.firstChild);
+  sec.appendChild(addBtn);
+
+  renderRows();
+  return sec;
+}
+
+function renderKpis() {
+  return dynamicSection({
+    num: '03',
+    title: 'KPIs',
+    hint: 'The numbers that anchor the strategy. Keep to 4–6.',
+    listKey: 'kpis',
+    addLabel: 'Add KPI',
+    blank: { value: '', subscript: '', label: '' },
+    render: (row, item) => {
+      const grid = el('div', { class: 'row-grid cols-3' },
+        field('Number',
+          makeInput(item.value, v => item.value = v, 'e.g. 5')),
+        field('Subscript (small)',
+          makeInput(item.subscript, v => item.subscript = v, 'e.g. paid eval')),
+        field('Label below',
+          makeInput(item.label, v => item.label = v, 'e.g. Products in portfolio'))
+      );
+      row.appendChild(grid);
+    }
+  });
+}
+
+function renderBets() {
+  return dynamicSection({
+    num: '04',
+    title: 'Strategic bets',
+    hint: 'The 2–4 outcomes everything else serves. Verb-led, plain language.',
+    listKey: 'bets',
+    addLabel: 'Add bet',
+    blank: { verb: '', headline: '', why: '' },
+    render: (row, item) => {
+      row.appendChild(fieldChips('Verb',
+        makeInput(item.verb, v => item.verb = v, 'click below or type a custom verb'),
+        VERB_OPTIONS));
+      row.appendChild(field('Headline (the bet itself, in one sentence)',
+        makeInput(item.headline, v => item.headline = v, 'e.g. Turn the one CYPHERA evaluation into the first paid customer.')));
+      row.appendChild(field('Why',
+        makeTextarea(item.why, v => item.why = v, 'Why this bet matters. 1–2 sentences.', 2)));
+    }
+  });
+}
+
+function renderProducts() {
+  const RAG = [
+    { value: 'G', label: 'On track', cls: 'go' },
+    { value: 'A', label: 'Caution',  cls: 'amber' },
+    { value: 'R', label: 'At risk',  cls: 'red' },
+  ];
+  return dynamicSection({
+    num: '05',
+    title: 'Products',
+    hint: 'One card per product / workstream. Status, capacity, next milestone, why it matters now.',
+    listKey: 'products',
+    addLabel: 'Add product',
+    blank: { name: '', stage: '', rag: 'A', capacity: '', nextMilestone: '', whyNow: '' },
+    render: (row, item) => {
+      const grid1 = el('div', { class: 'row-grid cols-2' },
+        field('Product name',
+          makeInput(item.name, v => item.name = v, 'e.g. CYPHERA')),
+        fieldChips('Stage',
+          makeInput(item.stage, v => item.stage = v, 'click below or type'),
+          STAGE_OPTIONS)
+      );
+      row.appendChild(grid1);
+
+      const ragField = el('div', { class: 'field' });
+      ragField.appendChild(el('label', {}, 'RAG status'));
+      ragField.appendChild(makeSegmented('rag', RAG, item.rag, v => item.rag = v));
+      row.appendChild(ragField);
+
+      row.appendChild(field('Capacity assigned',
+        makeInput(item.capacity, v => item.capacity = v, 'e.g. 2 devs · 60% PO')));
+      row.appendChild(field('Next milestone',
+        makeInput(item.nextMilestone, v => item.nextMilestone = v, 'e.g. Convert eval → first paid customer')));
+      row.appendChild(field('Why now',
+        makeTextarea(item.whyNow, v => item.whyNow = v, 'One sentence on why this product matters at this moment.', 2)));
+    }
+  });
+}
+
+function renderActions() {
+  const PRIO = [
+    { value: 'P0', label: 'P0', cls: 'p0' },
+    { value: 'P1', label: 'P1', cls: 'p1' },
+    { value: 'P2', label: 'P2', cls: 'p2' },
+  ];
+  return dynamicSection({
+    num: '06',
+    title: '30-day actions',
+    hint: 'The list of actions due in the next month. Keep to under 12.',
+    listKey: 'actions',
+    addLabel: 'Add action',
+    blank: { date: '', what: '', who: '', priority: 'P0' },
+    render: (row, item) => {
+      const grid = el('div', { class: 'row-grid cols-2' },
+        fieldChips('Date',
+          makeInput(item.date, v => item.date = v, 'click below or type'),
+          getDateChips()),
+        (() => {
+          const f = el('div', { class: 'field' });
+          f.appendChild(el('label', {}, 'Priority'));
+          f.appendChild(makeSegmented('prio', PRIO, item.priority, v => item.priority = v));
+          return f;
+        })()
+      );
+      row.appendChild(grid);
+      row.appendChild(field('What needs to happen',
+        makeInput(item.what, v => item.what = v, 'e.g. Eval customer 1:1 — explicit conversion blockers')));
+      row.appendChild(fieldDynamicChips('Owner',
+        makeInput(item.who, v => item.who = v, 'click below or type'),
+        () => getUsedOwners().filter(o => o !== item.who),
+        { emptyHint: 'Type owners; suggestions appear here once you have several' }));
+    }
+  });
+}
+
+/* ============================================================
+   ASSEMBLE
+   ============================================================ */
+const main = document.getElementById('main');
+main.appendChild(renderIdentity());
+main.appendChild(renderHero());
+main.appendChild(renderKpis());
+main.appendChild(renderBets());
+main.appendChild(renderProducts());
+main.appendChild(renderActions());
+
+// Footer with delete
+const foot = el('div', { class: 'foot' });
+foot.appendChild(el('div', { class: 'info' }, `ROADMAP ID · ${roadmap.id.slice(0, 8).toUpperCase()}`));
+
+const deleteWrapper = el('div', { class: 'danger-zone' });
+deleteWrapper.appendChild(el('button', {
+  onclick: () => {
+    if (!confirm(`Delete "${roadmap.name}"?\n\nThis cannot be undone.`)) return;
+    saveAll(all.filter(r => r.id !== roadmap.id));
+    window.location.href = 'index.html';
+  }
+}, 'Delete this roadmap'));
+foot.appendChild(deleteWrapper);
+main.appendChild(foot);
+
+
+
+// Render new sections (after existing renderActions append)
+main.appendChild(renderQuarters());
+main.appendChild(renderDecisions());
+main.appendChild(renderRisks());
+
+// Move the footer (delete button) below the new sections
+const _footEl = document.querySelector('.foot');
+if (_footEl) main.appendChild(_footEl);
+
+/* ============================================================
+   TITLE-INPUT WIRING
+   ============================================================ */
+const titleInput = document.getElementById('title-input');
+titleInput.oninput = (e) => {
+  roadmap.name = e.target.value;
+  scheduleSave();
+};
+
+// ============================================================
+// TOAST NOTIFICATION SYSTEM
+// ============================================================
+(function() {
+  let container = null;
+  function ensureContainer() {
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    return container;
+  }
+
+  const ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    confirm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
+
+  function show(opts) {
+    if (typeof opts === 'string') opts = { message: opts };
+    const o = Object.assign({
+      message: '', type: 'info', duration: 3000,
+      actions: null, onDismiss: null
+    }, opts);
+
+    const c = ensureContainer();
+    const el = document.createElement('div');
+    el.className = 'toast ' + o.type;
+
+    const iconSvg = ICONS[o.type] || ICONS.info;
+    el.innerHTML = '<div class="toast-icon">' + iconSvg + '</div><div class="toast-msg">' + escapeHtmlSafe(o.message) + '</div>';
+
+    if (o.actions && o.actions.length) {
+      const msgDiv = el.querySelector('.toast-msg');
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'toast-actions';
+      o.actions.forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = 'toast-btn ' + (a.variant || '');
+        btn.textContent = a.label;
+        btn.onclick = () => { dismiss(); if (a.onClick) a.onClick(); };
+        actionsDiv.appendChild(btn);
+      });
+      msgDiv.appendChild(actionsDiv);
+    }
+
+    if (o.duration > 0) {
+      const progress = document.createElement('div');
+      progress.className = 'toast-progress';
+      progress.style.animationDuration = o.duration + 'ms';
+      el.appendChild(progress);
+    }
+
+    c.appendChild(el);
+
+    let dismissTimer = null;
+    function dismiss() {
+      if (dismissTimer) clearTimeout(dismissTimer);
+      el.classList.add('removing');
+      setTimeout(() => {
+        if (el.parentNode) el.parentNode.removeChild(el);
+        if (o.onDismiss) o.onDismiss();
+      }, 300);
+    }
+    if (o.duration > 0) {
+      dismissTimer = setTimeout(dismiss, o.duration);
+    }
+
+    el.addEventListener('mouseenter', () => {
+      const p = el.querySelector('.toast-progress');
+      if (p) p.style.animationPlayState = 'paused';
+      if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+    });
+    el.addEventListener('mouseleave', () => {
+      if (o.duration > 0 && !el.classList.contains('removing')) {
+        const p = el.querySelector('.toast-progress');
+        if (p) p.style.animationPlayState = 'running';
+        dismissTimer = setTimeout(dismiss, 1500);
+      }
+    });
+
+    return { dismiss };
+  }
+
+  function escapeHtmlSafe(s) {
+    const d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  // Confirm-style toast with action buttons
+  function confirm(message, opts) {
+    opts = opts || {};
+    return show({
+      message: message,
+      type: 'confirm',
+      duration: 0,
+      actions: [
+        { label: opts.cancelLabel || 'Cancel', variant: '', onClick: opts.onCancel || (()=>{}) },
+        { label: opts.confirmLabel || 'Confirm', variant: opts.danger ? 'danger' : 'primary', onClick: opts.onConfirm || (()=>{}) }
+      ]
+    });
+  }
+
+  window.toast = function(msg, type, duration) {
+    if (typeof msg === 'object') return show(msg);
+    return show({ message: msg, type: type || 'info', duration: duration });
+  };
+  window.toast.success = (msg, dur) => show({ message: msg, type: 'success', duration: dur || 2400 });
+  window.toast.error   = (msg, dur) => show({ message: msg, type: 'error',   duration: dur || 4000 });
+  window.toast.info    = (msg, dur) => show({ message: msg, type: 'info',    duration: dur || 3000 });
+  window.toast.confirm = confirm;
+})();
+
+// ============================================================
+// VIEW TRANSITIONS HELPER
+// ============================================================
+function navigate(url) {
+  if (document.startViewTransition) {
+    document.startViewTransition(() => { window.location.href = url; });
+  } else {
+    window.location.href = url;
+  }
+}
+
+// ============================================================
+// DRAG-AND-DROP REORDERING
+// ============================================================
+function makeRowDraggable(row, list, items, idx, onReorder) {
+  row.dataset.idx = idx;
+  row.draggable = true;
+
+  // Add grab handle
+  const handle = document.createElement('div');
+  handle.className = 'drag-handle';
+  handle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>';
+  handle.title = 'Drag to reorder';
+  row.appendChild(handle);
+
+  row.addEventListener('dragstart', (e) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(idx));
+    setTimeout(() => row.classList.add('dragging'), 0);
+  });
+
+  row.addEventListener('dragend', () => {
+    row.classList.remove('dragging');
+    list.querySelectorAll('.dyn-row').forEach(r => {
+      r.classList.remove('drop-target-above', 'drop-target-below');
+    });
+  });
+
+  row.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const dragging = list.querySelector('.dragging');
+    if (!dragging || dragging === row) return;
+    const rect = row.getBoundingClientRect();
+    const halfway = rect.top + rect.height / 2;
+    list.querySelectorAll('.dyn-row').forEach(r => {
+      r.classList.remove('drop-target-above', 'drop-target-below');
+    });
+    if (e.clientY < halfway) row.classList.add('drop-target-above');
+    else row.classList.add('drop-target-below');
+  });
+
+  row.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const dragging = list.querySelector('.dragging');
+    if (!dragging || dragging === row) return;
+    const fromIdx = +dragging.dataset.idx;
+    const toIdx = +row.dataset.idx;
+    if (isNaN(fromIdx) || isNaN(toIdx)) return;
+
+    // Reorder data array
+    const moved = items.splice(fromIdx, 1)[0];
+    const rect = row.getBoundingClientRect();
+    const insertAfter = e.clientY > rect.top + rect.height / 2;
+    const adjustedToIdx = (toIdx > fromIdx ? toIdx - 1 : toIdx) + (insertAfter ? 1 : 0);
+    items.splice(Math.max(0, Math.min(items.length, adjustedToIdx)), 0, moved);
+
+    if (onReorder) onReorder();
+  });
+}
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+window.addEventListener('keydown', (e) => {
+  // Cmd/Ctrl + S → manual save trigger
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+    e.preventDefault();
+    if (typeof persist === 'function') {
+      clearTimeout(saveTimer);
+      persist();
+      window.toast && window.toast.success('Saved');
+    }
+  }
+});
+
+
+// ============================================================
+// INTEGRATE DRAG-DROP + REPLACE EMPTY STATE WITH SVG
+// Post-hoc enhancement of all already-rendered sections
+// ============================================================
+(function() {
+  // Map listKey by section number — must match renderActions etc.
+  const SECTION_LIST_KEYS = ['kpis', 'bets', 'products', 'actions', 'quarters', 'decisions', 'risks'];
+
+  function enhanceSections() {
+    const dynLists = document.querySelectorAll('.dyn-list');
+    dynLists.forEach((list, sectionIdx) => {
+      // Determine which data array this list represents
+      // The order of dyn-lists matches: kpis (3rd sec), bets (4th), products (5th), actions (6th)
+      // So sectionIdx 0..3 maps to SECTION_LIST_KEYS[0..3]
+      const listKey = SECTION_LIST_KEYS[sectionIdx];
+      if (!listKey || !roadmap.data[listKey]) return;
+
+      enhanceList(list, listKey);
+    });
+  }
+
+  function enhanceList(list, listKey) {
+    const items = roadmap.data[listKey];
+
+    function wireRows() {
+      // Empty state replacement
+      const emptyEl = list.querySelector('.empty-list');
+      if (emptyEl && !emptyEl.querySelector('svg.empty-art')) {
+        const currentText = emptyEl.textContent.trim();
+        emptyEl.innerHTML = `
+          <svg class="empty-art" viewBox="0 0 80 56" fill="none">
+            <rect x="6" y="10" width="68" height="36" rx="4" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="14" y1="22" x2="50" y2="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="30" x2="62" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="38" x2="42" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div>${escapeOptHtml(currentText)}</div>
+        `;
+      }
+
+      // Wire drag-drop on rows + replace delete with toast confirm
+      const rows = list.querySelectorAll('.dyn-row');
+      rows.forEach((row, i) => {
+        if (!row.dataset.dragWired) {
+          row.dataset.dragWired = '1';
+          makeRowDraggable(row, list, items, i, () => {
+            scheduleSave();
+            rebuildList();
+          });
+        }
+        // Replace delete button click handler to use toast confirm
+        const delBtn = row.querySelector('.del-btn');
+        if (delBtn && !delBtn.dataset.toastWired) {
+          delBtn.dataset.toastWired = '1';
+          const newDelBtn = delBtn.cloneNode(true);
+          delBtn.parentNode.replaceChild(newDelBtn, delBtn);
+          newDelBtn.dataset.toastWired = '1';
+          newDelBtn.onclick = () => {
+            window.toast.confirm('Remove this item?', {
+              confirmLabel: 'Remove',
+              danger: true,
+              onConfirm: () => {
+                items.splice(i, 1);
+                scheduleSave();
+                rebuildList();
+                window.toast.success('Item removed');
+              }
+            });
+          };
+        }
+      });
+    }
+
+    function rebuildList() {
+      // Find this section's render function by reverse-engineering opts.
+      // Easiest path: clear list and trigger re-render using add button's logic
+      // But we don't have the render fn here. So instead: simulate by calling
+      // the natural re-render path used elsewhere — manually rebuild via
+      // direct DOM construction is too coupled to the original render.
+      //
+      // Cleanest approach: dispatch a custom 'rebuild' event. The original
+      // dynamicSection had access to renderRows; we don't. So we use a hack:
+      // remove all rows, then "re-add" by toggling the add-btn-equivalent.
+      // BUT: the add btn appends a new item and rebuilds. We don't want to add.
+      //
+      // Best practical solution: full page reload of just this section by
+      // re-running the section's add button click in a way that doesn't add.
+      // OR: use the existing mechanism — simulate clicks programmatically.
+      //
+      // Pragmatic: just re-render manually using the row template stored
+      // in the first row. For now, use the simplest: trigger location.reload()
+      // is too aggressive. Let's manually clear + rebuild rows by inspecting
+      // existing structure.
+
+      // Save current scroll
+      const scrollY = window.scrollY;
+      // Remove all dyn-rows (preserves the empty-list and add-btn)
+      list.querySelectorAll('.dyn-row').forEach(r => r.remove());
+      // Trigger MutationObserver to re-show empty state if needed
+      // Then trigger add-then-undo via the add button... no, that's hacky.
+      // Best: navigate(window.location.href) to reload the editor with new data
+      // Auto-save will have already persisted it.
+      // BUT this resets scroll and is jarring.
+      //
+      // OPTIMAL: reach into the original closure. The list element's parent
+      // section has the original render function bound. We can find the
+      // add button's onclick — it does push() then re-renders. We can
+      // do the inverse: temporarily push, click add, pop, click again.
+      // Too fragile.
+      //
+      // FINAL APPROACH: just reload the page. Auto-save is fast (350ms).
+      // First wait for save.
+      setTimeout(() => {
+        window.scrollTo(0, scrollY);
+        window.location.reload();
+      }, 400);
+    }
+
+    wireRows();
+
+    // Observer for newly added rows (when user clicks + Add)
+    const observer = new MutationObserver(wireRows);
+    observer.observe(list, { childList: true, subtree: false });
+  }
+
+  // Run after the original script finishes constructing sections
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(enhanceSections, 0);
+  } else {
+    document.addEventListener('DOMContentLoaded', enhanceSections);
+  }
+})();
+
+function escapeOptHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
+}
+
+// ============================================================
+// REPLACE FOOTER DELETE WITH TOAST CONFIRM
+// ============================================================
+setTimeout(() => {
+  const footBtn = document.querySelector('.foot button');
+  if (footBtn) {
+    const newFoot = footBtn.cloneNode(true);
+    footBtn.parentNode.replaceChild(newFoot, footBtn);
+    newFoot.onclick = () => {
+      window.toast.confirm(`Delete "${roadmap.name}"? This cannot be undone.`, {
+        confirmLabel: 'Delete',
+        danger: true,
+        onConfirm: () => {
+          saveAll(all.filter(r => r.id !== roadmap.id));
+          window.toast.success('Roadmap deleted');
+          setTimeout(() => navigate('index.html'), 600);
+        }
+      });
+    };
+  }
+}, 100);
+
+// Override back link with view-transition navigation
+setTimeout(() => {
+  document.querySelectorAll('a[href="index.html"]').forEach(a => {
+    a.onclick = (e) => { e.preventDefault(); navigate('index.html'); };
+  });
+  document.querySelectorAll('a#view-output-btn').forEach(a => {
+    a.onclick = (e) => { e.preventDefault(); navigate(a.href); };
+  });
+}, 100);
+
+
+// ============================================================
+// LIVE PREVIEW PANE
+// ============================================================
+(function() {
+  let pane = null;
+  let iframe = null;
+  let visible = false;
+  let iframeReady = false;
+
+  function build() {
+    pane = document.createElement('aside');
+    pane.className = 'preview-pane';
+
+    // BULLETPROOF positioning: inline !important wins over ALL CSS rules.
+    // No cache, no specificity battles, no surprises.
+    const ps = pane.style;
+    ps.setProperty('position', 'fixed', 'important');
+    ps.setProperty('top', '0', 'important');
+    ps.setProperty('right', '0', 'important');
+    ps.setProperty('bottom', 'auto', 'important');
+    ps.setProperty('left', 'auto', 'important');
+    ps.setProperty('width', '45vw', 'important');
+    ps.setProperty('max-width', '800px', 'important');
+    ps.setProperty('min-width', '480px', 'important');
+    ps.setProperty('height', '100vh', 'important');
+    ps.setProperty('z-index', '80', 'important');
+    ps.setProperty('transform', 'translateX(100%)', 'important');
+    ps.setProperty('transition', 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+    ps.setProperty('display', 'flex', 'important');
+    ps.setProperty('flex-direction', 'column', 'important');
+    ps.setProperty('margin', '0', 'important');
+    ps.setProperty('background', 'rgba(255, 255, 255, 0.92)', 'important');
+    ps.setProperty('backdrop-filter', 'blur(32px) saturate(180%)', 'important');
+    ps.setProperty('-webkit-backdrop-filter', 'blur(32px) saturate(180%)', 'important');
+    ps.setProperty('border-left', '1px solid rgba(255, 255, 255, 0.7)', 'important');
+    ps.setProperty('border-radius', '0', 'important');
+    ps.setProperty('box-shadow', '0 1px 0 0 rgba(255, 255, 255, 0.6) inset, -16px 0 56px -16px rgba(0, 0, 0, 0.45)', 'important');
+
+    console.log('[preview] pane built with inline fixed positioning');
+
+    pane.innerHTML = `
+      <div class="preview-header">
+        <div class="preview-title">
+          <span class="live-dot"></span>
+          <span>Live preview</span>
+        </div>
+        <div class="preview-actions">
+          <button id="preview-open-new-tab" title="Open in new tab">Open ↗</button>
+          <button id="preview-close" title="Close preview">Close ×</button>
+        </div>
+      </div>
+      <div class="preview-skel" id="preview-skel">
+        <div class="spinner"></div>
+        <div>Loading preview…</div>
+      </div>
+    `;
+    document.body.appendChild(pane);
+
+    iframe = document.createElement('iframe');
+    iframe.className = 'preview-iframe';
+    iframe.style.display = 'none';
+
+    // CRITICAL: attach onload BEFORE setting src.
+    // Otherwise iframe may load from cache before handler is wired → spinner-forever.
+    let loadedFlag = false;
+    iframe.onload = () => {
+      loadedFlag = true;
+      const skel = pane.querySelector('#preview-skel');
+      if (skel) skel.style.display = 'none';
+      iframe.style.display = '';
+    };
+
+    // Timeout fallback: if iframe doesn't load in 6s, show error state
+    setTimeout(() => {
+      if (loadedFlag) return;
+      const skel = pane.querySelector('#preview-skel');
+      if (skel) {
+        skel.innerHTML =
+          '<div style="font-size:14px;color:#475569;text-align:center;line-height:1.5;">' +
+          '<strong style="color:#0F172A;">Preview unavailable</strong><br>' +
+          'The preview iframe didn\'t respond. ' +
+          'Click <strong>Open ↗</strong> above to view the roadmap in a new tab.' +
+          '</div>';
+      }
+    }, 6000);
+
+    iframe.src = 'output.html?id=' + roadmap.id + '&preview=1';
+    pane.appendChild(iframe);
+
+    pane.querySelector('#preview-close').onclick = toggle;
+    pane.querySelector('#preview-open-new-tab').onclick = () => {
+      window.open('output.html?id=' + roadmap.id, '_blank');
+    };
+
+    // Listen for ready signal from iframe, then push current data
+    window.addEventListener('message', (e) => {
+      if (!e.data) return;
+      if (e.data.type === 'preview-ready') {
+        iframeReady = true;
+        push();
+      }
+    });
+  }
+
+  function push() {
+    if (iframe && iframe.contentWindow && iframeReady) {
+      iframe.contentWindow.postMessage({ type: 'preview-update', roadmap: roadmap }, '*');
+    }
+  }
+
+  function toggle() {
+    if (!pane) build();
+    visible = !visible;
+    document.body.classList.toggle('preview-on', visible);
+    pane.classList.toggle('visible', visible);
+    // Bulletproof slide animation via inline style
+    pane.style.setProperty('transform', visible ? 'translateX(0)' : 'translateX(100%)', 'important');
+    const btn = document.getElementById('preview-toggle-btn');
+    if (btn) {
+      btn.classList.toggle('primary', visible);
+      btn.querySelector('.label-text').textContent = visible ? 'Hide preview' : 'Preview';
+    }
+    if (visible && iframeReady) push();
+  }
+
+  // Hook into persist() so the preview updates after every save
+  if (typeof persist === 'function') {
+    const _origPersist = persist;
+    window.persist = function() {
+      _origPersist();
+      if (visible) push();
+    };
+  }
+
+  // Also push on any input event (for instant feel even before debounced save)
+  document.addEventListener('input', () => {
+    if (visible) clearTimeout(window._previewPushT);
+    window._previewPushT = setTimeout(push, 250);
+  });
+
+  // Wire toggle button — added in HTML modification below
+  setTimeout(() => {
+    const btn = document.getElementById('preview-toggle-btn');
+    if (btn) btn.onclick = toggle;
+  }, 50);
+
+  // Keyboard shortcut: Cmd/Ctrl + P toggles preview
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'p' && !e.shiftKey) {
+      e.preventDefault();
+      toggle();
+    }
+  });
+})();
+
+
+// ============================================================
+// 3D CURSOR TILT + SPOTLIGHT — applied to glass cards
+// ============================================================
+(function() {
+  const TILT_SELECTOR = '.card, .bet, .product, .risk-card, .kpi';
+  const MAX_TILT = 5;  // degrees
+
+  function wire(el) {
+    if (el.dataset.tiltWired) return;
+    el.dataset.tiltWired = '1';
+
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const rotY = ((x - cx) / cx) * MAX_TILT;
+      const rotX = -((y - cy) / cy) * MAX_TILT;
+      el.style.transform = `perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-3px)`;
+      el.style.setProperty('--mx', `${(x / rect.width) * 100}%`);
+      el.style.setProperty('--my', `${(y / rect.height) * 100}%`);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  }
+
+  function wireAll() {
+    document.querySelectorAll(TILT_SELECTOR).forEach(wire);
+  }
+
+  // Skip tilt if user prefers reduced motion
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  wireAll();
+
+  // Re-wire after dynamic content changes (search filter, drag-drop, etc.)
+  const observer = new MutationObserver(() => {
+    clearTimeout(window._tiltDebounce);
+    window._tiltDebounce = setTimeout(wireAll, 50);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+
+// === Override prior tilt with gentler version ===
+(function() {
+  // Remove the old wired-tilt flag so we can re-wire with calmer values
+  document.querySelectorAll('[data-tilt-wired="1"]').forEach(el => {
+    delete el.dataset.tiltWired;
+    // Clear any inflight transform
+    el.style.transform = '';
+  });
+
+  const SELECTOR = '.card, .bet, .product, .risk-card, .kpi';
+  const MAX_TILT = 2.2; // was 5
+
+  function wire(el) {
+    if (el.dataset.calmTilt) return;
+    el.dataset.calmTilt = '1';
+
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const rotY = ((x - cx) / cx) * MAX_TILT;
+      const rotX = -((y - cy) / cy) * MAX_TILT;
+      el.style.transform = `perspective(1400px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-2px)`;
+      el.style.setProperty('--mx', `${(x / rect.width) * 100}%`);
+      el.style.setProperty('--my', `${(y / rect.height) * 100}%`);
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  }
+
+  function wireAll() { document.querySelectorAll(SELECTOR).forEach(wire); }
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  wireAll();
+  const obs = new MutationObserver(() => {
+    clearTimeout(window._calmTiltDebounce);
+    window._calmTiltDebounce = setTimeout(wireAll, 60);
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+})();
+
+</script>
+</body>
+</html>

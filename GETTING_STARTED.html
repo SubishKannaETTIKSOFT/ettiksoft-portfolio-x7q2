@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap Builder · Getting Started</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#F7F5F0; --surface:#FFFFFF; --ink:#1A1A18; --muted:#6E6E68; --faint:#9A9A93; --hairline:#E5E2D8;
+  --brand:#1F3F4F; --brand-soft:#E8EEF1;
+  --go:#2D5F3F; --go-soft:#E5EDE6;
+  --decide:#B8851F; --decide-soft:#F3EDDC;
+  --risk:#A1342B; --risk-soft:#F4E3E1;
+  --terminal-bg:#1A1A18; --terminal-text:#E8E6E0; --terminal-prompt:#7FAF8F; --terminal-comment:#9A9A93;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 25% 35%, rgba(0,0,0,0.012) 0%, transparent 40%),
+    radial-gradient(circle at 75% 65%, rgba(0,0,0,0.012) 0%, transparent 40%);
+}
+
+/* ============================================================
+   LAYOUT — sidebar TOC + main content
+   ============================================================ */
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 36px 80px;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+@media (max-width: 920px) {
+  .shell { grid-template-columns: 1fr; gap: 32px; padding: 24px 18px 56px; }
+}
+
+.toc {
+  position: sticky;
+  top: 32px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.toc-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--hairline);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.toc ol { list-style: none; padding: 0; }
+.toc ol > li { margin-bottom: 4px; }
+.toc a {
+  color: var(--muted);
+  text-decoration: none;
+  display: block;
+  padding: 5px 8px;
+  border-left: 2px solid transparent;
+  margin-left: -10px;
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+}
+.toc a:hover { color: var(--ink); border-left-color: var(--hairline); }
+.toc a .num {
+  display: inline-block;
+  width: 22px;
+  color: var(--brand);
+  font-weight: 600;
+}
+.toc .group-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--faint);
+  margin: 18px 0 6px;
+  padding-left: 0;
+}
+.toc .group-label:first-child { margin-top: 0; }
+
+@media (max-width: 920px) {
+  .toc {
+    position: static;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    padding: 18px 22px;
+  }
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main { min-width: 0; max-width: 760px; }
+
+.hero {
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 44px;
+}
+.hero .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--brand);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(32px, 4vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+.hero h1 .accent { color: var(--brand); font-style: italic; font-weight: 500; }
+.hero .lede {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 620px;
+}
+
+.tldr {
+  background: var(--surface);
+  border-left: 3px solid var(--brand);
+  padding: 18px 24px;
+  margin-top: 28px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.tldr strong { color: var(--ink); font-weight: 600; }
+.tldr code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--bg);
+  padding: 2px 6px;
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+}
+
+/* ============================================================
+   STEP / SECTION
+   ============================================================ */
+.step {
+  padding-top: 56px;
+  margin-top: 8px;
+  scroll-margin-top: 24px;
+}
+.step:first-of-type { padding-top: 0; }
+
+.step-head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--hairline);
+}
+.step-head .num {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.step-head h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+}
+.step-intro {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 22px;
+  max-width: 640px;
+}
+
+h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.012em;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+h3:first-child { margin-top: 0; }
+
+.body-content p { margin-bottom: 14px; }
+.body-content p:last-child { margin-bottom: 0; }
+
+ul, ol { padding-left: 26px; margin-bottom: 14px; }
+li { margin-bottom: 6px; }
+li::marker { color: var(--brand); font-family: var(--mono); }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; color: var(--ink); }
+
+.body-content code {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--bg);
+  padding: 2px 6px;
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { color: var(--ink); }
+
+/* ============================================================
+   OS BADGES — Windows / Mac / Linux clear callouts
+   ============================================================ */
+.os-block {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 20px 22px;
+  margin-bottom: 14px;
+}
+.os-block.win { border-left: 3px solid #0078D4; }
+.os-block.mac { border-left: 3px solid #1A1A18; }
+.os-block.lnx { border-left: 3px solid #BF8F00; }
+
+.os-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  display: inline-block;
+  margin-bottom: 14px;
+  border-radius: 999px;
+}
+.os-block.win .os-tag { background: #E8F1FA; color: #0078D4; }
+.os-block.mac .os-tag { background: #F2EFE7; color: var(--ink); }
+.os-block.lnx .os-tag { background: var(--decide-soft); color: var(--decide); }
+
+/* ============================================================
+   TERMINAL CODE BLOCKS
+   ============================================================ */
+.terminal {
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 16px 20px;
+  margin: 14px 0;
+  overflow-x: auto;
+  border-radius: 0;
+  position: relative;
+}
+.terminal::before {
+  content: 'TERMINAL';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.25);
+}
+.terminal .prompt { color: var(--terminal-prompt); user-select: none; }
+.terminal .comment { color: var(--terminal-comment); }
+.terminal .cmd { color: #E8E6E0; }
+.terminal .out { color: #B8B6B0; }
+
+/* ============================================================
+   CALLOUTS — tip / warning / note
+   ============================================================ */
+.callout {
+  border-left: 3px solid;
+  padding: 14px 20px;
+  margin: 18px 0;
+  font-size: 14px;
+  background: var(--surface);
+}
+.callout.tip { border-left-color: var(--go); background: var(--go-soft); }
+.callout.warn { border-left-color: var(--decide); background: var(--decide-soft); }
+.callout.danger { border-left-color: var(--risk); background: var(--risk-soft); }
+.callout.note { border-left-color: var(--brand); background: var(--brand-soft); }
+.callout .label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-right: 8px;
+}
+.callout.tip .label { color: var(--go); }
+.callout.warn .label { color: var(--decide); }
+.callout.danger .label { color: var(--risk); }
+.callout.note .label { color: var(--brand); }
+
+/* ============================================================
+   SCREEN MOCK — visual representation of what they'll see
+   ============================================================ */
+.screen-mock {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 0;
+  margin: 18px 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  overflow: hidden;
+}
+.screen-mock .titlebar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--hairline);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.screen-mock .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--hairline);
+}
+.screen-mock .dot:nth-child(1) { background: #FF5F57; }
+.screen-mock .dot:nth-child(2) { background: #FEBC2E; }
+.screen-mock .dot:nth-child(3) { background: #28C840; }
+.screen-mock .url {
+  margin-left: 12px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.screen-mock .body {
+  padding: 28px 24px;
+  background: var(--bg);
+  text-align: center;
+}
+.screen-mock .body .brand {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.screen-mock .body .brand .light { color: var(--brand); font-weight: 500; }
+.screen-mock .body .h {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  margin: 14px 0 10px;
+}
+.screen-mock .body .h .a { color: var(--brand); font-style: italic; font-weight: 500; }
+.screen-mock .body .l {
+  color: var(--muted);
+  font-family: var(--body);
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+.screen-mock .body .btn {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 8px 16px;
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   TROUBLESHOOTING ITEMS
+   ============================================================ */
+.faq {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 20px 22px;
+  margin-bottom: 12px;
+}
+.faq h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.faq h4::before {
+  content: 'Q: ';
+  color: var(--brand);
+  font-family: var(--mono);
+  font-weight: 500;
+}
+.faq p { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.faq p::before {
+  content: 'A: ';
+  color: var(--go);
+  font-family: var(--mono);
+  font-weight: 500;
+}
+.faq p:not(:first-of-type)::before { content: ''; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot {
+  margin-top: 80px;
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
+  font-size: 12.5px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.foot .right {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* selectable terminal text */
+.terminal, .terminal * { user-select: text; -webkit-user-select: text; }
+</style>
+</head>
+
+<body>
+<div class="shell">
+
+  <!-- ============================================================
+       SIDEBAR TABLE OF CONTENTS
+       ============================================================ -->
+  <nav class="toc">
+    <div class="toc-title">Steps</div>
+    <ol>
+      <li class="group-label">Setup</li>
+      <li><a href="#step-1"><span class="num">1.</span>Save the file</a></li>
+      <li><a href="#step-2"><span class="num">2.</span>Extract the zip</a></li>
+      <li><a href="#step-3"><span class="num">3.</span>Open a terminal</a></li>
+      <li><a href="#step-4"><span class="num">4.</span>Check Python</a></li>
+      <li><a href="#step-5"><span class="num">5.</span>Go to the folder</a></li>
+      <li><a href="#step-6"><span class="num">6.</span>Start the server</a></li>
+      <li><a href="#step-7"><span class="num">7.</span>Open in browser</a></li>
+
+      <li class="group-label">Use</li>
+      <li><a href="#step-8"><span class="num">8.</span>Create a roadmap</a></li>
+      <li><a href="#step-9"><span class="num">9.</span>Fill the editor</a></li>
+      <li><a href="#step-10"><span class="num">10.</span>View the output</a></li>
+      <li><a href="#step-11"><span class="num">11.</span>Download HTML</a></li>
+
+      <li class="group-label">After</li>
+      <li><a href="#step-12"><span class="num">12.</span>Stop the server</a></li>
+      <li><a href="#step-13"><span class="num">13.</span>Use it again later</a></li>
+      <li><a href="#backup">Backup &amp; restore</a></li>
+      <li><a href="#troubleshoot">Troubleshooting</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="main">
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+    <section class="hero">
+      <div class="eyebrow">Detailed walkthrough · No prior experience needed</div>
+      <h1>From a zip file to a working roadmap, in <span class="accent">five minutes</span>.</h1>
+      <p class="lede">
+        This guide assumes you have never opened a terminal before. Every step is spelled out for Windows, Mac, and Linux. If you get stuck, the <a href="#troubleshoot">troubleshooting section</a> at the end covers the most common problems.
+      </p>
+
+      <div class="tldr">
+        <strong>TL;DR if you're already comfortable:</strong>
+        Extract the zip, <code>cd</code> into the folder, run <code>python3 -m http.server 8000</code>, open <code>http://localhost:8000</code> in your browser. Done. Skip to <a href="#step-8">Step 8</a> for using the app.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 1 — Save the file
+         ============================================================ -->
+    <section id="step-1" class="step body-content">
+      <div class="step-head">
+        <div class="num">01</div>
+        <h2>Save the zip file somewhere you'll remember</h2>
+      </div>
+      <p class="step-intro">
+        You should already have a file called <code>roadmap-builder.zip</code>. Move it somewhere easy to find — your <strong>Desktop</strong> is the simplest choice.
+      </p>
+
+      <div class="callout tip">
+        <span class="label">TIP</span>
+        Put it on your Desktop. Every step below assumes that's where it is. If you put it somewhere else, replace "Desktop" with that location in the commands.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 2 — Extract the zip
+         ============================================================ -->
+    <section id="step-2" class="step body-content">
+      <div class="step-head">
+        <div class="num">02</div>
+        <h2>Extract the zip file</h2>
+      </div>
+      <p class="step-intro">
+        A zip file is a compressed folder. You need to extract it before you can use what's inside.
+      </p>
+
+      <div class="os-block win">
+        <span class="os-tag">Windows</span>
+        <ol>
+          <li>Find <code>roadmap-builder.zip</code> on your Desktop.</li>
+          <li><strong>Right-click</strong> the file.</li>
+          <li>Click <strong>Extract All…</strong> in the menu that appears.</li>
+          <li>A window opens. Click <strong>Extract</strong> (the default location is fine).</li>
+          <li>You'll now see a new folder called <code>roadmap-builder</code> on your Desktop. Open it. You should see four files: <code>index.html</code>, <code>editor.html</code>, <code>output.html</code>, <code>README.md</code>.</li>
+        </ol>
+      </div>
+
+      <div class="os-block mac">
+        <span class="os-tag">Mac</span>
+        <ol>
+          <li>Find <code>roadmap-builder.zip</code> on your Desktop.</li>
+          <li><strong>Double-click</strong> the file.</li>
+          <li>A new folder called <code>roadmap-builder</code> appears next to the zip — Mac extracts it automatically.</li>
+          <li>Open the folder. You should see four files: <code>index.html</code>, <code>editor.html</code>, <code>output.html</code>, <code>README.md</code>.</li>
+        </ol>
+      </div>
+
+      <div class="os-block lnx">
+        <span class="os-tag">Linux</span>
+        <ol>
+          <li>Right-click <code>roadmap-builder.zip</code> on your Desktop.</li>
+          <li>Click <strong>Extract Here</strong> (or <strong>Open With Archive Manager</strong> then Extract).</li>
+          <li>You'll see a new folder called <code>roadmap-builder</code>.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 3 — Open a terminal
+         ============================================================ -->
+    <section id="step-3" class="step body-content">
+      <div class="step-head">
+        <div class="num">03</div>
+        <h2>Open a terminal</h2>
+      </div>
+      <p class="step-intro">
+        A terminal (also called <em>command prompt</em> or <em>shell</em>) is a window where you type commands instead of clicking. We'll only use two simple commands.
+      </p>
+
+      <div class="os-block win">
+        <span class="os-tag">Windows</span>
+        <p>You have two options. Either works. <strong>PowerShell</strong> is recommended.</p>
+
+        <h3 style="margin-top: 14px; font-size: 15px;">Option A — PowerShell (recommended)</h3>
+        <ol>
+          <li>Press the <strong>Windows key</strong> on your keyboard (the one with the Windows logo).</li>
+          <li>Type <strong>PowerShell</strong>.</li>
+          <li>Click <strong>Windows PowerShell</strong> in the search results.</li>
+          <li>A blue window opens. That's your terminal.</li>
+        </ol>
+
+        <h3 style="margin-top: 18px; font-size: 15px;">Option B — Command Prompt</h3>
+        <ol>
+          <li>Press the <strong>Windows key</strong>.</li>
+          <li>Type <strong>cmd</strong>.</li>
+          <li>Click <strong>Command Prompt</strong>.</li>
+          <li>A black window opens. That's your terminal.</li>
+        </ol>
+      </div>
+
+      <div class="os-block mac">
+        <span class="os-tag">Mac</span>
+        <ol>
+          <li>Press <strong>Cmd + Space</strong> together. The Spotlight search bar opens.</li>
+          <li>Type <strong>Terminal</strong>.</li>
+          <li>Press <strong>Enter</strong>.</li>
+          <li>A window opens with a prompt. That's your terminal.</li>
+        </ol>
+      </div>
+
+      <div class="os-block lnx">
+        <span class="os-tag">Linux</span>
+        <ol>
+          <li>Press <strong>Ctrl + Alt + T</strong> together (works on most distributions).</li>
+          <li>Or open your applications menu and search for <strong>Terminal</strong>.</li>
+        </ol>
+      </div>
+
+      <div class="callout note">
+        <span class="label">WHAT IT LOOKS LIKE</span>
+        Whichever terminal you open, you'll see a window with text and a blinking cursor waiting for you to type. The line you'll type on is called the <em>prompt</em>. It usually ends with a <code>&gt;</code>, <code>$</code>, or <code>%</code> sign.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 4 — Check Python
+         ============================================================ -->
+    <section id="step-4" class="step body-content">
+      <div class="step-head">
+        <div class="num">04</div>
+        <h2>Check if Python is installed</h2>
+      </div>
+      <p class="step-intro">
+        We need Python to run a tiny local server (60 seconds of work — it doesn't change anything on your computer permanently). Most Mac and Linux systems already have it. Windows usually does not, but installation is one click.
+      </p>
+
+      <h3>Type this command and press Enter</h3>
+
+      <div class="terminal">
+        <span class="prompt">$</span> <span class="cmd">python3 --version</span>
+      </div>
+
+      <p>You'll get one of two responses:</p>
+
+      <div class="callout tip">
+        <span class="label">GOOD RESPONSE</span>
+        Something like <code>Python 3.11.4</code> (any 3.x version is fine). Skip to Step 5.
+      </div>
+
+      <div class="callout warn">
+        <span class="label">NEED TO INSTALL</span>
+        Something like <code>'python3' is not recognized</code> or <code>command not found</code>. Install Python first using the instructions below for your OS, then come back to this step.
+      </div>
+
+      <h3>Installing Python (only if needed)</h3>
+
+      <div class="os-block win">
+        <span class="os-tag">Windows</span>
+        <ol>
+          <li>Open <a href="https://www.python.org/downloads/" target="_blank">https://www.python.org/downloads/</a> in your browser.</li>
+          <li>Click the big yellow <strong>Download Python 3.x.x</strong> button.</li>
+          <li>Run the downloaded installer.</li>
+          <li><strong>VERY IMPORTANT:</strong> on the first screen, check the box that says <strong>"Add python.exe to PATH"</strong> at the bottom. If you skip this, the command won't work.</li>
+          <li>Click <strong>Install Now</strong>.</li>
+          <li>Wait for it to finish. Click <strong>Close</strong>.</li>
+          <li>Close your terminal window completely (the X in the top corner).</li>
+          <li>Open a new terminal (Step 3 again) and run <code>python3 --version</code>. It should now report a version. If still not found, also try <code>python --version</code> (without the 3).</li>
+        </ol>
+      </div>
+
+      <div class="os-block mac">
+        <span class="os-tag">Mac</span>
+        <p>Mac comes with Python pre-installed. If <code>python3 --version</code> doesn't work, install via Homebrew:</p>
+        <div class="terminal">
+          <span class="prompt">$</span> <span class="cmd">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span>
+          <br><span class="comment"># installs Homebrew (the Mac package installer)</span><br>
+          <span class="prompt">$</span> <span class="cmd">brew install python3</span>
+        </div>
+      </div>
+
+      <div class="os-block lnx">
+        <span class="os-tag">Linux</span>
+        <p>Almost every Linux distribution ships with Python 3. If yours doesn't:</p>
+        <div class="terminal">
+          <span class="prompt">$</span> <span class="cmd">sudo apt install python3</span>      <span class="comment"># Ubuntu / Debian</span><br>
+          <span class="prompt">$</span> <span class="cmd">sudo dnf install python3</span>      <span class="comment"># Fedora / RHEL</span>
+        </div>
+      </div>
+
+      <div class="callout note">
+        <span class="label">DON'T WANT TO INSTALL PYTHON?</span>
+        Alternatives: if you have <strong>Node.js</strong>, use <code>npx serve .</code> instead of the Python command in Step 6. If you have <strong>PHP</strong>, use <code>php -S localhost:8000</code>. If none of these — install Python; it's the easiest.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 5 — Navigate to the folder
+         ============================================================ -->
+    <section id="step-5" class="step body-content">
+      <div class="step-head">
+        <div class="num">05</div>
+        <h2>Move into the roadmap-builder folder</h2>
+      </div>
+      <p class="step-intro">
+        The terminal is currently "looking at" some default folder (usually your home folder). We need to tell it to look at the <code>roadmap-builder</code> folder you extracted in Step 2. We do this with the <code>cd</code> command (it stands for "change directory").
+      </p>
+
+      <h3>Type this and press Enter</h3>
+
+      <div class="os-block win">
+        <span class="os-tag">Windows</span>
+        <div class="terminal">
+          <span class="prompt">PS C:\Users\You&gt;</span> <span class="cmd">cd Desktop\roadmap-builder</span>
+        </div>
+        <p>After Enter, your prompt should change to show you're now inside the folder:</p>
+        <div class="terminal">
+          <span class="prompt">PS C:\Users\You\Desktop\roadmap-builder&gt;</span> <span class="cmd">_</span>
+        </div>
+      </div>
+
+      <div class="os-block mac">
+        <span class="os-tag">Mac</span>
+        <div class="terminal">
+          <span class="prompt">$</span> <span class="cmd">cd ~/Desktop/roadmap-builder</span>
+        </div>
+        <p>The <code>~</code> is shorthand for "your home folder." After Enter, no error means it worked.</p>
+      </div>
+
+      <div class="os-block lnx">
+        <span class="os-tag">Linux</span>
+        <div class="terminal">
+          <span class="prompt">$</span> <span class="cmd">cd ~/Desktop/roadmap-builder</span>
+        </div>
+      </div>
+
+      <h3>Confirm you're in the right place</h3>
+      <p>Type <code>ls</code> (Mac/Linux) or <code>dir</code> (Windows) and press Enter. You should see the four files listed:</p>
+
+      <div class="terminal">
+        <span class="prompt">$</span> <span class="cmd">ls</span><br>
+        <span class="out">README.md       editor.html     index.html      output.html</span>
+      </div>
+
+      <div class="callout tip">
+        <span class="label">SHORTCUT</span>
+        On <strong>Mac and Linux</strong>, you can drag the <code>roadmap-builder</code> folder from Finder/Files <em>onto</em> your terminal window — it will paste the full path automatically. Then just type <code>cd </code> (with a trailing space) before it and press Enter.
+        <br><br>
+        On <strong>Windows</strong> in PowerShell: navigate to the folder in File Explorer, click in the address bar (or press Alt+D), type <code>powershell</code>, and press Enter — opens a terminal already inside that folder.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 6 — Start the server
+         ============================================================ -->
+    <section id="step-6" class="step body-content">
+      <div class="step-head">
+        <div class="num">06</div>
+        <h2>Start the local server</h2>
+      </div>
+      <p class="step-intro">
+        Now we run a tiny "web server" on your own computer. It only serves the four files in this folder, only to you, only while the terminal stays open. Nothing leaves your machine.
+      </p>
+
+      <h3>Type this and press Enter</h3>
+
+      <div class="terminal">
+        <span class="prompt">$</span> <span class="cmd">python3 -m http.server 8000</span>
+      </div>
+
+      <p>You should see something like:</p>
+
+      <div class="terminal">
+        <span class="out">Serving HTTP on :: port 8000 (http://[::]:8000/) ...</span>
+      </div>
+
+      <div class="callout tip">
+        <span class="label">SUCCESS</span>
+        That message means the server is running. <strong>Leave this terminal window open.</strong> If you close it, the server stops and the app won't load.
+      </div>
+
+      <div class="callout warn">
+        <span class="label">FIRST TIME ON WINDOWS</span>
+        Windows may ask permission for Python to access the network — click <strong>Allow</strong>. This is just so your browser can talk to the server <em>on the same machine</em>. Nothing goes to the internet.
+      </div>
+
+      <div class="callout danger">
+        <span class="label">IF IT SAYS "ADDRESS ALREADY IN USE"</span>
+        Port 8000 is being used by something else. Use a different port: <code>python3 -m http.server 8123</code> (or any number between 1024 and 65000). Remember the number for Step 7.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 7 — Open in browser
+         ============================================================ -->
+    <section id="step-7" class="step body-content">
+      <div class="step-head">
+        <div class="num">07</div>
+        <h2>Open the app in your browser</h2>
+      </div>
+      <p class="step-intro">
+        Open Chrome, Firefox, Safari, or Edge — any modern browser works. In the address bar at the top, type the URL below and press Enter.
+      </p>
+
+      <div class="terminal">
+        <span class="cmd">http://localhost:8000</span>
+      </div>
+
+      <p>(If you used a different port in Step 6, replace <code>8000</code> with that number.)</p>
+
+      <h3>What you should see</h3>
+      <p>The home page of Roadmap Builder loads. It looks something like this:</p>
+
+      <div class="screen-mock">
+        <div class="titlebar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="url">localhost:8000</span>
+        </div>
+        <div class="body">
+          <div class="brand">Roadmap Builder<span class="light"> · Home</span></div>
+          <div class="h">Build a roadmap your team actually <span class="a">uses</span>.</div>
+          <div class="l">Single-page roadmaps for product teams</div>
+          <div class="btn">+ Create new roadmap</div>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <span class="label">YOU'RE IN</span>
+        If you see this, the app is working. Now we use it.
+      </div>
+
+      <div class="callout warn">
+        <span class="label">PAGE WON'T LOAD?</span>
+        Check that the terminal from Step 6 is still showing the "Serving HTTP" message. If you closed it accidentally, just repeat Step 6.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 8 — Create a roadmap
+         ============================================================ -->
+    <section id="step-8" class="step body-content">
+      <div class="step-head">
+        <div class="num">08</div>
+        <h2>Create your first roadmap</h2>
+      </div>
+      <p class="step-intro">
+        Click the <strong>+ Create new roadmap</strong> button on the home page. The page changes to the editor — you'll spend most of your time here.
+      </p>
+
+      <p>The editor is divided into <strong>six sections</strong>. None of them are required — fill in what you want, leave the rest blank. Empty sections won't appear on the output page.</p>
+
+      <ul>
+        <li><strong>Identity</strong> — company name, tagline, date, version</li>
+        <li><strong>Thesis</strong> — the headline statement of your strategy</li>
+        <li><strong>KPIs</strong> — the key numbers anchoring your strategy</li>
+        <li><strong>Strategic bets</strong> — the 2–4 outcomes everything else serves</li>
+        <li><strong>Products</strong> — one card per product / workstream</li>
+        <li><strong>30-day actions</strong> — the list of things due this month</li>
+      </ul>
+
+      <div class="callout tip">
+        <span class="label">EVERYTHING AUTO-SAVES</span>
+        You don't need to click "save." A small indicator at the top right shows <strong>Saving…</strong> as you type, then <strong>All changes saved</strong>. You can close the tab or shut down — your work is safe in your browser's local storage.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 9 — Editor walkthrough
+         ============================================================ -->
+    <section id="step-9" class="step body-content">
+      <div class="step-head">
+        <div class="num">09</div>
+        <h2>Fill in the editor</h2>
+      </div>
+      <p class="step-intro">
+        Walk through it top to bottom. Below is what each section is for.
+      </p>
+
+      <h3>Roadmap name (top of the page)</h3>
+      <p>Click the title at the top — it says <strong>Untitled roadmap</strong> by default. Type the name you want (e.g., "Q3 Product Strategy"). This is what appears on the home page list.</p>
+
+      <h3>Section 01 — Identity</h3>
+      <p>Top-bar metadata for the roadmap. Company name, optional tagline, the date you want shown, and a version number. All optional, but the company name is recommended.</p>
+
+      <h3>Section 02 — Thesis</h3>
+      <p>The single statement that summarizes your strategy. Four fields:</p>
+      <ul>
+        <li><strong>Eyebrow</strong> — a small uppercase line above the headline (e.g., "12-month strategy"). Optional.</li>
+        <li><strong>Headline</strong> — the one sentence your team can repeat. Punchy, verb-led.</li>
+        <li><strong>Accent word</strong> — type one word from your headline; it gets highlighted in italic + brand color in the output.</li>
+        <li><strong>Lede</strong> — a 2–3 sentence elaboration. The supporting detail.</li>
+      </ul>
+
+      <h3>Section 03 — KPIs</h3>
+      <p>The numbers that anchor your strategy (e.g., <em>5 products</em>, <em>1 paid eval</em>). Click <strong>+ Add KPI</strong> to add a row. Each KPI has three fields:</p>
+      <ul>
+        <li><strong>Number</strong> — the big number (e.g., "5")</li>
+        <li><strong>Subscript</strong> — small text next to it (e.g., "paid eval"). Optional.</li>
+        <li><strong>Label</strong> — what the number means (e.g., "Customers in pipeline")</li>
+      </ul>
+      <p>Keep to 4–6 KPIs for the cleanest output.</p>
+
+      <h3>Section 04 — Strategic bets</h3>
+      <p>The 2–4 outcomes everything else in the company is in service of. Each bet has:</p>
+      <ul>
+        <li><strong>Verb</strong> — one word (CONVERT, SHIP, DECIDE, BUILD, etc.)</li>
+        <li><strong>Headline</strong> — the bet stated as a complete sentence</li>
+        <li><strong>Why</strong> — 1–2 sentences on why this bet matters</li>
+      </ul>
+
+      <h3>Section 05 — Products</h3>
+      <p>One card per product or major workstream. Each product has:</p>
+      <ul>
+        <li><strong>Name</strong></li>
+        <li><strong>Stage</strong> (e.g., "Pre-GA", "Beta", "Concept")</li>
+        <li><strong>RAG</strong> — click one of three colored buttons. <span style="color: var(--go); font-weight: 600;">Green = on track</span>, <span style="color: var(--decide); font-weight: 600;">Amber = caution</span>, <span style="color: var(--risk); font-weight: 600;">Red = at risk</span>.</li>
+        <li><strong>Capacity</strong> — what's working on it (e.g., "2 devs · 60% PO")</li>
+        <li><strong>Next milestone</strong> — the immediate goal</li>
+        <li><strong>Why now</strong> — one sentence on relevance</li>
+      </ul>
+
+      <h3>Section 06 — 30-day actions</h3>
+      <p>The list of things due in the next month. Each row has date (free text — write it however you want), what needs to happen, who owns it, and a priority (P0 = critical / P1 = important / P2 = nice).</p>
+
+      <div class="callout tip">
+        <span class="label">REMOVING ITEMS</span>
+        Every row in a dynamic section has a small <strong>×</strong> in the top-right corner. Click it to remove that row.
+      </div>
+
+      <div class="callout note">
+        <span class="label">NAVIGATION</span>
+        Click <strong>← Home</strong> at the top-left to go back to the list. Click <strong>View output →</strong> at the top-right to see what your roadmap looks like rendered.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 10 — View output
+         ============================================================ -->
+    <section id="step-10" class="step body-content">
+      <div class="step-head">
+        <div class="num">10</div>
+        <h2>View the rendered roadmap</h2>
+      </div>
+      <p class="step-intro">
+        From the editor, click <strong>View output →</strong> in the top-right. From the home page, click the <strong>View</strong> button next to a roadmap.
+      </p>
+
+      <p>This is the visual page that summarizes everything you typed — the "deliverable" you'd share with someone. Empty sections are hidden automatically, so the layout adapts to what you've filled in.</p>
+
+      <p>At the top there's a small toolbar with three actions:</p>
+
+      <ul>
+        <li><strong>← Home</strong> — back to the list</li>
+        <li><strong>✎ Edit</strong> — back to the editor for this roadmap</li>
+        <li><strong>⎙ Print</strong> — opens your browser's print dialog (you can save as PDF from there)</li>
+        <li><strong>↓ Download HTML</strong> — see Step 11</li>
+      </ul>
+
+      <div class="callout tip">
+        <span class="label">PRINTING</span>
+        The page is print-friendly — the toolbar and background texture are removed automatically when you print or save as PDF. Use your browser's "Save as PDF" option in the print dialog.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 11 — Download HTML
+         ============================================================ -->
+    <section id="step-11" class="step body-content">
+      <div class="step-head">
+        <div class="num">11</div>
+        <h2>Download as a standalone HTML file</h2>
+      </div>
+      <p class="step-intro">
+        Click the <strong>↓ Download HTML</strong> button on the output page. Your browser downloads a single HTML file (named after your roadmap, e.g., <code>Q3_Product_Strategy.html</code>) into your default Downloads folder.
+      </p>
+
+      <p>This downloaded file is <strong>completely self-contained</strong>. You can:</p>
+
+      <ul>
+        <li><strong>Email it</strong> as an attachment</li>
+        <li><strong>Open it on any other computer</strong> by double-clicking — no app, no internet (except for fonts), no install</li>
+        <li><strong>Embed it in Notion / Confluence / SharePoint</strong></li>
+        <li><strong>Host it on a webserver</strong> for a permanent link</li>
+        <li><strong>Open it offline</strong> on a flight</li>
+      </ul>
+
+      <div class="callout note">
+        <span class="label">WHAT'S DIFFERENT IN THE DOWNLOADED FILE</span>
+        It has no toolbar (no Edit / Print / Download buttons) and no JavaScript. Just the rendered roadmap, fully styled. View-only.
+      </div>
+
+      <div class="callout warn">
+        <span class="label">REGENERATE IF YOU CHANGE THINGS</span>
+        The downloaded file is a snapshot. If you go back and edit the roadmap, click <strong>↓ Download HTML</strong> again to get an updated copy.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 12 — Stop the server
+         ============================================================ -->
+    <section id="step-12" class="step body-content">
+      <div class="step-head">
+        <div class="num">12</div>
+        <h2>When you're done — stop the server</h2>
+      </div>
+      <p class="step-intro">
+        When you're finished using the app, return to the terminal window from Step 6.
+      </p>
+
+      <h3>Press Ctrl + C</h3>
+      <p>(That's the Control key and the letter C, pressed together. On Mac, it's still <strong>Ctrl</strong>, not Cmd.)</p>
+
+      <p>The server stops. You can close the terminal.</p>
+
+      <div class="callout tip">
+        <span class="label">YOUR DATA IS SAFE</span>
+        Stopping the server doesn't affect your saved roadmaps. They live in your browser's local storage and stay there until you delete them or clear browser data.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STEP 13 — Use it again later
+         ============================================================ -->
+    <section id="step-13" class="step body-content">
+      <div class="step-head">
+        <div class="num">13</div>
+        <h2>Using it again later</h2>
+      </div>
+      <p class="step-intro">
+        Once everything is set up, getting back to work takes 20 seconds.
+      </p>
+
+      <ol>
+        <li>Open a terminal (Step 3)</li>
+        <li><code>cd ~/Desktop/roadmap-builder</code> (Mac/Linux) or <code>cd Desktop\roadmap-builder</code> (Windows)</li>
+        <li><code>python3 -m http.server 8000</code></li>
+        <li>Open <code>http://localhost:8000</code> in your browser</li>
+      </ol>
+
+      <p>Your previously created roadmaps will be there. Same browser, same machine = same data.</p>
+
+      <div class="callout warn">
+        <span class="label">DIFFERENT BROWSER OR DIFFERENT COMPUTER</span>
+        LocalStorage is per-browser-per-device. If you switch from Chrome to Firefox, or move to a different laptop, your saved roadmaps won't appear. To move them, see "Backup &amp; restore" below.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         BACKUP & RESTORE
+         ============================================================ -->
+    <section id="backup" class="step body-content">
+      <div class="step-head">
+        <div class="num">↓</div>
+        <h2>Backup &amp; restore</h2>
+      </div>
+      <p class="step-intro">
+        Your roadmaps are stored in your browser. Browsers can clear data unexpectedly (especially in private browsing). Back up regularly if your roadmaps matter.
+      </p>
+
+      <h3>Quick backup</h3>
+      <p>Open the home page of the app. Press <strong>F12</strong> to open browser DevTools (or right-click → Inspect). Click the <strong>Console</strong> tab. Paste this and press Enter:</p>
+
+      <div class="terminal">
+        <span class="cmd">copy(localStorage.getItem('roadmap-builder.roadmaps'))</span>
+      </div>
+
+      <p>Your data is now copied to clipboard. Paste it into a text file and save somewhere safe.</p>
+
+      <h3>Restore</h3>
+      <p>On the new browser / computer (after Steps 1–7 of this guide), open the home page, F12 → Console, and run:</p>
+
+      <div class="terminal">
+        <span class="cmd">localStorage.setItem('roadmap-builder.roadmaps', PASTE_BACKUP_HERE)</span>
+      </div>
+
+      <p>Replace <code>PASTE_BACKUP_HERE</code> with your backed-up text, wrapped in single quotes if it isn't already. Refresh the page.</p>
+
+      <h3>Easier alternative</h3>
+      <p>For each important roadmap, click <strong>↓ Download HTML</strong> and save the file. The downloaded HTML files <em>are</em> backups — they don't lose any visible content even if your browser data goes away. The only thing you lose is the ability to re-edit (you'd have to recreate it in the editor).</p>
+    </section>
+
+    <!-- ============================================================
+         TROUBLESHOOTING
+         ============================================================ -->
+    <section id="troubleshoot" class="step body-content">
+      <div class="step-head">
+        <div class="num">?</div>
+        <h2>Troubleshooting</h2>
+      </div>
+      <p class="step-intro">
+        The most common problems and how to fix them.
+      </p>
+
+      <div class="faq">
+        <h4>The terminal says <code>'python3' is not recognized</code> or <code>command not found</code></h4>
+        <p>Python isn't installed, or it's installed but not in your "PATH." Go back to Step 4 and install it (Windows users: make sure to check the "Add to PATH" box during installation). After installing, close and reopen the terminal.</p>
+        <p>On some systems the command is just <code>python</code>, not <code>python3</code>. Try <code>python --version</code>. If that works, use <code>python -m http.server 8000</code> in Step 6.</p>
+      </div>
+
+      <div class="faq">
+        <h4>The terminal says <code>Address already in use</code> or <code>OSError: [Errno 48]</code></h4>
+        <p>Port 8000 is being used by another program. Pick a different port: <code>python3 -m http.server 8123</code> (any number 1024–65000 works). Then visit <code>http://localhost:8123</code> in your browser instead.</p>
+      </div>
+
+      <div class="faq">
+        <h4>The browser says "This site can't be reached" or just spins</h4>
+        <p>Check that the terminal from Step 6 is still showing the "Serving HTTP" line. If it has stopped, restart it. If you accidentally closed the terminal, the server is gone — open a new terminal and repeat Steps 5–6.</p>
+        <p>Also make sure the URL is <strong>http://</strong>localhost — not <strong>https://</strong>.</p>
+      </div>
+
+      <div class="faq">
+        <h4>I created a roadmap, refreshed, and it's gone</h4>
+        <p>Most likely you opened a private/incognito window — those don't persist localStorage. Use a normal browser window instead.</p>
+        <p>Also check you're using the same browser you created it in. Roadmaps in Chrome don't appear in Firefox.</p>
+      </div>
+
+      <div class="faq">
+        <h4>The fonts look wrong / generic</h4>
+        <p>Google Fonts is blocked by your network or your browser is offline. The app still works, just with system fonts instead. To fix: get internet access, or download the fonts locally and update the <code>&lt;link&gt;</code> tag in each HTML file to reference the local copies.</p>
+      </div>
+
+      <div class="faq">
+        <h4>Download HTML button doesn't do anything</h4>
+        <p>Some browsers block downloads from local pages. Try a different browser (Chrome / Edge / Firefox handle this well). Or right-click the page → Save As, then trim the file manually (advanced).</p>
+      </div>
+
+      <div class="faq">
+        <h4>I want to start completely fresh — delete everything</h4>
+        <p>F12 → Console, paste: <code>localStorage.removeItem('roadmap-builder.roadmaps')</code> and press Enter. Refresh the home page. All roadmaps gone.</p>
+      </div>
+
+      <div class="faq">
+        <h4>I want to change the colors / fonts</h4>
+        <p>Open <code>output.html</code> in a text editor (Notepad, TextEdit, VS Code, anything). Find the <code>:root {</code> block at the top of the <code>&lt;style&gt;</code> tag. Edit any of the color values (the hex codes like <code>#1F3F4F</code>). Save. Refresh the page. The change applies everywhere.</p>
+      </div>
+
+      <div class="faq">
+        <h4>Something else is broken</h4>
+        <p>Try: (1) refresh the page, (2) restart the server (Ctrl+C in terminal, then run the server command again), (3) try a different browser.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <footer class="foot">
+      <div>
+        <strong style="color: var(--ink);">Roadmap Builder · Getting Started</strong><br>
+        Built once, edit forever. No accounts, no cloud, no telemetry.
+      </div>
+      <div class="right">
+        v1.0<br>
+        Local · Offline · Yours
+      </div>
+    </footer>
+
+  </main>
+</div>
+</body>
+</html>
