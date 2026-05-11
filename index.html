@@ -3640,15 +3640,83 @@ html {
 
 <script>
 /* ============================================================
+   DATA MODEL MIGRATION  v1→v2  (roadmaps → portfolios)
+   Runs once on every page load; idempotent after first run.
+   Backs up old data under 'legacy-backup'. Never deletes it.
+   ============================================================ */
+(function migrateToPortfolios() {
+  const PF_KEY  = 'roadmap-builder.portfolios';
+  const RM_KEY  = 'roadmap-builder.roadmaps';
+  const BAK_KEY = 'roadmap-builder.legacy-backup';
+  if (localStorage.getItem(PF_KEY)) return;
+  const raw = localStorage.getItem(RM_KEY);
+  if (!raw) return;
+  let legacy; try { legacy = JSON.parse(raw); } catch(e) { return; }
+  if (!Array.isArray(legacy) || !legacy.length) return;
+  if (!localStorage.getItem(BAK_KEY)) localStorage.setItem(BAK_KEY, raw);
+  function _uuid() {
+    return (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+  }
+  function _inferType(n) { return /hsm|hardware/i.test(n || '') ? 'hardware' : 'software'; }
+  function _inferTrl(s) {
+    s = (s || '').toLowerCase().trim();
+    return s === 'beta' ? 5 : s === 'pre-ga' ? 7 : s === 'ga' ? 8 : null;
+  }
+  function _inferComm(s) {
+    s = (s || '').toLowerCase().trim();
+    if (['concept','spec','design'].includes(s)) return 1;
+    if (s === 'in build') return 3;
+    if (s === 'beta') return 4;
+    if (['pre-ga','ga','maintenance'].includes(s)) return 5;
+    return null;
+  }
+  function _inferBiz(s) {
+    return ({concept:'Concept',spec:'Concept',design:'Concept','in build':'Concept',
+             beta:'Beta','pre-ga':'Pre-GA',ga:'GA',maintenance:'Mature',sunset:'Sunset'
+            })[(s||'').toLowerCase().trim()] || 'Concept';
+  }
+  const NA = 'n/a', now = new Date().toISOString();
+  localStorage.setItem(PF_KEY, JSON.stringify(legacy.map(rm => {
+    const d = rm.data || {};
+    return {
+      id: rm.id, name: rm.name || 'Untitled Portfolio',
+      isSnapshot: false, snapshotDate: null,
+      createdAt: rm.createdAt || now, updatedAt: rm.updatedAt || now, lastEditedBy: 'me',
+      strategicContext: {
+        masthead: d.masthead || {}, hero: d.hero || {},
+        kpis: d.kpis || [], bets: d.bets || [], actions: d.actions || [],
+        quarters: d.quarters || [], decisions: d.decisions || [], risks: d.risks || []
+      },
+      products: (d.products || []).map(p => ({
+        id: _uuid(), type: _inferType(p.name),
+        identity:     { name: p.name||'', owner:'', oneLiner: p.whyNow||'', vision:'', currentCustomers:'' },
+        technologyReadiness: { trl: _inferTrl(p.stage), evidence:'', targetTrl:null, targetDate:null },
+        maturity:     { level:null, evidence:'' },
+        commercializationStage: _inferComm(p.stage),
+        businessStage: _inferBiz(p.stage),
+        investment:   { fteCount:null, budgetTier:null, capacityNotes: p.capacity||'' },
+        rag:          { status: p.rag||'A', reasoning:'' },
+        nextMilestone:{ description: p.nextMilestone||'', targetDate:null, owner:'' },
+        compliance:   { iso21434:NA, aisXXX:NA, uneceR155:NA, certIn:NA, iso27001:NA, tisax:NA, custom:[] },
+        customerEvidence:[], productRisks:[], productRoadmap:[],
+        createdAt: rm.createdAt||now, updatedAt: rm.updatedAt||now, lastEditedBy:'me'
+      }))
+    };
+  })));
+})();
+
+/* ============================================================
    STORAGE
    ============================================================ */
-const STORAGE_KEY = 'roadmap-builder.roadmaps';
+const STORAGE_KEY = 'roadmap-builder.portfolios';
 
-function loadRoadmaps() {
+function loadPortfolios() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
   catch(e) { console.warn('Storage parse failed:', e); return []; }
 }
-function saveRoadmaps(arr) {
+function savePortfolios(arr) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
 }
 function uuid() {
@@ -3679,17 +3747,19 @@ function fmtRelative(iso) {
   return fmtDate(iso);
 }
 
-function defaultRoadmapData() {
-  return {
-    masthead: { company: '', tagline: '', date: new Date().toISOString().slice(0,10), version: '1.0' },
+function defaultPortfolio(id) {
+  const now = new Date().toISOString();
+  const sc = {
+    masthead: { company: '', tagline: '', date: now.slice(0,10), version: '1.0' },
     hero: { eyebrow: '', headline: '', accentWord: '', lede: '' },
-    kpis: [],
-    bets: [],
-    products: [],
-    actions: [],
-    quarters: [],
-    decisions: [],
-    risks: []
+    kpis: [], bets: [], actions: [], quarters: [], decisions: [], risks: []
+  };
+  return {
+    id, name: 'Untitled portfolio',
+    isSnapshot: false, snapshotDate: null,
+    createdAt: now, updatedAt: now, lastEditedBy: 'me',
+    strategicContext: sc,
+    products: []
   };
 }
 
@@ -3698,20 +3768,14 @@ function defaultRoadmapData() {
    ============================================================ */
 function createNew() {
   const id = uuid();
-  const all = loadRoadmaps();
-  all.push({
-    id,
-    name: 'Untitled roadmap',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    data: defaultRoadmapData()
-  });
-  saveRoadmaps(all);
+  const all = loadPortfolios();
+  all.push(defaultPortfolio(id));
+  savePortfolios(all);
   window.location.href = `editor.html?id=${id}`;
 }
 
 function duplicate(id) {
-  const all = loadRoadmaps();
+  const all = loadPortfolios();
   const orig = all.find(r => r.id === id);
   if (!orig) return;
   const copy = JSON.parse(JSON.stringify(orig));
@@ -3720,16 +3784,16 @@ function duplicate(id) {
   copy.createdAt = new Date().toISOString();
   copy.updatedAt = new Date().toISOString();
   all.push(copy);
-  saveRoadmaps(all);
+  savePortfolios(all);
   render();
 }
 
 function del(id) {
-  const all = loadRoadmaps();
+  const all = loadPortfolios();
   const r = all.find(x => x.id === id);
   if (!r) return;
   if (!confirm(`Delete "${r.name}"?\n\nThis can't be undone.`)) return;
-  saveRoadmaps(all.filter(x => x.id !== id));
+  savePortfolios(all.filter(x => x.id !== id));
   render();
 }
 
@@ -3739,7 +3803,7 @@ function del(id) {
 function render() {
   const list = document.getElementById('list');
   const countEl = document.getElementById('count');
-  const all = loadRoadmaps().sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  const all = loadPortfolios().sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   countEl.textContent = all.length === 0 ? 'NONE YET' : `${all.length} TOTAL`;
 
@@ -3754,9 +3818,10 @@ function render() {
   }
 
   list.innerHTML = all.map(r => {
-    const products = (r.data && r.data.products) ? r.data.products.length : 0;
-    const actions = (r.data && r.data.actions) ? r.data.actions.length : 0;
-    const company = (r.data && r.data.masthead && r.data.masthead.company) || '';
+    const sc = r.strategicContext || r.data || {};
+    const products = (r.products || []).length;
+    const actions = (sc.actions || []).length;
+    const company = (sc.masthead && sc.masthead.company) || '';
     return `
       <article class="card" data-id="${r.id}">
         <div class="info">
@@ -3926,7 +3991,7 @@ let searchQuery = '';
 let sortMode = 'updated-desc';
 
 function getFilteredSorted() {
-  const all = loadRoadmaps();
+  const all = loadPortfolios();
   let filtered = all;
   if (searchQuery.trim()) {
     const q = searchQuery.toLowerCase().trim();
@@ -3964,7 +4029,7 @@ window.render = function() {
   const list = document.getElementById('list');
   const countEl = document.getElementById('count');
   const all = getFilteredSorted();
-  const totalAll = loadRoadmaps().length;
+  const totalAll = loadPortfolios().length;
 
   countEl.textContent = totalAll === 0 ? 'NONE YET'
     : (searchQuery ? `${all.length} OF ${totalAll}` : `${totalAll} TOTAL`);
@@ -3999,9 +4064,10 @@ window.render = function() {
   }
 
   list.innerHTML = all.map(r => {
-    const products = (r.data && r.data.products) ? r.data.products.length : 0;
-    const actions = (r.data && r.data.actions) ? r.data.actions.length : 0;
-    const company = (r.data && r.data.masthead && r.data.masthead.company) || '';
+    const sc = r.strategicContext || r.data || {};
+    const products = (r.products || []).length;
+    const actions = (sc.actions || []).length;
+    const company = (sc.masthead && sc.masthead.company) || '';
     return `
       <article class="card" data-id="${r.id}">
         <div class="info">
@@ -4045,7 +4111,7 @@ function highlight(text, query) {
 // ============================================================
 const _origDuplicate = duplicate;
 window.duplicate = function(id) {
-  const all = loadRoadmaps();
+  const all = loadPortfolios();
   const orig = all.find(r => r.id === id);
   if (!orig) return;
   _origDuplicate(id);
@@ -4053,14 +4119,14 @@ window.duplicate = function(id) {
 };
 
 window.del = function(id) {
-  const all = loadRoadmaps();
+  const all = loadPortfolios();
   const r = all.find(x => x.id === id);
   if (!r) return;
   window.toast.confirm(`Delete "${r.name}"? This can't be undone.`, {
     confirmLabel: 'Delete',
     danger: true,
     onConfirm: () => {
-      saveRoadmaps(all.filter(x => x.id !== id));
+      savePortfolios(all.filter(x => x.id !== id));
       render();
       window.toast.success(`Deleted "${r.name}"`);
     }
@@ -4073,14 +4139,9 @@ render();
 // Replace navigation with view-transition
 document.getElementById('create-btn').onclick = function() {
   const id = uuid();
-  const all = loadRoadmaps();
-  all.push({
-    id, name: 'Untitled roadmap',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    data: defaultRoadmapData()
-  });
-  saveRoadmaps(all);
+  const all = loadPortfolios();
+  all.push(defaultPortfolio(id));
+  savePortfolios(all);
   navigate(`editor.html?id=${id}`);
 };
 

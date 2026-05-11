@@ -3913,9 +3913,77 @@ html {
 
 <script>
 /* ============================================================
+   DATA MODEL MIGRATION  v1→v2  (roadmaps → portfolios)
+   Runs once on every page load; idempotent after first run.
+   Backs up old data under 'legacy-backup'. Never deletes it.
+   ============================================================ */
+(function migrateToPortfolios() {
+  const PF_KEY  = 'roadmap-builder.portfolios';
+  const RM_KEY  = 'roadmap-builder.roadmaps';
+  const BAK_KEY = 'roadmap-builder.legacy-backup';
+  if (localStorage.getItem(PF_KEY)) return;
+  const raw = localStorage.getItem(RM_KEY);
+  if (!raw) return;
+  let legacy; try { legacy = JSON.parse(raw); } catch(e) { return; }
+  if (!Array.isArray(legacy) || !legacy.length) return;
+  if (!localStorage.getItem(BAK_KEY)) localStorage.setItem(BAK_KEY, raw);
+  function _uuid() {
+    return (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+  }
+  function _inferType(n) { return /hsm|hardware/i.test(n || '') ? 'hardware' : 'software'; }
+  function _inferTrl(s) {
+    s = (s || '').toLowerCase().trim();
+    return s === 'beta' ? 5 : s === 'pre-ga' ? 7 : s === 'ga' ? 8 : null;
+  }
+  function _inferComm(s) {
+    s = (s || '').toLowerCase().trim();
+    if (['concept','spec','design'].includes(s)) return 1;
+    if (s === 'in build') return 3;
+    if (s === 'beta') return 4;
+    if (['pre-ga','ga','maintenance'].includes(s)) return 5;
+    return null;
+  }
+  function _inferBiz(s) {
+    return ({concept:'Concept',spec:'Concept',design:'Concept','in build':'Concept',
+             beta:'Beta','pre-ga':'Pre-GA',ga:'GA',maintenance:'Mature',sunset:'Sunset'
+            })[(s||'').toLowerCase().trim()] || 'Concept';
+  }
+  const NA = 'n/a', now = new Date().toISOString();
+  localStorage.setItem(PF_KEY, JSON.stringify(legacy.map(rm => {
+    const d = rm.data || {};
+    return {
+      id: rm.id, name: rm.name || 'Untitled Portfolio',
+      isSnapshot: false, snapshotDate: null,
+      createdAt: rm.createdAt || now, updatedAt: rm.updatedAt || now, lastEditedBy: 'me',
+      strategicContext: {
+        masthead: d.masthead || {}, hero: d.hero || {},
+        kpis: d.kpis || [], bets: d.bets || [], actions: d.actions || [],
+        quarters: d.quarters || [], decisions: d.decisions || [], risks: d.risks || []
+      },
+      products: (d.products || []).map(p => ({
+        id: _uuid(), type: _inferType(p.name),
+        identity:     { name: p.name||'', owner:'', oneLiner: p.whyNow||'', vision:'', currentCustomers:'' },
+        technologyReadiness: { trl: _inferTrl(p.stage), evidence:'', targetTrl:null, targetDate:null },
+        maturity:     { level:null, evidence:'' },
+        commercializationStage: _inferComm(p.stage),
+        businessStage: _inferBiz(p.stage),
+        investment:   { fteCount:null, budgetTier:null, capacityNotes: p.capacity||'' },
+        rag:          { status: p.rag||'A', reasoning:'' },
+        nextMilestone:{ description: p.nextMilestone||'', targetDate:null, owner:'' },
+        compliance:   { iso21434:NA, aisXXX:NA, uneceR155:NA, certIn:NA, iso27001:NA, tisax:NA, custom:[] },
+        customerEvidence:[], productRisks:[], productRoadmap:[],
+        createdAt: rm.createdAt||now, updatedAt: rm.updatedAt||now, lastEditedBy:'me'
+      }))
+    };
+  })));
+})();
+
+/* ============================================================
    STORAGE
    ============================================================ */
-const STORAGE_KEY = 'roadmap-builder.roadmaps';
+const STORAGE_KEY = 'roadmap-builder.portfolios';
 function loadAll() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
   catch(e) { return []; }
@@ -3925,6 +3993,19 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const all = loadAll();
 const roadmap = all.find(r => r.id === id);
+// Gate 1 compat shim: make portfolio shape readable by existing render functions.
+// Products converted from new schema → legacy {name,stage,rag,...} shape renderers expect.
+if (roadmap && roadmap.strategicContext && !roadmap.data) {
+  roadmap.data = roadmap.strategicContext;
+  roadmap.data.products = (roadmap.products || []).map(p => ({
+    name:          (p.identity && p.identity.name) || '',
+    stage:         p.businessStage || '',
+    rag:           (p.rag && p.rag.status) || 'A',
+    capacity:      (p.investment && p.investment.capacityNotes) || '',
+    nextMilestone: (p.nextMilestone && p.nextMilestone.description) || '',
+    whyNow:        (p.identity && p.identity.oneLiner) || ''
+  }));
+}
 
 const target = document.getElementById('render-target');
 
