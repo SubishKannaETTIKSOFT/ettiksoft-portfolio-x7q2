@@ -9,8 +9,9 @@ const ETTIKSOFT_AUTH_CONFIG = {
   get redirectUri() {
     const isLocal = window.location.hostname === "localhost" ||
                     window.location.hostname === "127.0.0.1";
-    return isLocal
-      ? "http://localhost:8765"
-      : "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2";
+    if (isLocal) return "http://localhost:8765";
+
+    // Hardcoded — avoids any dynamic construction or trailing-slash issues
+    return "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2";
   }
 };

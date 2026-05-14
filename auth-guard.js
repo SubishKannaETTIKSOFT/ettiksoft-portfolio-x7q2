@@ -36,7 +36,8 @@
   await msalInstance.initialize();
 
   // Handle redirect response (returning from login)
-  const response = await msalInstance.handleRedirectPromise();
+  // redirectUri must match exactly what was passed to loginRedirect
+  const response = await msalInstance.handleRedirectPromise(cfg.redirectUri);
 
   const accounts = msalInstance.getAllAccounts();
   const activeAccount = response?.account || accounts[0];
@@ -79,6 +80,7 @@
   }
 
   // No account found — redirect to Microsoft login
+  // redirectUri passed explicitly here (MSAL requirement — msalConfig alone is not enough)
   console.log('REDIRECT URI BEING SENT:', cfg.redirectUri);
   console.log('MSAL CONFIG:', JSON.stringify({
     clientId: cfg.clientId,
@@ -87,6 +89,7 @@
   }));
   await msalInstance.loginRedirect({
     scopes: ["User.Read"],
-    prompt: "select_account"
+    prompt: "select_account",
+    redirectUri: "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2"
   });
 })();
