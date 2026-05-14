@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Roadmap Builder · Getting Started</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -463,28 +464,21 @@ a:hover { color: var(--ink); }
        SIDEBAR TABLE OF CONTENTS
        ============================================================ -->
   <nav class="toc">
-    <div class="toc-title">Steps</div>
+    <div class="toc-title">Contents</div>
     <ol>
-      <li class="group-label">Setup</li>
-      <li><a href="#step-1"><span class="num">1.</span>Save the file</a></li>
-      <li><a href="#step-2"><span class="num">2.</span>Extract the zip</a></li>
-      <li><a href="#step-3"><span class="num">3.</span>Open a terminal</a></li>
-      <li><a href="#step-4"><span class="num">4.</span>Check Python</a></li>
-      <li><a href="#step-5"><span class="num">5.</span>Go to the folder</a></li>
-      <li><a href="#step-6"><span class="num">6.</span>Start the server</a></li>
-      <li><a href="#step-7"><span class="num">7.</span>Open in browser</a></li>
+      <li class="group-label">Overview</li>
+      <li><a href="#what"><span class="num">1.</span>What this tool does</a></li>
+      <li><a href="#pages"><span class="num">2.</span>The 7 pages</a></li>
+      <li><a href="#walkthrough"><span class="num">3.</span>End-to-end walkthrough</a></li>
 
-      <li class="group-label">Use</li>
-      <li><a href="#step-8"><span class="num">8.</span>Create a roadmap</a></li>
-      <li><a href="#step-9"><span class="num">9.</span>Fill the editor</a></li>
-      <li><a href="#step-10"><span class="num">10.</span>View the output</a></li>
-      <li><a href="#step-11"><span class="num">11.</span>Download HTML</a></li>
+      <li class="group-label">Reference</li>
+      <li><a href="#trl"><span class="num">4.</span>TRL reference card</a></li>
+      <li><a href="#maturity"><span class="num">5.</span>Maturity levels</a></li>
+      <li><a href="#commercialization"><span class="num">6.</span>Commercialization stages</a></li>
+      <li><a href="#compliance"><span class="num">7.</span>Compliance frameworks</a></li>
 
-      <li class="group-label">After</li>
-      <li><a href="#step-12"><span class="num">12.</span>Stop the server</a></li>
-      <li><a href="#step-13"><span class="num">13.</span>Use it again later</a></li>
-      <li><a href="#backup">Backup &amp; restore</a></li>
-      <li><a href="#troubleshoot">Troubleshooting</a></li>
+      <li class="group-label">Data</li>
+      <li><a href="#backup"><span class="num">8.</span>Backup &amp; restore</a></li>
     </ol>
   </nav>
 
@@ -497,650 +491,263 @@ a:hover { color: var(--ink); }
          HERO
          ============================================================ -->
     <section class="hero">
-      <div class="eyebrow">Detailed walkthrough · No prior experience needed</div>
-      <h1>From a zip file to a working roadmap, in <span class="accent">five minutes</span>.</h1>
+      <div class="eyebrow">Portfolio · Assessment · Outputs</div>
+      <h1>Everything you need to run a <span class="accent">product portfolio</span>.</h1>
       <p class="lede">
-        This guide assumes you have never opened a terminal before. Every step is spelled out for Windows, Mac, and Linux. If you get stuck, the <a href="#troubleshoot">troubleshooting section</a> at the end covers the most common problems.
+        Capture TRL, MRL, and commercialization status for every product. Generate portfolio dashboards, heatmaps, and board-ready decks — all from one place, all offline.
       </p>
 
       <div class="tldr">
-        <strong>TL;DR if you're already comfortable:</strong>
-        Extract the zip, <code>cd</code> into the folder, run <code>python3 -m http.server 8000</code>, open <code>http://localhost:8000</code> in your browser. Done. Skip to <a href="#step-8">Step 8</a> for using the app.
+        <strong>Quick start:</strong> Run <code>python3 -m http.server 8765</code> in the roadmap-builder folder, open <code>http://localhost:8765</code>, paste <code>seed-test-data.js</code> into the browser console, then explore from the home page.
       </div>
     </section>
 
     <!-- ============================================================
-         STEP 1 — Save the file
+         SECTION 1 — WHAT THIS TOOL DOES
          ============================================================ -->
-    <section id="step-1" class="step body-content">
+    <section id="what" class="step body-content">
       <div class="step-head">
         <div class="num">01</div>
-        <h2>Save the zip file somewhere you'll remember</h2>
+        <h2>What this tool does</h2>
       </div>
       <p class="step-intro">
-        You should already have a file called <code>roadmap-builder.zip</code>. Move it somewhere easy to find — your <strong>Desktop</strong> is the simplest choice.
+        Roadmap Builder is a pure-static, offline web app for product teams. No backend, no install, no accounts. Data lives in your browser's <code>localStorage</code>.
       </p>
 
+      <h3>Three layers of work</h3>
+      <ul>
+        <li><strong>Portfolio</strong> — a named collection of products with a strategic context (hero headline, bets, KPIs, quarterly themes, open decisions, risks).</li>
+        <li><strong>Assessment</strong> — per-product data: Technology Readiness Level (TRL), Maturity (MRL or Operational Readiness), Commercialization stage, RAG status, compliance, milestones, risks.</li>
+        <li><strong>Outputs</strong> — three board-facing surfaces generated live from your data: a visual roadmap, a TRL x Commercialization heatmap, and a printable deck.</li>
+      </ul>
+
       <div class="callout tip">
-        <span class="label">TIP</span>
-        Put it on your Desktop. Every step below assumes that's where it is. If you put it somewhere else, replace "Desktop" with that location in the commands.
+        <span class="label">Tip</span>All data is local. Nothing leaves your machine. You can export any page as a self-contained HTML file to share or print.
       </div>
     </section>
 
     <!-- ============================================================
-         STEP 2 — Extract the zip
+         SECTION 2 — THE 7 PAGES
          ============================================================ -->
-    <section id="step-2" class="step body-content">
+    <section id="pages" class="step body-content">
       <div class="step-head">
         <div class="num">02</div>
-        <h2>Extract the zip file</h2>
+        <h2>The 7 pages</h2>
       </div>
-      <p class="step-intro">
-        A zip file is a compressed folder. You need to extract it before you can use what's inside.
-      </p>
+      <p class="step-intro">Each page is a self-contained HTML file. Open them in any order.</p>
 
-      <div class="os-block win">
-        <span class="os-tag">Windows</span>
-        <ol>
-          <li>Find <code>roadmap-builder.zip</code> on your Desktop.</li>
-          <li><strong>Right-click</strong> the file.</li>
-          <li>Click <strong>Extract All…</strong> in the menu that appears.</li>
-          <li>A window opens. Click <strong>Extract</strong> (the default location is fine).</li>
-          <li>You'll now see a new folder called <code>roadmap-builder</code> on your Desktop. Open it. You should see four files: <code>index.html</code>, <code>editor.html</code>, <code>output.html</code>, <code>README.md</code>.</li>
-        </ol>
-      </div>
+      <h3>index.html — Home</h3>
+      <p>Lists every portfolio you have saved. Create, duplicate, or delete portfolios here. Click a portfolio card to open its dashboard.</p>
 
-      <div class="os-block mac">
-        <span class="os-tag">Mac</span>
-        <ol>
-          <li>Find <code>roadmap-builder.zip</code> on your Desktop.</li>
-          <li><strong>Double-click</strong> the file.</li>
-          <li>A new folder called <code>roadmap-builder</code> appears next to the zip — Mac extracts it automatically.</li>
-          <li>Open the folder. You should see four files: <code>index.html</code>, <code>editor.html</code>, <code>output.html</code>, <code>README.md</code>.</li>
-        </ol>
-      </div>
+      <h3>dashboard.html — Portfolio dashboard</h3>
+      <p>Overview of one portfolio: strategic context summary, a card for every product showing TRL band, RAG status, maturity, and next milestone. Navigate from here to all other views. Use <strong>+ Add Product</strong> to create a new product assessment.</p>
 
-      <div class="os-block lnx">
-        <span class="os-tag">Linux</span>
-        <ol>
-          <li>Right-click <code>roadmap-builder.zip</code> on your Desktop.</li>
-          <li>Click <strong>Extract Here</strong> (or <strong>Open With Archive Manager</strong> then Extract).</li>
-          <li>You'll see a new folder called <code>roadmap-builder</code>.</li>
-        </ol>
-      </div>
+      <h3>product.html — Product assessment</h3>
+      <p>The per-product editor. Ten sections: Identity, Technology Readiness (TRL ladder), Maturity (MRL or Operational Readiness), Commercialization and Business Stage, Investment and RAG, Next Milestone, Compliance and Standards, Customer Evidence, Product Roadmap, Product Risks. Autosaves as you type.</p>
+
+      <h3>heatmap.html — TRL x Commercialization heatmap</h3>
+      <p>Plots all products as dots on a 9-row x 5-column grid. Dot size = FTE investment, dot colour = RAG. Use in board meetings to show portfolio distribution. Hover for a detail tooltip; click to open the product assessment. Products without TRL or stage appear in a bench strip below the grid.</p>
+
+      <h3>deck.html — Board deck</h3>
+      <p>A single-page printable summary: Portfolio Pulse KPIs, Strategic Thesis, Product Status table, Compliance Snapshot (all 6 frameworks), Open Decisions, Top Risks, Next 90 Days milestones, footer. Print with Ctrl+P or download as a self-contained HTML file via <strong>Download HTML</strong>.</p>
+
+      <h3>editor.html — Strategic context editor</h3>
+      <p>Edits the portfolio-level strategic context: Masthead, Hero, KPIs, Bets, Actions, Quarterly themes, Open Decisions, Risks. Does not edit products — use <code>product.html</code> for that.</p>
+
+      <h3>output.html — Visual roadmap</h3>
+      <p>The one-page visual roadmap output. Renders the strategic context into a print-ready layout. Download as HTML or print directly from the browser.</p>
     </section>
 
     <!-- ============================================================
-         STEP 3 — Open a terminal
+         SECTION 3 — END-TO-END WALKTHROUGH
          ============================================================ -->
-    <section id="step-3" class="step body-content">
+    <section id="walkthrough" class="step body-content">
       <div class="step-head">
         <div class="num">03</div>
-        <h2>Open a terminal</h2>
+        <h2>End-to-end walkthrough</h2>
       </div>
-      <p class="step-intro">
-        A terminal (also called <em>command prompt</em> or <em>shell</em>) is a window where you type commands instead of clicking. We'll only use two simple commands.
-      </p>
+      <p class="step-intro">Follow these steps to go from a blank browser to a board-ready deck.</p>
 
-      <div class="os-block win">
-        <span class="os-tag">Windows</span>
-        <p>You have two options. Either works. <strong>PowerShell</strong> is recommended.</p>
-
-        <h3 style="margin-top: 14px; font-size: 15px;">Option A — PowerShell (recommended)</h3>
-        <ol>
-          <li>Press the <strong>Windows key</strong> on your keyboard (the one with the Windows logo).</li>
-          <li>Type <strong>PowerShell</strong>.</li>
-          <li>Click <strong>Windows PowerShell</strong> in the search results.</li>
-          <li>A blue window opens. That's your terminal.</li>
-        </ol>
-
-        <h3 style="margin-top: 18px; font-size: 15px;">Option B — Command Prompt</h3>
-        <ol>
-          <li>Press the <strong>Windows key</strong>.</li>
-          <li>Type <strong>cmd</strong>.</li>
-          <li>Click <strong>Command Prompt</strong>.</li>
-          <li>A black window opens. That's your terminal.</li>
-        </ol>
+      <h3>Step 1 — Start the server</h3>
+      <div class="terminal">
+        <span class="prompt">$ </span><span class="cmd">cd roadmap-builder</span><br>
+        <span class="prompt">$ </span><span class="cmd">python3 -m http.server 8765</span><br>
+        <span class="out">Serving HTTP on 0.0.0.0 port 8765 ...</span>
       </div>
+      <p>Open <code>http://localhost:8765</code> in your browser.</p>
 
-      <div class="os-block mac">
-        <span class="os-tag">Mac</span>
-        <ol>
-          <li>Press <strong>Cmd + Space</strong> together. The Spotlight search bar opens.</li>
-          <li>Type <strong>Terminal</strong>.</li>
-          <li>Press <strong>Enter</strong>.</li>
-          <li>A window opens with a prompt. That's your terminal.</li>
-        </ol>
-      </div>
+      <h3>Step 2 — Create a portfolio</h3>
+      <p>On the home page, click <strong>+ Create new portfolio</strong>. Give it a name (e.g. "Q3 Product Portfolio"). This opens the strategic context editor automatically.</p>
 
-      <div class="os-block lnx">
-        <span class="os-tag">Linux</span>
-        <ol>
-          <li>Press <strong>Ctrl + Alt + T</strong> together (works on most distributions).</li>
-          <li>Or open your applications menu and search for <strong>Terminal</strong>.</li>
-        </ol>
-      </div>
+      <h3>Step 3 — Fill the strategic context</h3>
+      <p>In <code>editor.html</code>, fill in: Masthead (company name, date, version), Hero headline and accent word, 3 Bets, quarterly themes, and any open decisions or risks. Everything autosaves. When done, click <strong>Back to Dashboard</strong>.</p>
+
+      <h3>Step 4 — Add products</h3>
+      <p>On the dashboard, click <strong>+ Add Product</strong> for each product in your portfolio. You are taken to <code>product.html</code> for each one.</p>
+
+      <h3>Step 5 — Assess each product</h3>
+      <p>For each product, fill in: Identity (name, owner, one-liner), TRL (click the ladder — be honest and conservative, TRL is retrospective), Maturity level, Commercialization stage, Investment (FTE count, budget tier), RAG status and reasoning, and Next Milestone. Add compliance states for the frameworks that apply. Everything autosaves as you type.</p>
+
+      <h3>Step 6 — Review the dashboard</h3>
+      <p>Return to <code>dashboard.html</code>. Each product card now shows its TRL band, RAG dot, maturity chip, and next milestone date. The strategic context summary shows your hero headline and bets.</p>
+
+      <h3>Step 7 — Open the heatmap</h3>
+      <p>Click <strong>View Heatmap</strong> in the topbar. All products appear as dots. The goal over time: move products up (higher TRL) and to the right (higher commercialization stage). Hover over any dot for a detail card.</p>
+
+      <h3>Step 8 — Generate the deck</h3>
+      <p>Click <strong>Generate Deck</strong>. Review all 9 sections. When ready for the board, click <strong>Download HTML</strong> to save a self-contained offline file, or <strong>Print</strong> to go straight to PDF via the browser print dialog.</p>
 
       <div class="callout note">
-        <span class="label">WHAT IT LOOKS LIKE</span>
-        Whichever terminal you open, you'll see a window with text and a blinking cursor waiting for you to type. The line you'll type on is called the <em>prompt</em>. It usually ends with a <code>&gt;</code>, <code>$</code>, or <code>%</code> sign.
+        <span class="label">Note</span>The deck, heatmap, and roadmap all read live from localStorage. Any edits you make in the product or editor pages are immediately reflected — no manual refresh needed.
       </div>
     </section>
 
     <!-- ============================================================
-         STEP 4 — Check Python
+         SECTION 4 — TRL REFERENCE CARD
          ============================================================ -->
-    <section id="step-4" class="step body-content">
+    <section id="trl" class="step body-content">
       <div class="step-head">
         <div class="num">04</div>
-        <h2>Check if Python is installed</h2>
+        <h2>TRL reference card</h2>
       </div>
-      <p class="step-intro">
-        We need Python to run a tiny local server (60 seconds of work — it doesn't change anything on your computer permanently). Most Mac and Linux systems already have it. Windows usually does not, but installation is one click.
-      </p>
+      <p class="step-intro">Technology Readiness Level (TRL) is a retrospective scale — only assign a level based on what has already been demonstrated, not what you plan to do.</p>
 
-      <h3>Type this command and press Enter</h3>
-
-      <div class="terminal">
-        <span class="prompt">$</span> <span class="cmd">python3 --version</span>
-      </div>
-
-      <p>You'll get one of two responses:</p>
+      <ul>
+        <li><strong>TRL 1</strong> — Basic principles observed. Scientific idea, no experimental proof.</li>
+        <li><strong>TRL 2</strong> — Technology concept formulated. Application of basic principles identified.</li>
+        <li><strong>TRL 3</strong> — Experimental proof of concept. Lab experiments confirm feasibility.</li>
+        <li><strong>TRL 4</strong> — Technology validated in lab. Component or system validated in controlled environment.</li>
+        <li><strong>TRL 5</strong> — Technology validated in relevant environment. Performance validated in environment representative of real-world use.</li>
+        <li><strong>TRL 6</strong> — Technology demonstrated in relevant environment. Prototype demonstrated in operational environment.</li>
+        <li><strong>TRL 7</strong> — System prototype demonstration. Full prototype demonstrated in operational environment.</li>
+        <li><strong>TRL 8</strong> — System complete and qualified. Technology proven to work in its final form and under expected conditions.</li>
+        <li><strong>TRL 9</strong> — Actual system proven in operational environment. Ready for full-rate production.</li>
+      </ul>
 
       <div class="callout tip">
-        <span class="label">GOOD RESPONSE</span>
-        Something like <code>Python 3.11.4</code> (any 3.x version is fine). Skip to Step 5.
-      </div>
-
-      <div class="callout warn">
-        <span class="label">NEED TO INSTALL</span>
-        Something like <code>'python3' is not recognized</code> or <code>command not found</code>. Install Python first using the instructions below for your OS, then come back to this step.
-      </div>
-
-      <h3>Installing Python (only if needed)</h3>
-
-      <div class="os-block win">
-        <span class="os-tag">Windows</span>
-        <ol>
-          <li>Open <a href="https://www.python.org/downloads/" target="_blank">https://www.python.org/downloads/</a> in your browser.</li>
-          <li>Click the big yellow <strong>Download Python 3.x.x</strong> button.</li>
-          <li>Run the downloaded installer.</li>
-          <li><strong>VERY IMPORTANT:</strong> on the first screen, check the box that says <strong>"Add python.exe to PATH"</strong> at the bottom. If you skip this, the command won't work.</li>
-          <li>Click <strong>Install Now</strong>.</li>
-          <li>Wait for it to finish. Click <strong>Close</strong>.</li>
-          <li>Close your terminal window completely (the X in the top corner).</li>
-          <li>Open a new terminal (Step 3 again) and run <code>python3 --version</code>. It should now report a version. If still not found, also try <code>python --version</code> (without the 3).</li>
-        </ol>
-      </div>
-
-      <div class="os-block mac">
-        <span class="os-tag">Mac</span>
-        <p>Mac comes with Python pre-installed. If <code>python3 --version</code> doesn't work, install via Homebrew:</p>
-        <div class="terminal">
-          <span class="prompt">$</span> <span class="cmd">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span>
-          <br><span class="comment"># installs Homebrew (the Mac package installer)</span><br>
-          <span class="prompt">$</span> <span class="cmd">brew install python3</span>
-        </div>
-      </div>
-
-      <div class="os-block lnx">
-        <span class="os-tag">Linux</span>
-        <p>Almost every Linux distribution ships with Python 3. If yours doesn't:</p>
-        <div class="terminal">
-          <span class="prompt">$</span> <span class="cmd">sudo apt install python3</span>      <span class="comment"># Ubuntu / Debian</span><br>
-          <span class="prompt">$</span> <span class="cmd">sudo dnf install python3</span>      <span class="comment"># Fedora / RHEL</span>
-        </div>
-      </div>
-
-      <div class="callout note">
-        <span class="label">DON'T WANT TO INSTALL PYTHON?</span>
-        Alternatives: if you have <strong>Node.js</strong>, use <code>npx serve .</code> instead of the Python command in Step 6. If you have <strong>PHP</strong>, use <code>php -S localhost:8000</code>. If none of these — install Python; it's the easiest.
+        <span class="label">Heatmap bands</span>TRL 1-3 = Research (taupe), TRL 4-6 = Development (sage), TRL 7-9 = Deployment (marine). The heatmap colours your dot accordingly.
       </div>
     </section>
 
     <!-- ============================================================
-         STEP 5 — Navigate to the folder
+         SECTION 5 — MATURITY LEVELS
          ============================================================ -->
-    <section id="step-5" class="step body-content">
+    <section id="maturity" class="step body-content">
       <div class="step-head">
         <div class="num">05</div>
-        <h2>Move into the roadmap-builder folder</h2>
+        <h2>Maturity levels</h2>
       </div>
-      <p class="step-intro">
-        The terminal is currently "looking at" some default folder (usually your home folder). We need to tell it to look at the <code>roadmap-builder</code> folder you extracted in Step 2. We do this with the <code>cd</code> command (it stands for "change directory").
-      </p>
+      <p class="step-intro">Maturity is assessed differently depending on the product type. Switch the type selector in the product form and the maturity section adapts automatically.</p>
 
-      <h3>Type this and press Enter</h3>
+      <h3>Hardware — Manufacturing Readiness Level (MRL)</h3>
+      <p>A 1-10 scale measuring how ready a technology is to be manufactured at the required rate and quality:</p>
+      <ul>
+        <li><strong>MRL 1-3</strong> — Manufacturing feasibility assessed; basic manufacturing implications identified.</li>
+        <li><strong>MRL 4-5</strong> — Manufacturing processes identified; capability demonstrated in lab.</li>
+        <li><strong>MRL 6-7</strong> — Prototype manufacturing demonstrated; production-representative processes in place.</li>
+        <li><strong>MRL 8-9</strong> — Pilot manufacturing line qualified; low-rate initial production demonstrated.</li>
+        <li><strong>MRL 10</strong> — Full-rate production demonstrated; lean production practices established.</li>
+      </ul>
 
-      <div class="os-block win">
-        <span class="os-tag">Windows</span>
-        <div class="terminal">
-          <span class="prompt">PS C:\Users\You&gt;</span> <span class="cmd">cd Desktop\roadmap-builder</span>
-        </div>
-        <p>After Enter, your prompt should change to show you're now inside the folder:</p>
-        <div class="terminal">
-          <span class="prompt">PS C:\Users\You\Desktop\roadmap-builder&gt;</span> <span class="cmd">_</span>
-        </div>
-      </div>
+      <h3>Software — Operational Readiness (1-5)</h3>
+      <ul>
+        <li><strong>1 — Concept</strong> — Single-developer prototype; no SLA capability.</li>
+        <li><strong>2 — Pilot</strong> — Internal or limited external use; manual deployment.</li>
+        <li><strong>3 — Limited</strong> — Small number of production customers; on-call runbook exists.</li>
+        <li><strong>4 — Production</strong> — Stable production deployment; SLAs met; automated CI/CD.</li>
+        <li><strong>5 — Scaled</strong> — Multi-region, high-availability, self-healing infrastructure.</li>
+      </ul>
 
-      <div class="os-block mac">
-        <span class="os-tag">Mac</span>
-        <div class="terminal">
-          <span class="prompt">$</span> <span class="cmd">cd ~/Desktop/roadmap-builder</span>
-        </div>
-        <p>The <code>~</code> is shorthand for "your home folder." After Enter, no error means it worked.</p>
-      </div>
-
-      <div class="os-block lnx">
-        <span class="os-tag">Linux</span>
-        <div class="terminal">
-          <span class="prompt">$</span> <span class="cmd">cd ~/Desktop/roadmap-builder</span>
-        </div>
-      </div>
-
-      <h3>Confirm you're in the right place</h3>
-      <p>Type <code>ls</code> (Mac/Linux) or <code>dir</code> (Windows) and press Enter. You should see the four files listed:</p>
-
-      <div class="terminal">
-        <span class="prompt">$</span> <span class="cmd">ls</span><br>
-        <span class="out">README.md       editor.html     index.html      output.html</span>
-      </div>
-
-      <div class="callout tip">
-        <span class="label">SHORTCUT</span>
-        On <strong>Mac and Linux</strong>, you can drag the <code>roadmap-builder</code> folder from Finder/Files <em>onto</em> your terminal window — it will paste the full path automatically. Then just type <code>cd </code> (with a trailing space) before it and press Enter.
-        <br><br>
-        On <strong>Windows</strong> in PowerShell: navigate to the folder in File Explorer, click in the address bar (or press Alt+D), type <code>powershell</code>, and press Enter — opens a terminal already inside that folder.
-      </div>
+      <h3>Service — Not assessed</h3>
+      <p>For service-type products the maturity section is hidden. Services are assessed primarily through commercialization stage and business stage instead.</p>
     </section>
 
     <!-- ============================================================
-         STEP 6 — Start the server
+         SECTION 6 — COMMERCIALIZATION STAGES
          ============================================================ -->
-    <section id="step-6" class="step body-content">
+    <section id="commercialization" class="step body-content">
       <div class="step-head">
         <div class="num">06</div>
-        <h2>Start the local server</h2>
+        <h2>Commercialization stages</h2>
       </div>
-      <p class="step-intro">
-        Now we run a tiny "web server" on your own computer. It only serves the four files in this folder, only to you, only while the terminal stays open. Nothing leaves your machine.
-      </p>
+      <p class="step-intro">The 5-stage commercialization model describes how far along a product is from idea to market.</p>
 
-      <h3>Type this and press Enter</h3>
+      <ul>
+        <li><strong>Stage 1 — Identification</strong> — Market opportunity identified; problem defined; customer discovery underway. No product yet.</li>
+        <li><strong>Stage 2 — Planning</strong> — Business case defined; IP strategy in place; first prototype or proof-of-concept in progress.</li>
+        <li><strong>Stage 3 — Design and Build</strong> — Functional prototype built; design-partners or pilot customers engaged; go-to-market planned.</li>
+        <li><strong>Stage 4 — Validation</strong> — Beta product in use by paying or pilot customers; product-market fit being tested; feedback loop active.</li>
+        <li><strong>Stage 5 — Sales and Production</strong> — General availability; active sales motion; production or deployment at scale; revenue generating.</li>
+      </ul>
 
-      <div class="terminal">
-        <span class="prompt">$</span> <span class="cmd">python3 -m http.server 8000</span>
-      </div>
-
-      <p>You should see something like:</p>
-
-      <div class="terminal">
-        <span class="out">Serving HTTP on :: port 8000 (http://[::]:8000/) ...</span>
-      </div>
-
-      <div class="callout tip">
-        <span class="label">SUCCESS</span>
-        That message means the server is running. <strong>Leave this terminal window open.</strong> If you close it, the server stops and the app won't load.
-      </div>
-
-      <div class="callout warn">
-        <span class="label">FIRST TIME ON WINDOWS</span>
-        Windows may ask permission for Python to access the network — click <strong>Allow</strong>. This is just so your browser can talk to the server <em>on the same machine</em>. Nothing goes to the internet.
-      </div>
-
-      <div class="callout danger">
-        <span class="label">IF IT SAYS "ADDRESS ALREADY IN USE"</span>
-        Port 8000 is being used by something else. Use a different port: <code>python3 -m http.server 8123</code> (or any number between 1024 and 65000). Remember the number for Step 7.
-      </div>
+      <p>On the heatmap, the X-axis represents these five stages. The goal is to move products right over successive quarters.</p>
     </section>
 
     <!-- ============================================================
-         STEP 7 — Open in browser
+         SECTION 7 — COMPLIANCE FRAMEWORKS
          ============================================================ -->
-    <section id="step-7" class="step body-content">
+    <section id="compliance" class="step body-content">
       <div class="step-head">
         <div class="num">07</div>
-        <h2>Open the app in your browser</h2>
+        <h2>Compliance frameworks</h2>
       </div>
-      <p class="step-intro">
-        Open Chrome, Firefox, Safari, or Edge — any modern browser works. In the address bar at the top, type the URL below and press Enter.
-      </p>
+      <p class="step-intro">The product compliance section tracks six named frameworks plus unlimited custom entries. States: <code>n/a</code> / <code>not started</code> / <code>in progress</code> / <code>aligned</code> / <code>certified</code>.</p>
 
-      <div class="terminal">
-        <span class="cmd">http://localhost:8000</span>
-      </div>
+      <h3>ISO 21434 — Road vehicle cybersecurity</h3>
+      <p>International standard for cybersecurity engineering in road vehicles. Mandatory for OEM supply chains targeting EU, UK, and many APAC markets. Covers threat analysis (TARA), cybersecurity management systems, and secure development lifecycle.</p>
 
-      <p>(If you used a different port in Step 6, replace <code>8000</code> with that number.)</p>
+      <h3>AIS-189 — Indian automotive cybersecurity</h3>
+      <p>India's Automotive Industry Standard for cybersecurity in vehicles, aligned with ISO 21434 and UNECE R155. Required for type-approval of connected vehicles in India from 2024 onwards.</p>
 
-      <h3>What you should see</h3>
-      <p>The home page of Roadmap Builder loads. It looks something like this:</p>
+      <h3>UNECE R155 — UN regulation on vehicle cybersecurity</h3>
+      <p>United Nations Economic Commission for Europe Regulation 155. Mandatory vehicle type-approval requirement in the EU, UK, Japan, and other adopting regions. Requires a certified Cybersecurity Management System (CSMS) from OEM and supply chain.</p>
 
-      <div class="screen-mock">
-        <div class="titlebar">
-          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span class="url">localhost:8000</span>
-        </div>
-        <div class="body">
-          <div class="brand">Roadmap Builder<span class="light"> · Home</span></div>
-          <div class="h">Build a roadmap your team actually <span class="a">uses</span>.</div>
-          <div class="l">Single-page roadmaps for product teams</div>
-          <div class="btn">+ Create new roadmap</div>
-        </div>
-      </div>
+      <h3>CERT-IN — Indian Computer Emergency Response Team</h3>
+      <p>India's national cybersecurity agency. Products handling Indian user data or operating critical infrastructure must comply with CERT-IN's mandatory incident reporting and cybersecurity practices (2022 directive).</p>
 
-      <div class="callout tip">
-        <span class="label">YOU'RE IN</span>
-        If you see this, the app is working. Now we use it.
-      </div>
+      <h3>ISO 27001 — Information security management</h3>
+      <p>The international standard for information security management systems (ISMS). Certification demonstrates a systematic approach to managing sensitive data. Widely required by enterprise customers and financial sector buyers as a procurement prerequisite.</p>
 
-      <div class="callout warn">
-        <span class="label">PAGE WON'T LOAD?</span>
-        Check that the terminal from Step 6 is still showing the "Serving HTTP" message. If you closed it accidentally, just repeat Step 6.
-      </div>
-    </section>
-
-    <!-- ============================================================
-         STEP 8 — Create a roadmap
-         ============================================================ -->
-    <section id="step-8" class="step body-content">
-      <div class="step-head">
-        <div class="num">08</div>
-        <h2>Create your first roadmap</h2>
-      </div>
-      <p class="step-intro">
-        Click the <strong>+ Create new roadmap</strong> button on the home page. The page changes to the editor — you'll spend most of your time here.
-      </p>
-
-      <p>The editor is divided into <strong>six sections</strong>. None of them are required — fill in what you want, leave the rest blank. Empty sections won't appear on the output page.</p>
-
-      <ul>
-        <li><strong>Identity</strong> — company name, tagline, date, version</li>
-        <li><strong>Thesis</strong> — the headline statement of your strategy</li>
-        <li><strong>KPIs</strong> — the key numbers anchoring your strategy</li>
-        <li><strong>Strategic bets</strong> — the 2–4 outcomes everything else serves</li>
-        <li><strong>Products</strong> — one card per product / workstream</li>
-        <li><strong>30-day actions</strong> — the list of things due this month</li>
-      </ul>
-
-      <div class="callout tip">
-        <span class="label">EVERYTHING AUTO-SAVES</span>
-        You don't need to click "save." A small indicator at the top right shows <strong>Saving…</strong> as you type, then <strong>All changes saved</strong>. You can close the tab or shut down — your work is safe in your browser's local storage.
-      </div>
-    </section>
-
-    <!-- ============================================================
-         STEP 9 — Editor walkthrough
-         ============================================================ -->
-    <section id="step-9" class="step body-content">
-      <div class="step-head">
-        <div class="num">09</div>
-        <h2>Fill in the editor</h2>
-      </div>
-      <p class="step-intro">
-        Walk through it top to bottom. Below is what each section is for.
-      </p>
-
-      <h3>Roadmap name (top of the page)</h3>
-      <p>Click the title at the top — it says <strong>Untitled roadmap</strong> by default. Type the name you want (e.g., "Q3 Product Strategy"). This is what appears on the home page list.</p>
-
-      <h3>Section 01 — Identity</h3>
-      <p>Top-bar metadata for the roadmap. Company name, optional tagline, the date you want shown, and a version number. All optional, but the company name is recommended.</p>
-
-      <h3>Section 02 — Thesis</h3>
-      <p>The single statement that summarizes your strategy. Four fields:</p>
-      <ul>
-        <li><strong>Eyebrow</strong> — a small uppercase line above the headline (e.g., "12-month strategy"). Optional.</li>
-        <li><strong>Headline</strong> — the one sentence your team can repeat. Punchy, verb-led.</li>
-        <li><strong>Accent word</strong> — type one word from your headline; it gets highlighted in italic + brand color in the output.</li>
-        <li><strong>Lede</strong> — a 2–3 sentence elaboration. The supporting detail.</li>
-      </ul>
-
-      <h3>Section 03 — KPIs</h3>
-      <p>The numbers that anchor your strategy (e.g., <em>5 products</em>, <em>1 paid eval</em>). Click <strong>+ Add KPI</strong> to add a row. Each KPI has three fields:</p>
-      <ul>
-        <li><strong>Number</strong> — the big number (e.g., "5")</li>
-        <li><strong>Subscript</strong> — small text next to it (e.g., "paid eval"). Optional.</li>
-        <li><strong>Label</strong> — what the number means (e.g., "Customers in pipeline")</li>
-      </ul>
-      <p>Keep to 4–6 KPIs for the cleanest output.</p>
-
-      <h3>Section 04 — Strategic bets</h3>
-      <p>The 2–4 outcomes everything else in the company is in service of. Each bet has:</p>
-      <ul>
-        <li><strong>Verb</strong> — one word (CONVERT, SHIP, DECIDE, BUILD, etc.)</li>
-        <li><strong>Headline</strong> — the bet stated as a complete sentence</li>
-        <li><strong>Why</strong> — 1–2 sentences on why this bet matters</li>
-      </ul>
-
-      <h3>Section 05 — Products</h3>
-      <p>One card per product or major workstream. Each product has:</p>
-      <ul>
-        <li><strong>Name</strong></li>
-        <li><strong>Stage</strong> (e.g., "Pre-GA", "Beta", "Concept")</li>
-        <li><strong>RAG</strong> — click one of three colored buttons. <span style="color: var(--go); font-weight: 600;">Green = on track</span>, <span style="color: var(--decide); font-weight: 600;">Amber = caution</span>, <span style="color: var(--risk); font-weight: 600;">Red = at risk</span>.</li>
-        <li><strong>Capacity</strong> — what's working on it (e.g., "2 devs · 60% PO")</li>
-        <li><strong>Next milestone</strong> — the immediate goal</li>
-        <li><strong>Why now</strong> — one sentence on relevance</li>
-      </ul>
-
-      <h3>Section 06 — 30-day actions</h3>
-      <p>The list of things due in the next month. Each row has date (free text — write it however you want), what needs to happen, who owns it, and a priority (P0 = critical / P1 = important / P2 = nice).</p>
-
-      <div class="callout tip">
-        <span class="label">REMOVING ITEMS</span>
-        Every row in a dynamic section has a small <strong>×</strong> in the top-right corner. Click it to remove that row.
-      </div>
+      <h3>TISAX — Trusted Information Security Assessment Exchange</h3>
+      <p>Automotive industry-specific information security assessment scheme managed by the ENX Association. Required by most German OEMs (VW, BMW, Mercedes) and their Tier-1 suppliers for handling sensitive project data. Based on the VDA ISA questionnaire, which is ISO 27001-aligned.</p>
 
       <div class="callout note">
-        <span class="label">NAVIGATION</span>
-        Click <strong>← Home</strong> at the top-left to go back to the list. Click <strong>View output →</strong> at the top-right to see what your roadmap looks like rendered.
+        <span class="label">Custom frameworks</span>Use the <strong>Custom standards</strong> row in the product compliance section to add any additional frameworks (e.g. SOC 2 Type II, GDPR Article 32, Common Criteria EAL4+).
       </div>
     </section>
 
     <!-- ============================================================
-         STEP 10 — View output
-         ============================================================ -->
-    <section id="step-10" class="step body-content">
-      <div class="step-head">
-        <div class="num">10</div>
-        <h2>View the rendered roadmap</h2>
-      </div>
-      <p class="step-intro">
-        From the editor, click <strong>View output →</strong> in the top-right. From the home page, click the <strong>View</strong> button next to a roadmap.
-      </p>
-
-      <p>This is the visual page that summarizes everything you typed — the "deliverable" you'd share with someone. Empty sections are hidden automatically, so the layout adapts to what you've filled in.</p>
-
-      <p>At the top there's a small toolbar with three actions:</p>
-
-      <ul>
-        <li><strong>← Home</strong> — back to the list</li>
-        <li><strong>✎ Edit</strong> — back to the editor for this roadmap</li>
-        <li><strong>⎙ Print</strong> — opens your browser's print dialog (you can save as PDF from there)</li>
-        <li><strong>↓ Download HTML</strong> — see Step 11</li>
-      </ul>
-
-      <div class="callout tip">
-        <span class="label">PRINTING</span>
-        The page is print-friendly — the toolbar and background texture are removed automatically when you print or save as PDF. Use your browser's "Save as PDF" option in the print dialog.
-      </div>
-    </section>
-
-    <!-- ============================================================
-         STEP 11 — Download HTML
-         ============================================================ -->
-    <section id="step-11" class="step body-content">
-      <div class="step-head">
-        <div class="num">11</div>
-        <h2>Download as a standalone HTML file</h2>
-      </div>
-      <p class="step-intro">
-        Click the <strong>↓ Download HTML</strong> button on the output page. Your browser downloads a single HTML file (named after your roadmap, e.g., <code>Q3_Product_Strategy.html</code>) into your default Downloads folder.
-      </p>
-
-      <p>This downloaded file is <strong>completely self-contained</strong>. You can:</p>
-
-      <ul>
-        <li><strong>Email it</strong> as an attachment</li>
-        <li><strong>Open it on any other computer</strong> by double-clicking — no app, no internet (except for fonts), no install</li>
-        <li><strong>Embed it in Notion / Confluence / SharePoint</strong></li>
-        <li><strong>Host it on a webserver</strong> for a permanent link</li>
-        <li><strong>Open it offline</strong> on a flight</li>
-      </ul>
-
-      <div class="callout note">
-        <span class="label">WHAT'S DIFFERENT IN THE DOWNLOADED FILE</span>
-        It has no toolbar (no Edit / Print / Download buttons) and no JavaScript. Just the rendered roadmap, fully styled. View-only.
-      </div>
-
-      <div class="callout warn">
-        <span class="label">REGENERATE IF YOU CHANGE THINGS</span>
-        The downloaded file is a snapshot. If you go back and edit the roadmap, click <strong>↓ Download HTML</strong> again to get an updated copy.
-      </div>
-    </section>
-
-    <!-- ============================================================
-         STEP 12 — Stop the server
-         ============================================================ -->
-    <section id="step-12" class="step body-content">
-      <div class="step-head">
-        <div class="num">12</div>
-        <h2>When you're done — stop the server</h2>
-      </div>
-      <p class="step-intro">
-        When you're finished using the app, return to the terminal window from Step 6.
-      </p>
-
-      <h3>Press Ctrl + C</h3>
-      <p>(That's the Control key and the letter C, pressed together. On Mac, it's still <strong>Ctrl</strong>, not Cmd.)</p>
-
-      <p>The server stops. You can close the terminal.</p>
-
-      <div class="callout tip">
-        <span class="label">YOUR DATA IS SAFE</span>
-        Stopping the server doesn't affect your saved roadmaps. They live in your browser's local storage and stay there until you delete them or clear browser data.
-      </div>
-    </section>
-
-    <!-- ============================================================
-         STEP 13 — Use it again later
-         ============================================================ -->
-    <section id="step-13" class="step body-content">
-      <div class="step-head">
-        <div class="num">13</div>
-        <h2>Using it again later</h2>
-      </div>
-      <p class="step-intro">
-        Once everything is set up, getting back to work takes 20 seconds.
-      </p>
-
-      <ol>
-        <li>Open a terminal (Step 3)</li>
-        <li><code>cd ~/Desktop/roadmap-builder</code> (Mac/Linux) or <code>cd Desktop\roadmap-builder</code> (Windows)</li>
-        <li><code>python3 -m http.server 8000</code></li>
-        <li>Open <code>http://localhost:8000</code> in your browser</li>
-      </ol>
-
-      <p>Your previously created roadmaps will be there. Same browser, same machine = same data.</p>
-
-      <div class="callout warn">
-        <span class="label">DIFFERENT BROWSER OR DIFFERENT COMPUTER</span>
-        LocalStorage is per-browser-per-device. If you switch from Chrome to Firefox, or move to a different laptop, your saved roadmaps won't appear. To move them, see "Backup &amp; restore" below.
-      </div>
-    </section>
-
-    <!-- ============================================================
-         BACKUP & RESTORE
+         SECTION 8 — BACKUP and RESTORE
          ============================================================ -->
     <section id="backup" class="step body-content">
       <div class="step-head">
-        <div class="num">↓</div>
-        <h2>Backup &amp; restore</h2>
+        <div class="num">08</div>
+        <h2>Backup and restore</h2>
       </div>
-      <p class="step-intro">
-        Your roadmaps are stored in your browser. Browsers can clear data unexpectedly (especially in private browsing). Back up regularly if your roadmaps matter.
-      </p>
+      <p class="step-intro">All data is stored in your browser's <code>localStorage</code>. It is specific to the browser, device, and origin (<code>http://localhost:8765</code>) you use. Clearing your browser data will delete it.</p>
 
-      <h3>Quick backup</h3>
-      <p>Open the home page of the app. Press <strong>F12</strong> to open browser DevTools (or right-click → Inspect). Click the <strong>Console</strong> tab. Paste this and press Enter:</p>
-
+      <h3>Export your data</h3>
+      <p>Open the browser DevTools console (F12 then Console) and run:</p>
       <div class="terminal">
-        <span class="cmd">copy(localStorage.getItem('roadmap-builder.roadmaps'))</span>
+        <span class="prompt">&gt; </span><span class="cmd">copy(localStorage.getItem('roadmap-builder.portfolios'))</span>
       </div>
+      <p>This copies the raw JSON to your clipboard. Paste it into a <code>.json</code> file and save it somewhere safe.</p>
 
-      <p>Your data is now copied to clipboard. Paste it into a text file and save somewhere safe.</p>
-
-      <h3>Restore</h3>
-      <p>On the new browser / computer (after Steps 1–7 of this guide), open the home page, F12 → Console, and run:</p>
-
+      <h3>Restore your data</h3>
+      <p>Open the DevTools console and run, replacing PASTE_JSON_HERE with the contents of your backup file:</p>
       <div class="terminal">
-        <span class="cmd">localStorage.setItem('roadmap-builder.roadmaps', PASTE_BACKUP_HERE)</span>
+        <span class="prompt">&gt; </span><span class="cmd">localStorage.setItem('roadmap-builder.portfolios', 'PASTE_JSON_HERE')</span><br>
+        <span class="prompt">&gt; </span><span class="cmd">location.reload()</span>
       </div>
 
-      <p>Replace <code>PASTE_BACKUP_HERE</code> with your backed-up text, wrapped in single quotes if it isn't already. Refresh the page.</p>
+      <h3>Move to a different browser or device</h3>
+      <p>Export as above, then restore on the new device. Remember to use the same local server address (<code>http://localhost:8765</code>) — localStorage is origin-scoped.</p>
 
-      <h3>Easier alternative</h3>
-      <p>For each important roadmap, click <strong>↓ Download HTML</strong> and save the file. The downloaded HTML files <em>are</em> backups — they don't lose any visible content even if your browser data goes away. The only thing you lose is the ability to re-edit (you'd have to recreate it in the editor).</p>
-    </section>
+      <h3>Download individual pages as offline files</h3>
+      <p>The <strong>Download HTML</strong> button on <code>deck.html</code> and <code>output.html</code> exports a fully self-contained, data-embedded HTML file. This file can be emailed, archived, or opened in any browser without a server. It reflects the data at the moment of download — it does not stay live.</p>
 
-    <!-- ============================================================
-         TROUBLESHOOTING
-         ============================================================ -->
-    <section id="troubleshoot" class="step body-content">
-      <div class="step-head">
-        <div class="num">?</div>
-        <h2>Troubleshooting</h2>
-      </div>
-      <p class="step-intro">
-        The most common problems and how to fix them.
-      </p>
-
-      <div class="faq">
-        <h4>The terminal says <code>'python3' is not recognized</code> or <code>command not found</code></h4>
-        <p>Python isn't installed, or it's installed but not in your "PATH." Go back to Step 4 and install it (Windows users: make sure to check the "Add to PATH" box during installation). After installing, close and reopen the terminal.</p>
-        <p>On some systems the command is just <code>python</code>, not <code>python3</code>. Try <code>python --version</code>. If that works, use <code>python -m http.server 8000</code> in Step 6.</p>
-      </div>
-
-      <div class="faq">
-        <h4>The terminal says <code>Address already in use</code> or <code>OSError: [Errno 48]</code></h4>
-        <p>Port 8000 is being used by another program. Pick a different port: <code>python3 -m http.server 8123</code> (any number 1024–65000 works). Then visit <code>http://localhost:8123</code> in your browser instead.</p>
-      </div>
-
-      <div class="faq">
-        <h4>The browser says "This site can't be reached" or just spins</h4>
-        <p>Check that the terminal from Step 6 is still showing the "Serving HTTP" line. If it has stopped, restart it. If you accidentally closed the terminal, the server is gone — open a new terminal and repeat Steps 5–6.</p>
-        <p>Also make sure the URL is <strong>http://</strong>localhost — not <strong>https://</strong>.</p>
-      </div>
-
-      <div class="faq">
-        <h4>I created a roadmap, refreshed, and it's gone</h4>
-        <p>Most likely you opened a private/incognito window — those don't persist localStorage. Use a normal browser window instead.</p>
-        <p>Also check you're using the same browser you created it in. Roadmaps in Chrome don't appear in Firefox.</p>
-      </div>
-
-      <div class="faq">
-        <h4>The fonts look wrong / generic</h4>
-        <p>Google Fonts is blocked by your network or your browser is offline. The app still works, just with system fonts instead. To fix: get internet access, or download the fonts locally and update the <code>&lt;link&gt;</code> tag in each HTML file to reference the local copies.</p>
-      </div>
-
-      <div class="faq">
-        <h4>Download HTML button doesn't do anything</h4>
-        <p>Some browsers block downloads from local pages. Try a different browser (Chrome / Edge / Firefox handle this well). Or right-click the page → Save As, then trim the file manually (advanced).</p>
-      </div>
-
-      <div class="faq">
-        <h4>I want to start completely fresh — delete everything</h4>
-        <p>F12 → Console, paste: <code>localStorage.removeItem('roadmap-builder.roadmaps')</code> and press Enter. Refresh the home page. All roadmaps gone.</p>
-      </div>
-
-      <div class="faq">
-        <h4>I want to change the colors / fonts</h4>
-        <p>Open <code>output.html</code> in a text editor (Notepad, TextEdit, VS Code, anything). Find the <code>:root {</code> block at the top of the <code>&lt;style&gt;</code> tag. Edit any of the color values (the hex codes like <code>#1F3F4F</code>). Save. Refresh the page. The change applies everywhere.</p>
-      </div>
-
-      <div class="faq">
-        <h4>Something else is broken</h4>
-        <p>Try: (1) refresh the page, (2) restart the server (Ctrl+C in terminal, then run the server command again), (3) try a different browser.</p>
+      <div class="callout warn">
+        <span class="label">Warning</span>Legacy data (if you used an older version of this tool) is stored under <code>roadmap-builder.roadmaps</code>. It is automatically migrated to <code>roadmap-builder.portfolios</code> on first load. A backup copy is kept under <code>roadmap-builder.legacy-backup</code>.
       </div>
     </section>
 
@@ -1150,10 +757,10 @@ a:hover { color: var(--ink); }
     <footer class="foot">
       <div>
         <strong style="color: var(--ink);">Roadmap Builder · Getting Started</strong><br>
-        Built once, edit forever. No accounts, no cloud, no telemetry.
+        Portfolio · Assessment · Outputs. No accounts, no cloud, no telemetry.
       </div>
       <div class="right">
-        v1.0<br>
+        v2.0<br>
         Local · Offline · Yours
       </div>
     </footer>

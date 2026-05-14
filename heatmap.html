@@ -5,8 +5,8 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio Dashboard · Roadmap Builder</title>
-  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
+  <title>Portfolio Heatmap · Roadmap Builder</title>
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><circle cx=%2228%22 cy=%2272%22 r=%2210%22 fill=%22white%22/><circle cx=%2252%22 cy=%2250%22 r=%2214%22 fill=%22white%22/><circle cx=%2278%22 cy=%2228%22 r=%228%22 fill=%22white%22/></svg>'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -22,6 +22,7 @@
   --secondary:     #B5A491;
   --anchor:        #2C4A52;
   --highlight:     #C99B6B;
+  --rag-red:       #9B4444;
   --text:          #1F2937;
   --text-muted:    #6B7280;
   --glass-bg-t:    rgba(255, 255, 252, 0.70);
@@ -39,19 +40,6 @@
   --t-fast:        120ms;
   --t-base:        220ms;
   --t-slow:        380ms;
-
-  /* Status colours */
-  --rag-g:    #16A34A;
-  --rag-g-bg: #DCFCE7;
-  --rag-a:    #D97706;
-  --rag-a-bg: #FEF3C7;
-  --rag-r:    #DC2626;
-  --rag-r-bg: #FEE2E2;
-
-  /* TRL band colours */
-  --trl-research: var(--secondary);
-  --trl-dev:      var(--primary);
-  --trl-deploy:   var(--anchor);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -76,7 +64,7 @@ body {
   width: 100%; height: 100%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.14;
+  opacity: 0.12;
   filter: blur(0.5px) saturate(0.8);
 }
 
@@ -137,7 +125,7 @@ body {
 .page {
   position: relative;
   z-index: 1;
-  max-width: 1120px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px 64px;
 }
@@ -233,306 +221,373 @@ body {
   color: var(--text);
 }
 .btn .icn { display: inline-flex; align-items: center; }
-.btn[disabled], .btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
+
+/* ============================================================
+   SECTION HEAD
+   ============================================================ */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 32px 0 16px;
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.08em;
+}
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+.section-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: auto;
 }
 
 /* ============================================================
-   GLASS CARD
+   HEATMAP
    ============================================================ */
-.card {
+.heatmap-wrap {
+  position: relative;
   background: var(--glass-bg-t);
   border: 1px solid var(--glass-border-t);
   border-radius: var(--radius-lg);
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
   box-shadow: var(--shadow-md);
-  transition: box-shadow var(--t-base) var(--ease),
-              transform var(--t-base) var(--ease);
+  padding: 32px 28px 24px;
 }
+.heatmap-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.heatmap-frame {
+  display: grid;
+  grid-template-columns: 124px 1fr;
+  grid-template-rows: 1fr 56px;
+  gap: 0;
+  min-width: 760px;
+  height: 600px;
+}
+.heatmap-axis-y {
+  position: relative;
+  border-right: 1px dashed rgba(46,74,82,0.18);
+  padding-right: 10px;
+}
+.heatmap-axis-x {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px dashed rgba(46,74,82,0.18);
+  padding-top: 10px;
+}
+.heatmap-axis-x .x-tick {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  padding: 0 6px;
+  line-height: 1.35;
+}
+.heatmap-axis-x .x-num {
+  font-weight: 600;
+  color: var(--anchor);
+  font-size: 12px;
+  display: block;
+  margin-bottom: 2px;
+}
+.heatmap-grid {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  height: 100%;
+}
+/* Bands behind grid */
+.heatmap-band {
+  position: absolute;
+  left: 0; right: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.heatmap-band.deploy   { top: 0;          height: 33.333%; background: rgba(44,74,82,0.10); }
+.heatmap-band.develop  { top: 33.333%;    height: 33.333%; background: rgba(94,138,123,0.10); }
+.heatmap-band.research { top: 66.667%;    height: 33.333%; background: rgba(181,164,145,0.14); }
 
-/* ============================================================
-   CONTEXT SUMMARY
-   ============================================================ */
-.context-summary {
-  padding: 24px 28px;
-  margin-top: 24px;
-}
-.context-label {
+/* Band labels in Y axis area — placed at left edge, ticks at right */
+.y-band {
+  position: absolute;
+  left: 0;
+  width: 88px;
+  text-align: left;
+  font-family: var(--mono);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
   text-transform: uppercase;
+  line-height: 1.3;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+.y-band .y-band-name { display: block; }
+.y-band .y-band-trls { color: var(--text-muted); font-size: 9.5px; margin-top: 2px; }
+.y-band.deploy   { top: 16.67%; color: var(--anchor); }
+.y-band.develop  { top: 50%;    color: var(--primary); }
+.y-band.research { top: 83.33%; color: var(--secondary); }
+
+/* TRL ticks 1..9 */
+.y-tick {
+  position: absolute;
+  right: 4px;
+  font-size: 11px;
   font-family: var(--mono);
+  color: var(--text-muted);
+  transform: translateY(-50%);
+  font-weight: 600;
+}
+
+/* Cell mesh — subtle grid */
+.heatmap-mesh {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    linear-gradient(to right,  rgba(46,74,82,0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(46,74,82,0.07) 1px, transparent 1px);
+  background-size: 20% 11.111%;
+  background-position: 0 0;
+}
+.heatmap-mesh::after {
+  /* outer border */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(46,74,82,0.18);
+  border-radius: 6px;
+}
+
+/* Dot */
+.heatmap-dot {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--anchor);
+  box-shadow: 0 4px 12px rgba(44,74,82,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: var(--mono);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+  cursor: pointer;
+  z-index: 5;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: transform var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+.heatmap-dot:hover,
+.heatmap-dot.active {
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: 0 8px 24px rgba(44,74,82,0.40);
+  z-index: 100;
+}
+.heatmap-dot.drag {
+  transition: none;
+  cursor: grabbing;
+  box-shadow: 0 12px 28px rgba(44,74,82,0.45);
+}
+.heatmap-dot.rag-g { background: var(--primary); }
+.heatmap-dot.rag-a { background: var(--highlight); }
+.heatmap-dot.rag-r { background: var(--rag-red); }
+
+.heatmap-dot-label {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(247,244,237,0.85);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.heatmap-dot-owner {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 1px;
+  font-family: var(--mono);
+}
+
+/* Tooltip */
+.heatmap-tooltip {
+  position: absolute;
+  z-index: 200;
+  min-width: 220px;
+  max-width: 280px;
+  padding: 12px 14px;
+  background: rgba(255,255,252,0.96);
+  border: 1px solid rgba(94,138,123,0.30);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -100%) translateY(-10px);
+  transition: opacity var(--t-fast) var(--ease);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.heatmap-tooltip.show { opacity: 1; }
+.heatmap-tooltip .tt-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.heatmap-tooltip .tt-row  { color: var(--text-muted); }
+.heatmap-tooltip .tt-row strong { color: var(--text); font-weight: 600; }
+.heatmap-tooltip .tt-rag {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: 1px;
+}
+.heatmap-tooltip .tt-rag.g { background: var(--primary); }
+.heatmap-tooltip .tt-rag.a { background: var(--highlight); }
+.heatmap-tooltip .tt-rag.r { background: var(--rag-red); }
+.heatmap-tooltip .tt-hint {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Legend */
+.heatmap-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px 22px;
+  margin-top: 22px;
+  padding: 16px 18px;
+  background: rgba(247,244,237,0.55);
+  border: 1px solid var(--glass-border-t);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.heatmap-legend h4 {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  font-family: var(--mono);
+  margin-bottom: 7px;
+}
+.legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.legend-swatch {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--anchor);
+  flex-shrink: 0;
+}
+.legend-swatch.g { background: var(--primary); }
+.legend-swatch.a { background: var(--highlight); }
+.legend-swatch.r { background: var(--rag-red); }
+.legend-band {
+  width: 24px; height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.legend-band.deploy   { background: rgba(44,74,82,0.30); }
+.legend-band.develop  { background: rgba(94,138,123,0.30); }
+.legend-band.research { background: rgba(181,164,145,0.45); }
+.legend-size-demo {
+  display: flex; align-items: center; gap: 4px;
+}
+.legend-size-demo .dot-sm,
+.legend-size-demo .dot-md,
+.legend-size-demo .dot-lg {
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+.legend-size-demo .dot-sm { width: 8px;  height: 8px; }
+.legend-size-demo .dot-md { width: 13px; height: 13px; }
+.legend-size-demo .dot-lg { width: 18px; height: 18px; }
+
+/* Bench (not yet assessed) */
+.heatmap-bench {
+  margin-top: 24px;
+  padding: 16px 18px;
+  background: rgba(181,164,145,0.10);
+  border: 1px dashed rgba(46,74,82,0.20);
+  border-radius: var(--radius-md);
+}
+.bench-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
   margin-bottom: 10px;
 }
-.context-headline {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.25;
-  margin-bottom: 16px;
-}
-.context-headline .accent {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--anchor) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-.context-bets {
+.bench-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.bet-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  background: rgba(94,138,123,0.10);
-  border: 1px solid rgba(94,138,123,0.18);
-  border-radius: var(--radius-pill);
-  font-size: 12px;
-  color: var(--anchor);
-  font-weight: 500;
-}
-.bet-pill .bet-verb {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.context-quarter {
-  font-size: 12px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.quarter-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--highlight); flex-shrink: 0; }
-.context-empty {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-/* ============================================================
-   PRODUCTS SECTION HEADER
-   ============================================================ */
-.section-head {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 40px 0 20px;
-}
-.section-num {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--primary);
-  font-family: var(--mono);
-  letter-spacing: 0.06em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-num::before {
-  content: '';
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--primary);
-}
-.section-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-  flex: 1;
-}
-.section-count {
-  font-size: 11px;
-  font-family: var(--mono);
-  color: var(--text-muted);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-}
-
-/* ============================================================
-   PRODUCTS GRID
-   ============================================================ */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-/* ============================================================
-   PRODUCT CARD
-   ============================================================ */
-.product-card {
-  padding: 20px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-.product-card-header {
-  display: flex;
-  align-items: flex-start;
   gap: 10px;
-  margin-bottom: 14px;
 }
-.product-type-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  background: rgba(94,138,123,0.12);
-  border: 1px solid rgba(94,138,123,0.18);
-}
-.product-type-icon.hardware { background: rgba(201,155,107,0.12); border-color: rgba(201,155,107,0.22); }
-.product-type-icon.service  { background: rgba(44,74,82,0.10);    border-color: rgba(44,74,82,0.18); }
-.product-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.3;
-  flex: 1;
-}
-.product-owner {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-/* chips row */
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.chip {
+.bench-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  background: var(--glass-bg-t);
+  border: 1px solid var(--glass-border-t);
   border-radius: var(--radius-pill);
-  font-size: 11px;
-  font-weight: 600;
-  font-family: var(--mono);
-  letter-spacing: 0.04em;
-  border: 1px solid transparent;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
 }
-.chip.trl-research  { background: rgba(181,164,145,0.18); color: #7A6650; border-color: rgba(181,164,145,0.30); }
-.chip.trl-dev       { background: rgba(94,138,123,0.15);  color: var(--primary); border-color: rgba(94,138,123,0.25); }
-.chip.trl-deploy    { background: rgba(44,74,82,0.12);    color: var(--anchor); border-color: rgba(44,74,82,0.20); }
-.chip.trl-none      { background: rgba(107,114,128,0.10); color: var(--text-muted); border-color: rgba(107,114,128,0.18); }
-.chip.stage         { background: rgba(201,155,107,0.12); color: #8B6B35; border-color: rgba(201,155,107,0.22); }
-.chip.comm          { background: rgba(94,138,123,0.08);  color: var(--primary); border-color: rgba(94,138,123,0.16); }
-
-/* RAG dot */
-.rag-dot {
+.bench-chip:hover { background: rgba(255,255,252,0.95); border-color: rgba(94,138,123,0.35); }
+.bench-chip-dot {
   width: 10px; height: 10px;
   border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.7);
+  border: 1.5px solid var(--anchor);
 }
-.rag-dot.G { background: var(--rag-g); }
-.rag-dot.A { background: var(--rag-a); }
-.rag-dot.R { background: var(--rag-r); }
+.bench-chip-dot.g { background: var(--primary); }
+.bench-chip-dot.a { background: var(--highlight); }
+.bench-chip-dot.r { background: var(--rag-red); }
 
-/* milestone */
-.product-milestone {
-  border-top: 1px solid var(--glass-border-t);
-  padding-top: 12px;
-  margin-top: 4px;
-}
-.milestone-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-muted);
-  font-family: var(--mono);
-  margin-bottom: 3px;
-}
-.milestone-text {
-  font-size: 12px;
-  color: var(--text);
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.milestone-date {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-family: var(--mono);
-  margin-top: 3px;
-}
-
-/* ============================================================
-   ADD PRODUCT TILE
-   ============================================================ */
-.add-product-tile {
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  border: 2px dashed rgba(94,138,123,0.25);
-  background: rgba(94,138,123,0.04);
-  transition: border-color var(--t-base) var(--ease),
-              background var(--t-base) var(--ease);
-  min-height: 160px;
+/* Empty state */
+.empty-state {
   text-align: center;
+  padding: 80px 24px;
+  background: var(--glass-bg-t);
+  border: 1px solid var(--glass-border-t);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: var(--shadow-md);
 }
-.add-product-tile:hover {
-  border-color: rgba(94,138,123,0.45);
-  background: rgba(94,138,123,0.08);
-  box-shadow: none;
-  transform: none;
-}
-.add-product-tile .add-icon {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: rgba(94,138,123,0.12);
-  border: 1px solid rgba(94,138,123,0.20);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--primary);
-}
-.add-product-tile .add-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--primary);
-}
-.add-product-tile .add-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-}
+.empty-state h2 { font-size: 22px; color: var(--text); margin-bottom: 10px; }
+.empty-state p  { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
 
-/* ============================================================
-   FOOTER
-   ============================================================ */
+/* Footer */
 .foot {
   margin-top: 64px;
   padding: 20px 24px;
@@ -548,37 +603,22 @@ body {
   font-family: var(--mono);
 }
 
-/* ============================================================
-   TOAST NOTIFICATIONS
-   ============================================================ */
+/* Toast */
 .toast-container {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  pointer-events: none;
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 10px; pointer-events: none;
 }
 .toast {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 13px 16px;
-  border-radius: 14px;
-  min-width: 240px;
-  max-width: 380px;
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 13px 16px; border-radius: 14px;
+  min-width: 240px; max-width: 380px;
   background: rgba(31,41,55,0.94);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid rgba(255,255,255,0.10);
   box-shadow: 0 8px 32px rgba(0,0,0,0.32);
-  color: #fff;
-  font-size: 13.5px;
-  pointer-events: auto;
-  position: relative;
-  overflow: hidden;
+  color: #fff; font-size: 13.5px; pointer-events: auto;
+  position: relative; overflow: hidden;
   animation: toastIn var(--t-base) var(--ease) forwards;
 }
 .toast.out { animation: toastOut var(--t-base) var(--ease) forwards; }
@@ -586,76 +626,28 @@ body {
 @keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateY(8px) scale(0.97); } }
 .toast-icon { flex-shrink:0; opacity:0.85; }
 .toast-msg  { flex:1; line-height:1.45; color:#fff; }
-.toast-progress {
-  position:absolute; bottom:0; left:0; height:2px;
-  background:rgba(255,255,255,0.25);
-  width:100%;
-  transform-origin:left;
-  animation: shrink linear forwards;
-}
-@keyframes shrink { from { transform:scaleX(1); } to { transform:scaleX(0); } }
-.toast-actions { display:flex; gap:8px; margin-top:10px; }
-.toast-btn { padding:5px 12px; border-radius:8px; font-size:12px; font-weight:600; font-family:var(--sans); cursor:pointer; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.12); color:#fff; transition:background var(--t-fast); }
-.toast-btn:hover { background:rgba(255,255,255,0.22); }
-.toast-btn.primary { background:var(--primary); border-color:var(--primary); }
 
-/* ============================================================
-   ENTER ANIMATIONS
-   ============================================================ */
+/* Rise animation */
 .rise { opacity:0; transform:translateY(14px); animation:rise var(--t-slow) var(--ease) forwards; }
 .d1 { animation-delay: 60ms; }
 .d2 { animation-delay:120ms; }
-.d3 { animation-delay:180ms; }
-.d4 { animation-delay:240ms; }
 @keyframes rise { to { opacity:1; transform:none; } }
 
-/* ============================================================
-   NOT FOUND STATE
-   ============================================================ */
-.notfound {
-  text-align: center;
-  padding: 80px 24px;
-  color: var(--text-muted);
-}
+/* Not found */
+.notfound { text-align: center; padding: 80px 24px; color: var(--text-muted); }
 .notfound h2 { font-size: 22px; color: var(--text); margin-bottom: 12px; }
 .notfound a  { color: var(--primary); text-decoration: none; font-weight: 500; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .page { padding: 0 16px 48px; }
   .topbar { margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
-  .products-grid { grid-template-columns: 1fr; }
   .topbar-meta { display: none; }
-  .context-headline { font-size: 18px; }
-}
-@media (max-width: 480px) {
+  .heatmap-frame { min-width: 640px; }
   .topbar-actions .btn span:not(.icn) { display: none; }
 }
-
-/* ---- READ-ONLY MODE ---- */
-.readonly-banner {
-  background: rgba(44,74,82,0.08);
-  border: 1px solid rgba(44,74,82,0.14);
-  border-radius: 12px;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-.readonly-banner strong { color: var(--text); }
-.readonly-banner a { color: var(--primary); font-weight: 600; text-decoration: none; }
-.readonly-banner a:hover { text-decoration: underline; }
-.readonly-banner .ro-lock { flex-shrink: 0; opacity: 0.55; }
-body.read-only #snapshot-btn,
-body.read-only #edit-context-btn,
-body.read-only #add-product-btn { display: none !important; }
-/* product cards remain clickable in read-only mode — they open product.html?readonly=1 */
 
 /* ---- POLISH C3 ---- */
 /* Slim sage scrollbar */
@@ -671,9 +663,9 @@ body.read-only #add-product-btn { display: none !important; }
 @media (max-width: 768px) {
   .topbar { flex-wrap: wrap; gap: 6px; padding: 10px 14px; }
   .topbar-actions { flex-wrap: wrap; gap: 6px; }
-  .products-grid { grid-template-columns: 1fr; }
-  .page { padding: 16px 12px 40px; }
-  .context-bets { flex-direction: column; gap: 6px; }
+  .heatmap-wrap { overflow-x: auto; min-width: 0; }
+  .heatmap-inner { min-width: 640px; }
+  .page { padding: 16px 10px 40px; }
 }
 </style>
 </head>
@@ -689,79 +681,45 @@ body.read-only #add-product-btn { display: none !important; }
     </linearGradient>
   </defs>
   <g stroke="#5E8A7B" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Board outline -->
-    <rect x="60" y="60" width="520" height="380" rx="12" stroke-width="1.2" opacity="0.45"/>
-    <!-- Traces -->
-    <path d="M 80 160 H 200 V 120 H 380 V 160 H 440" stroke-width="1.5" opacity="0.55"/>
-    <path d="M 80 220 H 160 V 260 H 340 V 220 H 560" stroke-width="1.5" opacity="0.50"/>
-    <path d="M 80 300 H 240 V 340 H 420 V 300 H 560" stroke-width="1.5" opacity="0.45"/>
-    <path d="M 200 160 V 340" stroke-width="1"   opacity="0.30"/>
-    <path d="M 380 160 V 220" stroke-width="1"   opacity="0.30"/>
-    <!-- MCU block -->
-    <rect x="220" y="180" width="160" height="120" rx="6" stroke-width="1.4" opacity="0.55"/>
-    <text x="300" y="246" font-size="9" text-anchor="middle" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.65">MCU-HSM</text>
-    <!-- IC pins left -->
-    <g opacity="0.40" stroke-width="1">
-      <line x1="200" y1="196" x2="220" y2="196"/>
-      <line x1="200" y1="212" x2="220" y2="212"/>
-      <line x1="200" y1="228" x2="220" y2="228"/>
-      <line x1="200" y1="244" x2="220" y2="244"/>
-      <line x1="200" y1="260" x2="220" y2="260"/>
-      <line x1="200" y1="276" x2="220" y2="276"/>
+    <!-- Grid frame (matrix abstraction) -->
+    <rect x="120" y="80" width="700" height="420" rx="6" stroke-width="1.2" opacity="0.40"/>
+    <g opacity="0.32" stroke-width="0.8">
+      <line x1="260" y1="80"  x2="260" y2="500"/>
+      <line x1="400" y1="80"  x2="400" y2="500"/>
+      <line x1="540" y1="80"  x2="540" y2="500"/>
+      <line x1="680" y1="80"  x2="680" y2="500"/>
+      <line x1="120" y1="160" x2="820" y2="160"/>
+      <line x1="120" y1="240" x2="820" y2="240"/>
+      <line x1="120" y1="320" x2="820" y2="320"/>
+      <line x1="120" y1="400" x2="820" y2="400"/>
     </g>
-    <!-- IC pins right -->
-    <g opacity="0.40" stroke-width="1">
-      <line x1="380" y1="196" x2="400" y2="196"/>
-      <line x1="380" y1="212" x2="400" y2="212"/>
-      <line x1="380" y1="228" x2="400" y2="228"/>
-      <line x1="380" y1="244" x2="400" y2="244"/>
-      <line x1="380" y1="260" x2="400" y2="260"/>
-      <line x1="380" y1="276" x2="400" y2="276"/>
+    <!-- Scatter dots -->
+    <g fill="#5E8A7B" opacity="0.55">
+      <circle cx="220" cy="430" r="9"/>
+      <circle cx="350" cy="350" r="12"/>
+      <circle cx="490" cy="260" r="8"/>
+      <circle cx="600" cy="190" r="14"/>
+      <circle cx="730" cy="130" r="10"/>
     </g>
-    <!-- Connector blocks -->
-    <rect x="80" y="130" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
-    <rect x="80" y="200" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
-    <rect x="460" y="130" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
-    <!-- Capacitors (small) -->
-    <g opacity="0.38" stroke-width="1">
-      <rect x="430" y="188" width="14" height="8" rx="1"/>
-      <rect x="430" y="204" width="14" height="8" rx="1"/>
-    </g>
-    <!-- Via dots -->
-    <g fill="#5E8A7B" opacity="0.45">
-      <circle cx="160" cy="260" r="3.5"/>
-      <circle cx="340" cy="220" r="3.5"/>
-      <circle cx="440" cy="300" r="3.5"/>
-    </g>
-    <!-- Dimension lines -->
-    <g opacity="0.28" stroke-width="0.7" fill="#5E8A7B">
-      <line x1="220" y1="316" x2="380" y2="316"/>
-      <line x1="220" y1="311" x2="220" y2="321"/>
-      <line x1="380" y1="311" x2="380" y2="321"/>
-      <text x="300" y="330" font-size="7.5" text-anchor="middle" stroke="none" font-family="ui-monospace,monospace">160.0</text>
-    </g>
-    <!-- Crosshairs top-right area -->
+    <!-- Crosshairs -->
     <g opacity="0.30" stroke-width="0.8">
       <g transform="translate(1400,200)">
         <line x1="-8" y1="0" x2="8" y2="0"/>
         <line x1="0" y1="-8" x2="0" y2="8"/>
         <circle r="11" fill="none" stroke-width="0.6"/>
       </g>
-      <g transform="translate(1600,500)">
+      <g transform="translate(1620,460)">
         <line x1="-6" y1="0" x2="6" y2="0"/>
         <line x1="0" y1="-6" x2="0" y2="6"/>
-        <circle r="9" fill="none" stroke-width="0.5"/>
       </g>
-      <g transform="translate(900,950)">
+      <g transform="translate(960,920)">
         <line x1="-6" y1="0" x2="6" y2="0"/>
         <line x1="0" y1="-6" x2="0" y2="6"/>
       </g>
     </g>
-    <!-- Long horizontal trace across canvas -->
-    <path d="M 620 260 H 1860" stroke-width="0.8" opacity="0.18" stroke-dasharray="4 8"/>
-    <path d="M 620 400 H 1860" stroke-width="0.8" opacity="0.14" stroke-dasharray="4 8"/>
-    <!-- Board label -->
-    <text x="68" y="54" font-size="8.5" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SCH-002 · PORTFOLIO-DASH · REV 1.0</text>
+    <path d="M 880 260 H 1860" stroke-width="0.8" opacity="0.16" stroke-dasharray="4 8"/>
+    <path d="M 880 400 H 1860" stroke-width="0.8" opacity="0.13" stroke-dasharray="4 8"/>
+    <text x="128" y="74" font-size="8.5" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.40">SCH-004 · TRL × COMM · REV 1.0</text>
     <text x="1852" y="1182" font-size="8.5" text-anchor="end" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SHEET 1/1</text>
   </g>
 </svg>
@@ -779,29 +737,17 @@ body.read-only #add-product-btn { display: none !important; }
     <span class="topbar-meta" id="topbar-meta"></span>
     <nav class="topbar-actions">
       <button id="tour-retrigger-btn" title="Restart guided tour">?</button>
-      <a href="index.html" class="btn ghost">
+      <a id="dashboard-btn" href="#" class="btn ghost">
         <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></span>
-        <span>Portfolios</span>
+        <span>Dashboard</span>
       </a>
-      <button class="btn" id="snapshot-btn" title="Save a read-only snapshot of this portfolio">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
-        <span>Snapshot</span>
-      </button>
-      <a id="edit-context-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-        <span>Edit Context</span>
-      </a>
-      <a id="view-heatmap-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="6" cy="18" r="2.5"/><circle cx="12" cy="11" r="2.5"/><circle cx="18" cy="6" r="2.5"/></svg></span>
-        <span>View Heatmap</span>
-      </a>
-      <a id="generate-deck-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
-        <span>Generate Deck</span>
-      </a>
-      <a id="view-roadmap-btn" href="#" class="btn primary">
+      <a id="view-roadmap-btn" href="#" class="btn">
         <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
         <span>View Roadmap</span>
+      </a>
+      <a id="deck-btn" href="#" class="btn primary">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="3" y="4" width="18" height="14" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="18" x2="12" y2="20"/></svg></span>
+        <span>Generate Deck</span>
       </a>
     </nav>
   </header>
@@ -809,12 +755,17 @@ body.read-only #add-product-btn { display: none !important; }
   <div id="page-content"></div>
 
   <footer class="foot">
-    <div>Portfolio · Roadmap Builder</div>
+    <div>Portfolio · Heatmap</div>
     <div id="foot-meta">v1.0</div>
   </footer>
 </div>
 
 <script>
+/* ============================================================
+   STORAGE & UTILITIES
+   ============================================================ */
+const STORAGE_KEY = 'roadmap-builder.portfolios';
+
 /* ============================================================
    DEMO BOOTSTRAP — seeds ETTIKSOFT data if localStorage is empty
    Runs before migration; never overwrites existing user data.
@@ -832,87 +783,9 @@ body.read-only #add-product-btn { display: none !important; }
   } catch(e) {}
 })();
 
-/* ============================================================
-   DATA MODEL MIGRATION  v1→v2  (roadmaps → portfolios)
-   ============================================================ */
-try { (function migrateToPortfolios() {
-  const PF_KEY  = 'roadmap-builder.portfolios';
-  const RM_KEY  = 'roadmap-builder.roadmaps';
-  const BAK_KEY = 'roadmap-builder.legacy-backup';
-  if (localStorage.getItem(PF_KEY)) return;
-  const raw = localStorage.getItem(RM_KEY);
-  if (!raw) return;
-  let legacy; try { legacy = JSON.parse(raw); } catch(e) { return; }
-  if (!Array.isArray(legacy) || !legacy.length) return;
-  if (!localStorage.getItem(BAK_KEY)) localStorage.setItem(BAK_KEY, raw);
-  function _uuid() {
-    return (typeof crypto !== 'undefined' && crypto.randomUUID)
-      ? crypto.randomUUID()
-      : 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
-  }
-  function _inferType(n) { return /hsm|hardware/i.test(n || '') ? 'hardware' : 'software'; }
-  function _inferTrl(s) {
-    s = (s || '').toLowerCase().trim();
-    return s === 'beta' ? 5 : s === 'pre-ga' ? 7 : s === 'ga' ? 8 : null;
-  }
-  function _inferComm(s) {
-    s = (s || '').toLowerCase().trim();
-    if (['concept','spec','design'].includes(s)) return 1;
-    if (s === 'in build') return 3;
-    if (s === 'beta') return 4;
-    if (['pre-ga','ga','maintenance'].includes(s)) return 5;
-    return null;
-  }
-  function _inferBiz(s) {
-    return ({concept:'Concept',spec:'Concept',design:'Concept','in build':'Concept',
-             beta:'Beta','pre-ga':'Pre-GA',ga:'GA',maintenance:'Mature',sunset:'Sunset'
-            })[(s||'').toLowerCase().trim()] || 'Concept';
-  }
-  const NA = 'n/a', now = new Date().toISOString();
-  localStorage.setItem(PF_KEY, JSON.stringify(legacy.map(rm => {
-    const d = rm.data || {};
-    return {
-      id: rm.id, name: rm.name || 'Untitled Portfolio',
-      isSnapshot: false, snapshotDate: null,
-      createdAt: rm.createdAt || now, updatedAt: rm.updatedAt || now, lastEditedBy: 'me',
-      strategicContext: {
-        masthead: d.masthead || {}, hero: d.hero || {},
-        kpis: d.kpis || [], bets: d.bets || [], actions: d.actions || [],
-        quarters: d.quarters || [], decisions: d.decisions || [], risks: d.risks || []
-      },
-      products: (d.products || []).map(p => ({
-        id: _uuid(), type: _inferType(p.name),
-        identity:     { name: p.name||'', owner:'', oneLiner: p.whyNow||'', vision:'', currentCustomers:'' },
-        technologyReadiness: { trl: _inferTrl(p.stage), evidence:'', targetTrl:null, targetDate:null },
-        maturity:     { level:null, evidence:'' },
-        commercializationStage: _inferComm(p.stage),
-        businessStage: _inferBiz(p.stage),
-        investment:   { fteCount:null, budgetTier:null, capacityNotes: p.capacity||'' },
-        rag:          { status: p.rag||'A', reasoning:'' },
-        nextMilestone:{ description: p.nextMilestone||'', targetDate:null, owner:'' },
-        compliance:   { iso21434:'n/a', aisXXX:'n/a', uneceR155:'n/a', certIn:'n/a', iso27001:'n/a', tisax:'n/a', custom:[] },
-        customerEvidence:[], productRisks:[], productRoadmap:[],
-        createdAt: rm.createdAt||now, updatedAt: rm.updatedAt||now, lastEditedBy:'me'
-      }))
-    };
-  })));
-})(); } catch(e) { console.warn('[migration] skipped:', e); }
-
-/* ============================================================
-   STORAGE & UTILITIES
-   ============================================================ */
-const STORAGE_KEY = 'roadmap-builder.portfolios';
-
 function loadPortfolios() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
   catch(e) { return []; }
-}
-function savePortfolios(arr) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-}
-function uuid() {
-  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-  return 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
 }
 function esc(s) {
   const d = document.createElement('div');
@@ -940,43 +813,25 @@ function fmtRelative(iso) {
 /* ============================================================
    TRL HELPERS
    ============================================================ */
-function trlBand(trl) {
-  if (trl == null) return { cls: 'trl-none', label: 'Not assessed' };
-  if (trl <= 3)    return { cls: 'trl-research', label: `TRL ${trl} · Research` };
-  if (trl <= 6)    return { cls: 'trl-dev',      label: `TRL ${trl} · Development` };
-  return               { cls: 'trl-deploy',    label: `TRL ${trl} · Deployment` };
-}
+const STAGE_NAMES = ['', 'Identification', 'Planning', 'Design', 'Build & Test', 'Sales & Production'];
 
-function maturityLabel(type, level) {
-  if (type === 'service' || level == null) return null;
-  if (type === 'hardware') return `MRL ${level}`;
-  const labels = ['', 'Concept', 'Pilot', 'Limited', 'Production', 'Scaled'];
-  return `OR ${level}${labels[level] ? ' · ' + labels[level] : ''}`;
+function trlBandName(trl) {
+  if (trl == null) return null;
+  if (trl <= 3) return 'Research';
+  if (trl <= 6) return 'Development';
+  return 'Deployment';
 }
-
-function typeIcon(type) {
-  if (type === 'hardware') return '🔩';
-  if (type === 'service')  return '◌';
-  return '▣';
+function ragLabel(s) {
+  return s === 'G' ? 'On track' : s === 'R' ? 'At risk' : 'Watch';
 }
 
 /* ============================================================
-   ACCENT WORD HELPER
-   ============================================================ */
-function applyAccent(headline, accent) {
-  if (!accent || !accent.trim()) return esc(headline);
-  const re = new RegExp('\\b(' + accent.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')\\b', 'i');
-  return esc(headline).replace(re, '<span class="accent">$1</span>');
-}
-
-/* ============================================================
-   RENDER
+   LOAD
    ============================================================ */
 const params = new URLSearchParams(window.location.search);
 const portfolioId = params.get('id');
 const all = loadPortfolios();
 const portfolio = all.find(p => p.id === portfolioId);
-
 const content = document.getElementById('page-content');
 
 if (!portfolio) {
@@ -988,182 +843,14 @@ if (!portfolio) {
     </div>
   `;
 } else {
-  // Read-only mode
-  const isReadOnly = params.get('readonly') === '1';
-  if (isReadOnly) {
-    document.body.classList.add('read-only');
-  }
-
-  // Update top bar
   document.getElementById('topbar-name').textContent = portfolio.name || 'Untitled Portfolio';
   document.getElementById('topbar-meta').textContent =
     portfolio.updatedAt ? 'Updated ' + fmtRelative(portfolio.updatedAt) : '';
-  document.getElementById('edit-context-btn').href  = `editor.html?id=${portfolioId}`;
-  document.getElementById('view-heatmap-btn').href    = `heatmap.html?id=${portfolioId}`;
-  document.getElementById('generate-deck-btn').href  = `deck.html?id=${portfolioId}`;
-  document.getElementById('view-roadmap-btn').href   = `output.html?id=${portfolioId}`;
-  document.title = (portfolio.name || 'Portfolio') + ' · Dashboard';
-
-  // Page title in foot
-  document.getElementById('foot-meta').textContent =
-    `${(portfolio.products||[]).length} product${(portfolio.products||[]).length===1?'':'s'} · updated ${fmtDate(portfolio.updatedAt)}`;
-
-  const sc = portfolio.strategicContext || {};
-  const hero = sc.hero || {};
-  const bets = (sc.bets || []).slice(0, 3);
-  const quarters = sc.quarters || [];
-  const currentQuarter = quarters[0];
-
-  // Strategic context summary
-  const ctxHTML = `
-    <section class="context-summary card rise d2">
-      <div class="context-label">Strategic Context</div>
-      ${hero.headline
-        ? `<div class="context-headline">${applyAccent(hero.headline, hero.accentWord)}</div>`
-        : `<div class="context-empty">No hero headline set — <a href="editor.html?id=${portfolioId}" style="color:var(--primary)">Edit Context</a> to add one.</div>`
-      }
-      ${bets.length ? `
-        <div class="context-bets">
-          ${bets.map(b => `
-            <span class="bet-pill">
-              <span class="bet-verb">${esc(b.verb || '')}</span>
-              ${esc(b.headline || '')}
-            </span>
-          `).join('')}
-        </div>
-      ` : ''}
-      ${currentQuarter ? `
-        <div class="context-quarter">
-          <span class="quarter-dot"></span>
-          <span><strong>${esc(currentQuarter.label || '')}</strong>${currentQuarter.theme ? ' — ' + esc(currentQuarter.theme) : ''}</span>
-        </div>
-      ` : ''}
-    </section>
-  `;
-
-  // Products section
-  const products = portfolio.products || [];
-
-  function productCardHTML(p) {
-    const name = (p.identity && p.identity.name) || 'Unnamed product';
-    const owner = (p.identity && p.identity.owner) || '';
-    const trl = p.technologyReadiness && p.technologyReadiness.trl;
-    const band = trlBand(trl);
-    const maturity = maturityLabel(p.type, p.maturity && p.maturity.level);
-    const commStage = p.commercializationStage;
-    const ragStatus = (p.rag && p.rag.status) || 'A';
-    const bizStage = p.businessStage || '';
-    const ms = p.nextMilestone || {};
-
-    return `
-      <article class="product-card card rise d3" data-product-id="${esc(p.id)}">
-        <div class="product-card-header">
-          <div class="product-type-icon ${esc(p.type || 'software')}" title="${esc(p.type || 'software')}">
-            ${typeIcon(p.type)}
-          </div>
-          <div>
-            <div class="product-name">${esc(name)}</div>
-            ${owner ? `<div class="product-owner">${esc(owner)}</div>` : ''}
-          </div>
-          <span class="rag-dot ${ragStatus}" title="RAG: ${ragStatus === 'G' ? 'On Track' : ragStatus === 'A' ? 'Caution' : 'At Risk'}" style="margin-left:auto;margin-top:3px;flex-shrink:0"></span>
-        </div>
-        <div class="chip-row">
-          <span class="chip ${band.cls}">${esc(band.label)}</span>
-          ${maturity ? `<span class="chip comm">${esc(maturity)}</span>` : ''}
-          ${commStage != null ? `<span class="chip stage">Comm ${commStage}/5</span>` : ''}
-          ${bizStage ? `<span class="chip stage">${esc(bizStage)}</span>` : ''}
-        </div>
-        ${ms.description ? `
-          <div class="product-milestone">
-            <div class="milestone-label">Next milestone</div>
-            <div class="milestone-text">${esc(ms.description)}</div>
-            ${ms.targetDate ? `<div class="milestone-date">${fmtDate(ms.targetDate)}</div>` : ''}
-          </div>
-        ` : ''}
-      </article>
-    `;
-  }
-
-  const addTileHTML = `
-    <article class="add-product-tile card rise d4" id="add-product-btn">
-      <div class="add-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="add-label">Add product</div>
-      <div class="add-hint">Create a new product assessment</div>
-    </article>
-  `;
-
-  const productsHTML = `
-    <div class="section-head rise d3">
-      <span class="section-num">01</span>
-      <span class="section-title">Products</span>
-      <span class="section-count">${products.length} TOTAL</span>
-    </div>
-    <div class="products-grid">
-      ${products.map(productCardHTML).join('')}
-      ${addTileHTML}
-    </div>
-  `;
-
-  // Read-only banner
-  let bannerHTML = '';
-  if (isReadOnly) {
-    const snapDate = portfolio.snapshotDate ? fmtDate(portfolio.snapshotDate) : 'Unknown date';
-    const sourceLink = portfolio.sourceId
-      ? `<a href="dashboard.html?id=${portfolio.sourceId}">View current portfolio →</a>`
-      : '';
-    bannerHTML = `
-      <div class="readonly-banner">
-        <svg class="ro-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span><strong>Snapshot from ${snapDate}</strong> · Read only</span>
-        ${sourceLink ? `<span style="margin-left:auto">${sourceLink}</span>` : ''}
-      </div>
-    `;
-  }
-  content.innerHTML = bannerHTML + ctxHTML + productsHTML;
-
-  // Wire product card clicks → product.html
-  content.querySelectorAll('.product-card[data-product-id]').forEach(card => {
-    card.onclick = () => {
-      const pid = card.dataset.productId;
-      window.location.href = `product.html?portfolio=${portfolioId}&product=${pid}${isReadOnly ? '&readonly=1' : ''}`;
-    };
-  });
-
-  // Wire "Add product" tile
-  document.getElementById('add-product-btn').onclick = () => {
-    const newId = uuid();
-    const now = new Date().toISOString();
-    const NA = 'n/a';
-    const newProduct = {
-      id: newId, type: 'software',
-      identity: { name: '', owner: '', oneLiner: '', vision: '', currentCustomers: '' },
-      technologyReadiness: { trl: null, evidence: '', targetTrl: null, targetDate: null },
-      maturity: { level: null, evidence: '' },
-      commercializationStage: null,
-      businessStage: 'Concept',
-      investment: { fteCount: null, budgetTier: null, capacityNotes: '' },
-      rag: { status: 'A', reasoning: '' },
-      nextMilestone: { description: '', targetDate: null, owner: '' },
-      compliance: { iso21434:NA, aisXXX:NA, uneceR155:NA, certIn:NA, iso27001:NA, tisax:NA, custom:[] },
-      customerEvidence: [], productRisks: [], productRoadmap: [],
-      createdAt: now, updatedAt: now, lastEditedBy: 'me'
-    };
-    const latest = loadPortfolios();
-    const pf = latest.find(x => x.id === portfolioId);
-    if (!pf) { window.toast && window.toast.error('Portfolio not found'); return; }
-    pf.products = pf.products || [];
-    pf.products.push(newProduct);
-    pf.updatedAt = now;
-    savePortfolios(latest);
-    window.location.href = `product.html?portfolio=${portfolioId}&product=${newId}`;
-  };
-}
-
-// Snapshot button — Phase B, no-op for now
-window.__TOUR_PAGE_STEPS   = [2, 5];
-window.__TOUR_STEP_TARGETS = { 2: '#add-product-btn', 5: '#view-heatmap-btn' };
+  document.getElementById('dashboard-btn').href     = `dashboard.html?id=${portfolioId}`;
+  document.getElementById('view-roadmap-btn').href  = `output.html?id=${portfolioId}`;
+  document.getElementById('deck-btn').href          = `deck.html?id=${portfolioId}`;
+  window.__TOUR_PAGE_STEPS   = [6];
+window.__TOUR_STEP_TARGETS = { 6: '#heatmap-grid' };
 
 
 /* ============================================================
@@ -1454,30 +1141,286 @@ window.__TOUR_STEP_TARGETS = { 2: '#add-product-btn', 5: '#view-heatmap-btn' };
   }
 })();
 
-// ── Snapshot ─────────────────────────────────────────────────────────────────
-function doSnapshot() {
-  const snap = JSON.parse(JSON.stringify(portfolio));
-  snap.id = uuid();
-  snap.isSnapshot = true;
-  snap.snapshotDate = new Date().toISOString();
-  snap.name = portfolio.name + ' · Snapshot ' + fmtDate(snap.snapshotDate);
-  snap.sourceId = portfolio.id;
-  snap.createdAt = snap.snapshotDate;
-  snap.updatedAt = snap.snapshotDate;
-  const latest = loadPortfolios();
-  latest.push(snap);
-  savePortfolios(latest);
-  window.toast && window.toast.success('Snapshot saved — visible on the home page');
+document.title = (portfolio.name || 'Portfolio') + ' · Heatmap';
+
+  const products = portfolio.products || [];
+  document.getElementById('foot-meta').textContent =
+    `${products.length} product${products.length===1?'':'s'} · updated ${fmtDate(portfolio.updatedAt)}`;
+
+  if (!products.length) {
+    content.innerHTML = `
+      <div class="section-head rise d1">
+        <span class="section-num">01</span>
+        <span class="section-title">TRL × Commercialization Heatmap</span>
+      </div>
+      <div class="empty-state rise d2">
+        <h2>No products to plot yet</h2>
+        <p>Add products from the dashboard to see them positioned on the heatmap.</p>
+        <a href="dashboard.html?id=${esc(portfolioId)}" class="btn primary">← Back to dashboard</a>
+      </div>
+    `;
+  } else {
+    renderHeatmap(products);
+  }
 }
 
-document.getElementById('snapshot-btn').onclick = () => {
-  window.toast && window.toast.confirm('Save a snapshot of this portfolio?', {
-    actions: [
-      { label: 'Cancel', variant: '' },
-      { label: 'Save Snapshot', variant: 'primary', onClick: doSnapshot }
-    ]
+/* ============================================================
+   RENDER HEATMAP
+   ============================================================ */
+function renderHeatmap(products) {
+  const plotted = [];
+  const bench = [];
+  products.forEach(p => {
+    const trl   = (p.technologyReadiness || {}).trl;
+    const stage = p.commercializationStage;
+    if (trl == null || stage == null) bench.push(p);
+    else plotted.push(p);
   });
-};
+
+  // FTE range for sizing
+  const ftes = plotted.map(p => (p.investment||{}).fteCount).filter(n => typeof n === 'number');
+  const maxFte = ftes.length ? Math.max(...ftes, 1) : 1;
+  const minFte = ftes.length ? Math.min(...ftes, 0) : 0;
+
+  function dotSize(fte) {
+    if (typeof fte !== 'number') return 55;
+    if (maxFte === minFte) return 55;
+    const t = (fte - minFte) / (maxFte - minFte);
+    return Math.round(40 + t * 40);
+  }
+  function initials(name) {
+    return (name || '').replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || '··';
+  }
+
+  // Build dots HTML
+  const dotsHTML = plotted.map(p => {
+    const trl   = p.technologyReadiness.trl;
+    const stage = p.commercializationStage;
+    const fte   = (p.investment||{}).fteCount;
+    const rag   = (p.rag||{}).status || 'A';
+    const size  = dotSize(fte);
+    const leftPct = ((stage - 0.5) / 5) * 100;
+    const topPct  = ((9.5 - trl) / 9) * 100;
+    return `
+      <div class="heatmap-dot rag-${rag.toLowerCase()}"
+           data-product-id="${esc(p.id)}"
+           data-trl="${trl}"
+           data-stage="${stage}"
+           data-fte="${fte == null ? '' : fte}"
+           data-rag="${esc(rag)}"
+           style="left:${leftPct}%; top:${topPct}%; width:${size}px; height:${size}px; font-size:${Math.round(size*0.3)}px;">
+        ${esc(initials(p.identity && p.identity.name))}
+        <span class="heatmap-dot-label">
+          ${esc((p.identity && p.identity.name) || 'Untitled')}
+          ${p.identity && p.identity.owner ? `<span class="heatmap-dot-owner">${esc(p.identity.owner)}</span>` : ''}
+        </span>
+      </div>
+    `;
+  }).join('');
+
+  const benchHTML = bench.length ? `
+    <div class="heatmap-bench rise d2">
+      <div class="bench-label">Not yet assessed · ${bench.length} product${bench.length===1?'':'s'}</div>
+      <div class="bench-list">
+        ${bench.map(p => {
+          const rag = (p.rag||{}).status || 'A';
+          return `
+            <span class="bench-chip" data-product-id="${esc(p.id)}">
+              <span class="bench-chip-dot ${rag.toLowerCase()}"></span>
+              ${esc((p.identity && p.identity.name) || 'Untitled')}
+            </span>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  ` : '';
+
+  content.innerHTML = `
+    <div class="section-head rise d1">
+      <span class="section-num">01</span>
+      <span class="section-title">TRL × Commercialization Heatmap</span>
+      <span class="section-sub">${plotted.length} plotted${bench.length ? ' · ' + bench.length + ' unassessed' : ''}</span>
+    </div>
+
+    <div class="heatmap-wrap rise d2">
+      <div class="heatmap-scroll">
+        <div class="heatmap-frame">
+          <div class="heatmap-axis-y">
+            <div class="y-band deploy">
+              <span class="y-band-name">Deployment</span>
+              <span class="y-band-trls">TRL 7 · 8 · 9</span>
+            </div>
+            <div class="y-band develop">
+              <span class="y-band-name">Development</span>
+              <span class="y-band-trls">TRL 4 · 5 · 6</span>
+            </div>
+            <div class="y-band research">
+              <span class="y-band-name">Research</span>
+              <span class="y-band-trls">TRL 1 · 2 · 3</span>
+            </div>
+            ${[9,8,7,6,5,4,3,2,1].map((n, i) => {
+              const pct = ((i + 0.5) / 9) * 100;
+              return `<div class="y-tick" style="top:${pct}%;">${n}</div>`;
+            }).join('')}
+          </div>
+          <div class="heatmap-grid" id="heatmap-grid">
+            <div class="heatmap-band deploy"></div>
+            <div class="heatmap-band develop"></div>
+            <div class="heatmap-band research"></div>
+            <div class="heatmap-mesh"></div>
+            ${dotsHTML}
+            <div class="heatmap-tooltip" id="heatmap-tooltip"></div>
+          </div>
+          <div class="heatmap-axis-x">
+            ${[1,2,3,4,5].map(n => `
+              <div class="x-tick">
+                <span class="x-num">0${n}</span>
+                ${STAGE_NAMES[n]}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="heatmap-legend">
+        <div>
+          <h4>RAG status</h4>
+          <div class="legend-row"><span class="legend-swatch g"></span> On track</div>
+          <div class="legend-row"><span class="legend-swatch a"></span> Watch</div>
+          <div class="legend-row"><span class="legend-swatch r"></span> At risk</div>
+        </div>
+        <div>
+          <h4>TRL bands</h4>
+          <div class="legend-row"><span class="legend-band deploy"></span> Deployment (7–9)</div>
+          <div class="legend-row"><span class="legend-band develop"></span> Development (4–6)</div>
+          <div class="legend-row"><span class="legend-band research"></span> Research (1–3)</div>
+        </div>
+        <div>
+          <h4>Dot size</h4>
+          <div class="legend-row">
+            <span class="legend-size-demo">
+              <span class="dot-sm"></span><span class="dot-md"></span><span class="dot-lg"></span>
+            </span>
+            Investment (FTE count)
+          </div>
+          <div class="legend-row" style="font-size:11px; margin-top:6px;">Click a dot to open the product. Drag to rearrange for presentation (not saved).</div>
+        </div>
+      </div>
+    </div>
+
+    ${benchHTML}
+  `;
+
+  wireDots();
+  wireBench();
+}
+
+/* ============================================================
+   DOT INTERACTIONS
+   ============================================================ */
+function wireDots() {
+  const tooltip = document.getElementById('heatmap-tooltip');
+  const grid    = document.getElementById('heatmap-grid');
+  if (!tooltip || !grid) return;
+
+  const dots = grid.querySelectorAll('.heatmap-dot');
+
+  function showTooltip(dot) {
+    const id = dot.dataset.productId;
+    const p = (portfolio.products || []).find(x => x.id === id);
+    if (!p) return;
+    const trl = Number(dot.dataset.trl);
+    const stage = Number(dot.dataset.stage);
+    const fte = dot.dataset.fte === '' ? '—' : dot.dataset.fte;
+    const rag = (dot.dataset.rag || 'A').toLowerCase();
+    const next = (p.nextMilestone || {}).description || '—';
+    const nextDate = (p.nextMilestone || {}).targetDate;
+    const nextStr = nextDate ? `${esc(next)} <span style="color:var(--text-muted)">(${fmtDate(nextDate)})</span>` : esc(next);
+
+    tooltip.innerHTML = `
+      <div class="tt-name">${esc((p.identity && p.identity.name) || 'Untitled')}</div>
+      <div class="tt-row">TRL <strong>${trl}</strong> · ${esc(trlBandName(trl))}</div>
+      <div class="tt-row">Stage <strong>${stage}/5</strong> · ${esc(STAGE_NAMES[stage])}</div>
+      <div class="tt-row"><span class="tt-rag ${rag}"></span> RAG: <strong>${esc(ragLabel(dot.dataset.rag))}</strong></div>
+      <div class="tt-row">FTEs: <strong>${esc(fte)}</strong></div>
+      <div class="tt-row" style="margin-top:6px;">Next: ${nextStr}</div>
+      <div class="tt-hint">Click to open →</div>
+    `;
+    // Position above the dot
+    const left = parseFloat(dot.style.left);
+    const top  = parseFloat(dot.style.top);
+    tooltip.style.left = left + '%';
+    tooltip.style.top  = top + '%';
+    tooltip.classList.add('show');
+  }
+  function hideTooltip() {
+    tooltip.classList.remove('show');
+  }
+
+  dots.forEach(dot => {
+    let startX = 0, startY = 0, origLeft = 0, origTop = 0;
+    let dragging = false, moved = false;
+    let pointerId = null;
+
+    dot.addEventListener('mouseenter', () => {
+      if (!dragging) showTooltip(dot);
+    });
+    dot.addEventListener('mouseleave', () => {
+      hideTooltip();
+    });
+
+    dot.addEventListener('pointerdown', (e) => {
+      pointerId = e.pointerId;
+      dot.setPointerCapture(pointerId);
+      startX = e.clientX;
+      startY = e.clientY;
+      origLeft = parseFloat(dot.style.left);
+      origTop  = parseFloat(dot.style.top);
+      dragging = true;
+      moved = false;
+      hideTooltip();
+    });
+    dot.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        moved = true;
+        dot.classList.add('drag');
+        const rect = grid.getBoundingClientRect();
+        const newLeft = origLeft + (dx / rect.width) * 100;
+        const newTop  = origTop  + (dy / rect.height) * 100;
+        dot.style.left = Math.max(0, Math.min(100, newLeft)) + '%';
+        dot.style.top  = Math.max(0, Math.min(100, newTop)) + '%';
+      }
+    });
+    dot.addEventListener('pointerup', (e) => {
+      if (pointerId != null) dot.releasePointerCapture(pointerId);
+      pointerId = null;
+      dragging = false;
+      dot.classList.remove('drag');
+      if (!moved) {
+        // Click: open product
+        const id = dot.dataset.productId;
+        window.location.href = `product.html?portfolio=${portfolioId}&product=${id}`;
+      }
+    });
+    dot.addEventListener('pointercancel', () => {
+      pointerId = null;
+      dragging = false;
+      dot.classList.remove('drag');
+    });
+  });
+}
+
+function wireBench() {
+  document.querySelectorAll('.bench-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const id = chip.dataset.productId;
+      window.location.href = `product.html?portfolio=${portfolioId}&product=${id}`;
+    });
+  });
+}
 
 /* ============================================================
    TOAST NOTIFICATION SYSTEM
@@ -1495,8 +1438,7 @@ document.getElementById('snapshot-btn').onclick = () => {
   const ICONS = {
     success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>',
     error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
-    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-    confirm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
   };
   function escSafe(s) {
     const d = document.createElement('div');
@@ -1505,35 +1447,14 @@ document.getElementById('snapshot-btn').onclick = () => {
   }
   function show(opts) {
     if (typeof opts === 'string') opts = { message: opts };
-    const o = Object.assign({ message:'', type:'info', duration:3200, actions:null }, opts);
+    const o = Object.assign({ message:'', type:'info', duration:3200 }, opts);
     const c = ensureContainer();
     const el = document.createElement('div');
     el.className = 'toast ' + o.type;
     el.innerHTML = `<div class="toast-icon">${ICONS[o.type]||ICONS.info}</div><div class="toast-msg">${escSafe(o.message)}</div>`;
-    if (o.actions && o.actions.length) {
-      const ad = document.createElement('div'); ad.className = 'toast-actions';
-      o.actions.forEach(a => {
-        const btn = document.createElement('button');
-        btn.className = 'toast-btn ' + (a.variant||'');
-        btn.textContent = a.label;
-        btn.onclick = () => { dismiss(); if (a.onClick) a.onClick(); };
-        ad.appendChild(btn);
-      });
-      el.querySelector('.toast-msg').appendChild(ad);
-    }
-    if (o.duration > 0) {
-      const prog = document.createElement('div');
-      prog.className = 'toast-progress';
-      prog.style.animationDuration = o.duration + 'ms';
-      el.appendChild(prog);
-    }
     c.appendChild(el);
     let t = null;
-    function dismiss() {
-      clearTimeout(t);
-      el.classList.add('out');
-      setTimeout(() => el.remove(), 220);
-    }
+    function dismiss() { clearTimeout(t); el.classList.add('out'); setTimeout(() => el.remove(), 220); }
     if (o.duration > 0) t = setTimeout(dismiss, o.duration);
     el.onclick = dismiss;
     return { dismiss };
@@ -1541,8 +1462,7 @@ document.getElementById('snapshot-btn').onclick = () => {
   window.toast = {
     success: (msg, opts) => show(Object.assign({ message: msg, type: 'success' }, opts)),
     error:   (msg, opts) => show(Object.assign({ message: msg, type: 'error',   duration: 5000 }, opts)),
-    info:    (msg, opts) => show(Object.assign({ message: msg, type: 'info' }, opts)),
-    confirm: (msg, opts) => show(Object.assign({ message: msg, type: 'confirm', duration: 0 }, opts))
+    info:    (msg, opts) => show(Object.assign({ message: msg, type: 'info' }, opts))
   };
 })();
 </script>

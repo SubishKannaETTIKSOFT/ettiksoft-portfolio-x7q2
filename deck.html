@@ -5,7 +5,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio Dashboard · Roadmap Builder</title>
+  <title>Board Deck · Roadmap Builder</title>
   <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,24 +40,19 @@
   --t-base:        220ms;
   --t-slow:        380ms;
 
-  /* Status colours */
   --rag-g:    #16A34A;
   --rag-g-bg: #DCFCE7;
   --rag-a:    #D97706;
   --rag-a-bg: #FEF3C7;
   --rag-r:    #DC2626;
   --rag-r-bg: #FEE2E2;
-
-  /* TRL band colours */
   --trl-research: var(--secondary);
   --trl-dev:      var(--primary);
   --trl-deploy:   var(--anchor);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; font-size: 15px; }
-
 body {
   font-family: var(--sans);
   background: var(--base-bg);
@@ -137,29 +132,27 @@ body {
 .page {
   position: relative;
   z-index: 1;
-  max-width: 1120px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 0 24px 64px;
+  padding: 0 32px 80px;
 }
 
 /* ============================================================
    TOP BAR
    ============================================================ */
-.topbar {
+.deck-topbar {
   position: sticky;
   top: 0;
   z-index: 100;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 0;
+  padding: 12px 32px;
+  margin: 0 -32px;
   background: rgba(247, 244, 237, 0.88);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border-bottom: 1px solid var(--glass-border-t);
-  margin: 0 -24px;
-  padding-left: 24px;
-  padding-right: 24px;
 }
 .topbar-name {
   font-size: 15px;
@@ -170,13 +163,6 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.topbar-meta {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-family: var(--mono);
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 .topbar-actions {
   display: flex;
@@ -223,21 +209,7 @@ body {
   background: linear-gradient(135deg, #6B9B8C 0%, #375863 100%);
   box-shadow: 0 4px 12px rgba(44,74,82,0.30);
 }
-.btn.ghost {
-  background: transparent;
-  border-color: transparent;
-  color: var(--text-muted);
-}
-.btn.ghost:hover {
-  background: rgba(94,138,123,0.08);
-  color: var(--text);
-}
 .btn .icn { display: inline-flex; align-items: center; }
-.btn[disabled], .btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
 
 /* ============================================================
    GLASS CARD
@@ -249,413 +221,590 @@ body {
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
   box-shadow: var(--shadow-md);
-  transition: box-shadow var(--t-base) var(--ease),
-              transform var(--t-base) var(--ease);
+  padding: 24px;
 }
 
 /* ============================================================
-   CONTEXT SUMMARY
+   DECK SECTIONS
    ============================================================ */
-.context-summary {
-  padding: 24px 28px;
-  margin-top: 24px;
+.deck-body {
+  padding-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
-.context-label {
+.deck-section {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.section-label {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.10em;
   color: var(--text-muted);
   text-transform: uppercase;
   font-family: var(--mono);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--glass-border-t);
+}
+
+/* ============================================================
+   SECTION 1 — HEADER
+   ============================================================ */
+.deck-header {
+  padding: 32px 36px;
+}
+.deck-company {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  font-family: var(--mono);
   margin-bottom: 10px;
 }
-.context-headline {
-  font-size: 22px;
+.deck-title {
+  font-size: 30px;
   font-weight: 700;
   color: var(--text);
-  line-height: 1.25;
-  margin-bottom: 16px;
+  line-height: 1.2;
+  margin-bottom: 14px;
 }
-.context-headline .accent {
+.deck-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.deck-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(94,138,123,0.08);
+  border: 1px solid rgba(94,138,123,0.15);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text-muted);
+}
+.deck-meta-chip strong { color: var(--text); font-weight: 600; }
+
+/* ============================================================
+   SECTION 2 — PORTFOLIO PULSE
+   ============================================================ */
+.pulse-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.pulse-card {
+  background: rgba(94,138,123,0.06);
+  border: 1px solid rgba(94,138,123,0.12);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: center;
+}
+.pulse-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+}
+.pulse-value.v-green { color: var(--rag-g); }
+.pulse-value.v-amber { color: var(--rag-a); }
+.pulse-value.v-red   { color: var(--rag-r); }
+.pulse-value.v-sage  { color: var(--primary); }
+.pulse-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ============================================================
+   SECTION 3 — STRATEGIC THESIS
+   ============================================================ */
+.thesis-headline {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.thesis-headline .accent {
   background: linear-gradient(135deg, var(--primary) 0%, var(--anchor) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
-.context-bets {
+.thesis-bets {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 10px;
 }
 .bet-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  background: rgba(94,138,123,0.10);
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(94,138,123,0.08);
   border: 1px solid rgba(94,138,123,0.18);
   border-radius: var(--radius-pill);
-  font-size: 12px;
-  color: var(--anchor);
-  font-weight: 500;
+  font-size: 13px;
+  color: var(--text);
 }
 .bet-pill .bet-verb {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.context-quarter {
-  font-size: 12px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.quarter-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--highlight); flex-shrink: 0; }
-.context-empty {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-/* ============================================================
-   PRODUCTS SECTION HEADER
-   ============================================================ */
-.section-head {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 40px 0 20px;
-}
-.section-num {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--primary);
-  font-family: var(--mono);
-  letter-spacing: 0.06em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-num::before {
-  content: '';
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--primary);
-}
-.section-title {
-  font-size: 22px;
   font-weight: 700;
-  color: var(--text);
-  flex: 1;
+  color: var(--primary);
 }
-.section-count {
-  font-size: 11px;
+
+/* ============================================================
+   SECTION 4 — PRODUCT STATUS TABLE
+   ============================================================ */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.status-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.status-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
   font-family: var(--mono);
-  color: var(--text-muted);
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--glass-border-t);
+  white-space: nowrap;
 }
-
-/* ============================================================
-   PRODUCTS GRID
-   ============================================================ */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-/* ============================================================
-   PRODUCT CARD
-   ============================================================ */
-.product-card {
-  padding: 20px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-.product-card-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.product-type-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  background: rgba(94,138,123,0.12);
-  border: 1px solid rgba(94,138,123,0.18);
-}
-.product-type-icon.hardware { background: rgba(201,155,107,0.12); border-color: rgba(201,155,107,0.22); }
-.product-type-icon.service  { background: rgba(44,74,82,0.10);    border-color: rgba(44,74,82,0.18); }
-.product-name {
-  font-size: 15px;
-  font-weight: 600;
+.status-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(46,74,82,0.06);
   color: var(--text);
-  line-height: 1.3;
-  flex: 1;
+  vertical-align: middle;
 }
-.product-owner {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
+.status-table tr:last-child td { border-bottom: none; }
+.status-table tr:hover td { background: rgba(94,138,123,0.04); }
+.product-name-cell {
+  font-weight: 600;
+  white-space: nowrap;
 }
-
-/* chips row */
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.chip {
+.type-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
+  padding: 2px 8px;
   border-radius: var(--radius-pill);
   font-size: 11px;
-  font-weight: 600;
   font-family: var(--mono);
-  letter-spacing: 0.04em;
-  border: 1px solid transparent;
+  background: rgba(46,74,82,0.07);
+  color: var(--text-muted);
 }
-.chip.trl-research  { background: rgba(181,164,145,0.18); color: #7A6650; border-color: rgba(181,164,145,0.30); }
-.chip.trl-dev       { background: rgba(94,138,123,0.15);  color: var(--primary); border-color: rgba(94,138,123,0.25); }
-.chip.trl-deploy    { background: rgba(44,74,82,0.12);    color: var(--anchor); border-color: rgba(44,74,82,0.20); }
-.chip.trl-none      { background: rgba(107,114,128,0.10); color: var(--text-muted); border-color: rgba(107,114,128,0.18); }
-.chip.stage         { background: rgba(201,155,107,0.12); color: #8B6B35; border-color: rgba(201,155,107,0.22); }
-.chip.comm          { background: rgba(94,138,123,0.08);  color: var(--primary); border-color: rgba(94,138,123,0.16); }
-
-/* RAG dot */
-.rag-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.7);
+.trl-cell {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.rag-dot.G { background: var(--rag-g); }
-.rag-dot.A { background: var(--rag-a); }
-.rag-dot.R { background: var(--rag-r); }
-
-/* milestone */
-.product-milestone {
-  border-top: 1px solid var(--glass-border-t);
-  padding-top: 12px;
-  margin-top: 4px;
+.trl-num {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 13px;
 }
-.milestone-label {
+.band-badge {
   font-size: 10px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-muted);
-  font-family: var(--mono);
-  margin-bottom: 3px;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.04em;
 }
-.milestone-text {
+.band-research { background: rgba(181,164,145,0.20); color: #7A6A5E; }
+.band-development { background: rgba(94,138,123,0.16); color: var(--primary); }
+.band-deployment { background: rgba(44,74,82,0.14); color: var(--anchor); }
+.band-none { background: rgba(107,114,128,0.12); color: var(--text-muted); }
+.stage-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--mono);
+  background: rgba(94,138,123,0.12);
+  color: var(--primary);
+}
+.biz-chip {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(44,74,82,0.07);
+  color: var(--text);
+}
+.rag-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+.rag-dot.g { background: var(--rag-g); }
+.rag-dot.a { background: var(--rag-a); }
+.rag-dot.r { background: var(--rag-r); }
+.milestone-cell {
+  max-width: 220px;
   font-size: 12px;
   color: var(--text);
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 .milestone-date {
   font-size: 11px;
-  color: var(--text-muted);
   font-family: var(--mono);
-  margin-top: 3px;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* ============================================================
-   ADD PRODUCT TILE
+   SECTION 5 — COMPLIANCE SNAPSHOT
    ============================================================ */
-.add-product-tile {
-  padding: 24px 20px;
+.compliance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.compliance-table th {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--glass-border-t);
+  white-space: nowrap;
+}
+.compliance-table th.prod-col {
+  text-align: left;
+  min-width: 140px;
+}
+.compliance-table td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(46,74,82,0.06);
+  text-align: center;
+  vertical-align: middle;
+}
+.compliance-table td.prod-name {
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+.compliance-table tr:last-child td { border-bottom: none; }
+.comp-chip {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.comp-certified    { background: var(--primary); color: #fff; }
+.comp-aligned      { border: 1.5px solid var(--primary); color: var(--primary); }
+.comp-in_progress  { border: 1.5px solid var(--highlight); color: var(--highlight); }
+.comp-not_started  { border: 1.5px solid rgba(107,114,128,0.35); color: var(--text-muted); }
+.comp-na           { color: var(--text-muted); font-size: 14px; letter-spacing: 0; }
+
+/* ============================================================
+   SECTION 6 — DECISIONS / SECTION 7 — RISKS
+   ============================================================ */
+.decisions-list, .risks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.decision-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(94,138,123,0.05);
+  border: 1px solid rgba(94,138,123,0.10);
+  border-radius: var(--radius-md);
+}
+.decision-status {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+.status-open   { background: rgba(217,119,6,0.12); color: var(--rag-a); }
+.status-decided{ background: rgba(22,163,74,0.12); color: var(--rag-g); }
+.status-deferred{ background: rgba(107,114,128,0.12); color: var(--text-muted); }
+.decision-body { flex: 1; min-width: 0; }
+.decision-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.decision-meta  { font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
+.risk-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(94,138,123,0.05);
+  border: 1px solid rgba(94,138,123,0.10);
+  border-radius: var(--radius-md);
+}
+.risk-badge {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  border: 2px dashed rgba(94,138,123,0.25);
-  background: rgba(94,138,123,0.04);
-  transition: border-color var(--t-base) var(--ease),
-              background var(--t-base) var(--ease);
-  min-height: 160px;
-  text-align: center;
+  gap: 3px;
 }
-.add-product-tile:hover {
-  border-color: rgba(94,138,123,0.45);
-  background: rgba(94,138,123,0.08);
-  box-shadow: none;
-  transform: none;
-}
-.add-product-tile .add-icon {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: rgba(94,138,123,0.12);
-  border: 1px solid rgba(94,138,123,0.20);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--primary);
-}
-.add-product-tile .add-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--primary);
-}
-.add-product-tile .add-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-/* ============================================================
-   FOOTER
-   ============================================================ */
-.foot {
-  margin-top: 64px;
-  padding: 20px 24px;
-  border-radius: var(--radius-md);
-  background: var(--glass-bg-t);
-  border: 1px solid var(--glass-border-t);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  font-size: 12px;
-  color: var(--text-muted);
+.risk-lh, .risk-imp {
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 700;
   font-family: var(--mono);
 }
+.level-h { background: rgba(220,38,38,0.12); color: var(--rag-r); }
+.level-m { background: rgba(217,119,6,0.12);  color: var(--rag-a); }
+.level-l { background: rgba(22,163,74,0.12);  color: var(--rag-g); }
+.level-  { background: rgba(107,114,128,0.10); color: var(--text-muted); }
+.risk-body { flex: 1; min-width: 0; }
+.risk-title      { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.risk-mitigation { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
 /* ============================================================
-   TOAST NOTIFICATIONS
+   SECTION 8 — NEXT 90 DAYS
+   ============================================================ */
+.milestones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.milestone-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 4px;
+  border-bottom: 1px solid rgba(46,74,82,0.06);
+}
+.milestone-row:last-child { border-bottom: none; }
+.ms-date-col {
+  flex-shrink: 0;
+  width: 96px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  padding-top: 1px;
+}
+.ms-product {
+  flex-shrink: 0;
+  width: 110px;
+}
+.ms-product-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  font-family: var(--mono);
+}
+.ms-desc {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+}
+.ms-owner {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+/* ============================================================
+   SECTION 9 — FOOTER
+   ============================================================ */
+.deck-foot {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.foot-left, .foot-right {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text-muted);
+}
+.foot-center {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  text-align: center;
+  padding: 64px 24px;
+}
+.empty-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.empty-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* ============================================================
+   TOAST
    ============================================================ */
 .toast-container {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  bottom: 24px;
+  right: 24px;
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   pointer-events: none;
 }
 .toast {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 13px 16px;
-  border-radius: 14px;
-  min-width: 240px;
-  max-width: 380px;
-  background: rgba(31,41,55,0.94);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.32);
-  color: #fff;
-  font-size: 13.5px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(15,23,42,0.92);
+  color: #fff !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.24), 0 1px 4px rgba(0,0,0,0.16);
   pointer-events: auto;
+  cursor: pointer;
+  max-width: 340px;
+  font-size: 13px;
+  font-weight: 500;
+  animation: toastIn 220ms cubic-bezier(0.16,1,0.3,1) both;
   position: relative;
   overflow: hidden;
-  animation: toastIn var(--t-base) var(--ease) forwards;
 }
-.toast.out { animation: toastOut var(--t-base) var(--ease) forwards; }
-@keyframes toastIn  { from { opacity:0; transform:translateY(12px) scale(0.96); } to { opacity:1; transform:none; } }
+.toast.out { animation: toastOut 220ms ease forwards; }
+.toast-icon { flex-shrink: 0; }
+.toast-msg  { flex: 1; color: #fff !important; }
+@keyframes toastIn  { from { opacity:0; transform:translateY(16px) scale(0.96); } to { opacity:1; transform:none; } }
 @keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateY(8px) scale(0.97); } }
-.toast-icon { flex-shrink:0; opacity:0.85; }
-.toast-msg  { flex:1; line-height:1.45; color:#fff; }
-.toast-progress {
-  position:absolute; bottom:0; left:0; height:2px;
-  background:rgba(255,255,255,0.25);
-  width:100%;
-  transform-origin:left;
-  animation: shrink linear forwards;
-}
-@keyframes shrink { from { transform:scaleX(1); } to { transform:scaleX(0); } }
-.toast-actions { display:flex; gap:8px; margin-top:10px; }
-.toast-btn { padding:5px 12px; border-radius:8px; font-size:12px; font-weight:600; font-family:var(--sans); cursor:pointer; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.12); color:#fff; transition:background var(--t-fast); }
-.toast-btn:hover { background:rgba(255,255,255,0.22); }
-.toast-btn.primary { background:var(--primary); border-color:var(--primary); }
 
 /* ============================================================
-   ENTER ANIMATIONS
+   SCROLLBAR
    ============================================================ */
-.rise { opacity:0; transform:translateY(14px); animation:rise var(--t-slow) var(--ease) forwards; }
-.d1 { animation-delay: 60ms; }
-.d2 { animation-delay:120ms; }
-.d3 { animation-delay:180ms; }
-.d4 { animation-delay:240ms; }
-@keyframes rise { to { opacity:1; transform:none; } }
-
-/* ============================================================
-   NOT FOUND STATE
-   ============================================================ */
-.notfound {
-  text-align: center;
-  padding: 80px 24px;
-  color: var(--text-muted);
-}
-.notfound h2 { font-size: 22px; color: var(--text); margin-bottom: 12px; }
-.notfound a  { color: var(--primary); text-decoration: none; font-weight: 500; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(94,138,123,0.35); border-radius: 99px; }
+* { scrollbar-width: thin; scrollbar-color: rgba(94,138,123,0.35) transparent; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 640px) {
-  .page { padding: 0 16px 48px; }
-  .topbar { margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
-  .products-grid { grid-template-columns: 1fr; }
-  .topbar-meta { display: none; }
-  .context-headline { font-size: 18px; }
+@media (max-width: 768px) {
+  .page { padding: 0 16px 64px; }
+  .deck-topbar { padding: 12px 16px; margin: 0 -16px; }
+  .pulse-grid { grid-template-columns: repeat(2, 1fr); }
+  .thesis-headline { font-size: 20px; }
+  .deck-title { font-size: 24px; }
+  .table-scroll { overflow-x: auto; }
+  .compliance-table th, .compliance-table td { padding: 6px; }
+  .ms-product { display: none; }
 }
 @media (max-width: 480px) {
-  .topbar-actions .btn span:not(.icn) { display: none; }
+  .deck-topbar .btn span:not(.icn) { display: none; }
 }
 
-/* ---- READ-ONLY MODE ---- */
-.readonly-banner {
-  background: rgba(44,74,82,0.08);
-  border: 1px solid rgba(44,74,82,0.14);
-  border-radius: 12px;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 18px;
-  flex-wrap: wrap;
+/* ============================================================
+   PRINT STYLESHEET
+   ============================================================ */
+@media print {
+  .deck-topbar   { display: none !important; }
+  .depth-orbs    { display: none !important; }
+  .schematic-bg  { display: none !important; }
+  .toast-container { display: none !important; }
+
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 11pt;
+  }
+  .page {
+    max-width: none;
+    padding: 0 !important;
+    padding-top: 12mm !important;
+  }
+  .deck-body { gap: 16px; }
+  .card, .pulse-card, .decision-row, .risk-row {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  .deck-section { break-inside: avoid; page-break-inside: avoid; }
+  .status-table {
+    border-collapse: collapse;
+  }
+  .status-table th, .status-table td {
+    border: 1px solid #ccc !important;
+    padding: 6px 8px;
+    font-size: 10pt;
+  }
+  .compliance-table {
+    border-collapse: collapse;
+  }
+  .compliance-table th, .compliance-table td {
+    border: 1px solid #ccc !important;
+    padding: 5px 7px;
+    font-size: 9pt;
+  }
+  .thesis-headline { font-size: 20pt; }
+  .deck-title      { font-size: 22pt; }
+  .pulse-value     { font-size: 22pt; }
+  a { text-decoration: none; color: inherit; }
 }
-.readonly-banner strong { color: var(--text); }
-.readonly-banner a { color: var(--primary); font-weight: 600; text-decoration: none; }
-.readonly-banner a:hover { text-decoration: underline; }
-.readonly-banner .ro-lock { flex-shrink: 0; opacity: 0.55; }
-body.read-only #snapshot-btn,
-body.read-only #edit-context-btn,
-body.read-only #add-product-btn { display: none !important; }
-/* product cards remain clickable in read-only mode — they open product.html?readonly=1 */
 
 /* ---- POLISH C3 ---- */
 /* Slim sage scrollbar */
@@ -669,11 +818,13 @@ body.read-only #add-product-btn { display: none !important; }
 .topbar .btn, .topbar button.btn, .topbar a.btn { min-height: 36px; }
 
 @media (max-width: 768px) {
-  .topbar { flex-wrap: wrap; gap: 6px; padding: 10px 14px; }
-  .topbar-actions { flex-wrap: wrap; gap: 6px; }
-  .products-grid { grid-template-columns: 1fr; }
-  .page { padding: 16px 12px 40px; }
-  .context-bets { flex-direction: column; gap: 6px; }
+  .deck-topbar { flex-wrap: wrap; gap: 6px; padding: 10px 14px; }
+  .deck-topbar-actions { flex-wrap: wrap; gap: 6px; }
+  .deck-body { padding: 20px 14px; }
+  .pulse-grid { grid-template-columns: 1fr 1fr; }
+  .product-table-wrap { overflow-x: auto; }
+  .compliance-table-wrap { overflow-x: auto; }
+  .bets-row { flex-direction: column; gap: 8px; }
 }
 </style>
 </head>
@@ -689,79 +840,45 @@ body.read-only #add-product-btn { display: none !important; }
     </linearGradient>
   </defs>
   <g stroke="#5E8A7B" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Board outline -->
     <rect x="60" y="60" width="520" height="380" rx="12" stroke-width="1.2" opacity="0.45"/>
-    <!-- Traces -->
     <path d="M 80 160 H 200 V 120 H 380 V 160 H 440" stroke-width="1.5" opacity="0.55"/>
     <path d="M 80 220 H 160 V 260 H 340 V 220 H 560" stroke-width="1.5" opacity="0.50"/>
     <path d="M 80 300 H 240 V 340 H 420 V 300 H 560" stroke-width="1.5" opacity="0.45"/>
-    <path d="M 200 160 V 340" stroke-width="1"   opacity="0.30"/>
-    <path d="M 380 160 V 220" stroke-width="1"   opacity="0.30"/>
-    <!-- MCU block -->
+    <path d="M 200 160 V 340" stroke-width="1" opacity="0.30"/>
+    <path d="M 380 160 V 220" stroke-width="1" opacity="0.30"/>
     <rect x="220" y="180" width="160" height="120" rx="6" stroke-width="1.4" opacity="0.55"/>
     <text x="300" y="246" font-size="9" text-anchor="middle" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.65">MCU-HSM</text>
-    <!-- IC pins left -->
     <g opacity="0.40" stroke-width="1">
-      <line x1="200" y1="196" x2="220" y2="196"/>
-      <line x1="200" y1="212" x2="220" y2="212"/>
-      <line x1="200" y1="228" x2="220" y2="228"/>
-      <line x1="200" y1="244" x2="220" y2="244"/>
-      <line x1="200" y1="260" x2="220" y2="260"/>
-      <line x1="200" y1="276" x2="220" y2="276"/>
+      <line x1="200" y1="196" x2="220" y2="196"/><line x1="200" y1="212" x2="220" y2="212"/>
+      <line x1="200" y1="228" x2="220" y2="228"/><line x1="200" y1="244" x2="220" y2="244"/>
+      <line x1="200" y1="260" x2="220" y2="260"/><line x1="200" y1="276" x2="220" y2="276"/>
     </g>
-    <!-- IC pins right -->
     <g opacity="0.40" stroke-width="1">
-      <line x1="380" y1="196" x2="400" y2="196"/>
-      <line x1="380" y1="212" x2="400" y2="212"/>
-      <line x1="380" y1="228" x2="400" y2="228"/>
-      <line x1="380" y1="244" x2="400" y2="244"/>
-      <line x1="380" y1="260" x2="400" y2="260"/>
-      <line x1="380" y1="276" x2="400" y2="276"/>
+      <line x1="380" y1="196" x2="400" y2="196"/><line x1="380" y1="212" x2="400" y2="212"/>
+      <line x1="380" y1="228" x2="400" y2="228"/><line x1="380" y1="244" x2="400" y2="244"/>
+      <line x1="380" y1="260" x2="400" y2="260"/><line x1="380" y1="276" x2="400" y2="276"/>
     </g>
-    <!-- Connector blocks -->
     <rect x="80" y="130" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
     <rect x="80" y="200" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
     <rect x="460" y="130" width="40" height="60" rx="3" stroke-width="1.2" opacity="0.42"/>
-    <!-- Capacitors (small) -->
     <g opacity="0.38" stroke-width="1">
-      <rect x="430" y="188" width="14" height="8" rx="1"/>
-      <rect x="430" y="204" width="14" height="8" rx="1"/>
+      <rect x="430" y="188" width="14" height="8" rx="1"/><rect x="430" y="204" width="14" height="8" rx="1"/>
     </g>
-    <!-- Via dots -->
     <g fill="#5E8A7B" opacity="0.45">
-      <circle cx="160" cy="260" r="3.5"/>
-      <circle cx="340" cy="220" r="3.5"/>
-      <circle cx="440" cy="300" r="3.5"/>
+      <circle cx="160" cy="260" r="3.5"/><circle cx="340" cy="220" r="3.5"/><circle cx="440" cy="300" r="3.5"/>
     </g>
-    <!-- Dimension lines -->
     <g opacity="0.28" stroke-width="0.7" fill="#5E8A7B">
       <line x1="220" y1="316" x2="380" y2="316"/>
-      <line x1="220" y1="311" x2="220" y2="321"/>
-      <line x1="380" y1="311" x2="380" y2="321"/>
+      <line x1="220" y1="311" x2="220" y2="321"/><line x1="380" y1="311" x2="380" y2="321"/>
       <text x="300" y="330" font-size="7.5" text-anchor="middle" stroke="none" font-family="ui-monospace,monospace">160.0</text>
     </g>
-    <!-- Crosshairs top-right area -->
     <g opacity="0.30" stroke-width="0.8">
-      <g transform="translate(1400,200)">
-        <line x1="-8" y1="0" x2="8" y2="0"/>
-        <line x1="0" y1="-8" x2="0" y2="8"/>
-        <circle r="11" fill="none" stroke-width="0.6"/>
-      </g>
-      <g transform="translate(1600,500)">
-        <line x1="-6" y1="0" x2="6" y2="0"/>
-        <line x1="0" y1="-6" x2="0" y2="6"/>
-        <circle r="9" fill="none" stroke-width="0.5"/>
-      </g>
-      <g transform="translate(900,950)">
-        <line x1="-6" y1="0" x2="6" y2="0"/>
-        <line x1="0" y1="-6" x2="0" y2="6"/>
-      </g>
+      <g transform="translate(1400,200)"><line x1="-8" y1="0" x2="8" y2="0"/><line x1="0" y1="-8" x2="0" y2="8"/><circle r="11" fill="none" stroke-width="0.6"/></g>
+      <g transform="translate(1600,500)"><line x1="-6" y1="0" x2="6" y2="0"/><line x1="0" y1="-6" x2="0" y2="6"/><circle r="9" fill="none" stroke-width="0.5"/></g>
     </g>
-    <!-- Long horizontal trace across canvas -->
     <path d="M 620 260 H 1860" stroke-width="0.8" opacity="0.18" stroke-dasharray="4 8"/>
     <path d="M 620 400 H 1860" stroke-width="0.8" opacity="0.14" stroke-dasharray="4 8"/>
-    <!-- Board label -->
-    <text x="68" y="54" font-size="8.5" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SCH-002 · PORTFOLIO-DASH · REV 1.0</text>
+    <text x="68" y="54" font-size="8.5" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SCH-003 · PORTFOLIO-DECK · REV 1.0</text>
     <text x="1852" y="1182" font-size="8.5" text-anchor="end" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SHEET 1/1</text>
   </g>
 </svg>
@@ -774,44 +891,26 @@ body.read-only #add-product-btn { display: none !important; }
 </div>
 
 <div class="page">
-  <header class="topbar">
-    <span class="topbar-name" id="topbar-name">Portfolio</span>
-    <span class="topbar-meta" id="topbar-meta"></span>
+  <header class="deck-topbar">
+    <span class="topbar-name" id="topbar-name">Board Deck</span>
     <nav class="topbar-actions">
       <button id="tour-retrigger-btn" title="Restart guided tour">?</button>
-      <a href="index.html" class="btn ghost">
+      <a id="back-btn" href="index.html" class="btn ghost">
         <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></span>
-        <span>Portfolios</span>
+        <span>Dashboard</span>
       </a>
-      <button class="btn" id="snapshot-btn" title="Save a read-only snapshot of this portfolio">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
-        <span>Snapshot</span>
+      <button class="btn" id="print-btn">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></span>
+        <span>Print</span>
       </button>
-      <a id="edit-context-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-        <span>Edit Context</span>
-      </a>
-      <a id="view-heatmap-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="6" cy="18" r="2.5"/><circle cx="12" cy="11" r="2.5"/><circle cx="18" cy="6" r="2.5"/></svg></span>
-        <span>View Heatmap</span>
-      </a>
-      <a id="generate-deck-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
-        <span>Generate Deck</span>
-      </a>
-      <a id="view-roadmap-btn" href="#" class="btn primary">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
-        <span>View Roadmap</span>
-      </a>
+      <button class="btn primary" id="download-btn">
+        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+        <span>Download HTML</span>
+      </button>
     </nav>
   </header>
 
-  <div id="page-content"></div>
-
-  <footer class="foot">
-    <div>Portfolio · Roadmap Builder</div>
-    <div id="foot-meta">v1.0</div>
-  </footer>
+  <div id="deck-content"></div>
 </div>
 
 <script>
@@ -863,95 +962,83 @@ try { (function migrateToPortfolios() {
     if (['pre-ga','ga','maintenance'].includes(s)) return 5;
     return null;
   }
-  function _inferBiz(s) {
-    return ({concept:'Concept',spec:'Concept',design:'Concept','in build':'Concept',
-             beta:'Beta','pre-ga':'Pre-GA',ga:'GA',maintenance:'Mature',sunset:'Sunset'
-            })[(s||'').toLowerCase().trim()] || 'Concept';
+  function _bizStage(s) {
+    const m = {'concept':'Concept','beta':'Beta','pre-ga':'Pre-GA','ga':'GA','maintenance':'Mature','sunset':'Sunset'};
+    return m[(s||'').toLowerCase().trim()] || 'Concept';
   }
-  const NA = 'n/a', now = new Date().toISOString();
-  localStorage.setItem(PF_KEY, JSON.stringify(legacy.map(rm => {
-    const d = rm.data || {};
+  const NA = 'n/a';
+  const portfolios = legacy.map(rm => {
+    const sc = Object.assign({}, rm.data || {});
+    delete sc.products;
+    const products = (rm.data && rm.data.products || []).map(p => ({
+      id: _uuid(),
+      type: _inferType(p.name),
+      identity: { name: p.name || '', owner: '', oneLiner: p.whyNow || '', vision: '', currentCustomers: '' },
+      technologyReadiness: { trl: _inferTrl(p.stage), evidence: '', targetTrl: null, targetDate: null },
+      maturity: { level: null, evidence: '' },
+      commercializationStage: _inferComm(p.stage),
+      businessStage: _bizStage(p.stage),
+      investment: { fteCount: null, budgetTier: null, capacityNotes: p.capacity || '' },
+      rag: { status: p.rag || 'G', reasoning: '' },
+      nextMilestone: { description: p.nextMilestone || '', targetDate: null, owner: '' },
+      compliance: { iso21434: NA, aisXXX: NA, uneceR155: NA, certIn: NA, iso27001: NA, tisax: NA, custom: [] },
+      customerEvidence: [], productRisks: [], productRoadmap: [],
+      createdAt: rm.createdAt || new Date().toISOString(),
+      updatedAt: rm.updatedAt || new Date().toISOString(),
+      lastEditedBy: 'me'
+    }));
     return {
-      id: rm.id, name: rm.name || 'Untitled Portfolio',
-      isSnapshot: false, snapshotDate: null,
-      createdAt: rm.createdAt || now, updatedAt: rm.updatedAt || now, lastEditedBy: 'me',
-      strategicContext: {
-        masthead: d.masthead || {}, hero: d.hero || {},
-        kpis: d.kpis || [], bets: d.bets || [], actions: d.actions || [],
-        quarters: d.quarters || [], decisions: d.decisions || [], risks: d.risks || []
-      },
-      products: (d.products || []).map(p => ({
-        id: _uuid(), type: _inferType(p.name),
-        identity:     { name: p.name||'', owner:'', oneLiner: p.whyNow||'', vision:'', currentCustomers:'' },
-        technologyReadiness: { trl: _inferTrl(p.stage), evidence:'', targetTrl:null, targetDate:null },
-        maturity:     { level:null, evidence:'' },
-        commercializationStage: _inferComm(p.stage),
-        businessStage: _inferBiz(p.stage),
-        investment:   { fteCount:null, budgetTier:null, capacityNotes: p.capacity||'' },
-        rag:          { status: p.rag||'A', reasoning:'' },
-        nextMilestone:{ description: p.nextMilestone||'', targetDate:null, owner:'' },
-        compliance:   { iso21434:'n/a', aisXXX:'n/a', uneceR155:'n/a', certIn:'n/a', iso27001:'n/a', tisax:'n/a', custom:[] },
-        customerEvidence:[], productRisks:[], productRoadmap:[],
-        createdAt: rm.createdAt||now, updatedAt: rm.updatedAt||now, lastEditedBy:'me'
-      }))
+      id: rm.id, name: rm.name, isSnapshot: false, snapshotDate: null,
+      createdAt: rm.createdAt || new Date().toISOString(),
+      updatedAt: rm.updatedAt || new Date().toISOString(),
+      lastEditedBy: 'me',
+      strategicContext: sc,
+      products
     };
-  })));
-})(); } catch(e) { console.warn('[migration] skipped:', e); }
+  });
+  localStorage.setItem(PF_KEY, JSON.stringify(portfolios));
+}) (); } catch(e) { console.warn('Migration error:', e); }
 
 /* ============================================================
-   STORAGE & UTILITIES
+   STORAGE HELPERS
    ============================================================ */
 const STORAGE_KEY = 'roadmap-builder.portfolios';
-
 function loadPortfolios() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-  catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
 }
-function savePortfolios(arr) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-}
-function uuid() {
-  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-  return 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
-}
+
+/* ============================================================
+   UTILITY HELPERS
+   ============================================================ */
 function esc(s) {
   const d = document.createElement('div');
   d.textContent = s == null ? '' : String(s);
   return d.innerHTML;
 }
+
 function fmtDate(iso) {
   if (!iso) return '—';
-  try { return new Date(iso).toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' }); }
-  catch(e) { return iso; }
-}
-function fmtRelative(iso) {
-  if (!iso) return '';
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  if (days < 7) return `${days}d ago`;
-  return fmtDate(iso);
+  try {
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  } catch(e) { return iso; }
 }
 
-/* ============================================================
-   TRL HELPERS
-   ============================================================ */
+function fmtDateShort(iso) {
+  if (!iso) return '—';
+  try {
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: '2-digit' });
+  } catch(e) { return iso; }
+}
+
 function trlBand(trl) {
-  if (trl == null) return { cls: 'trl-none', label: 'Not assessed' };
-  if (trl <= 3)    return { cls: 'trl-research', label: `TRL ${trl} · Research` };
-  if (trl <= 6)    return { cls: 'trl-dev',      label: `TRL ${trl} · Development` };
-  return               { cls: 'trl-deploy',    label: `TRL ${trl} · Deployment` };
-}
-
-function maturityLabel(type, level) {
-  if (type === 'service' || level == null) return null;
-  if (type === 'hardware') return `MRL ${level}`;
-  const labels = ['', 'Concept', 'Pilot', 'Limited', 'Production', 'Scaled'];
-  return `OR ${level}${labels[level] ? ' · ' + labels[level] : ''}`;
+  if (!trl || trl < 1) return { name: 'Not assessed', cls: 'band-none' };
+  if (trl <= 3) return { name: 'Research',    cls: 'band-research' };
+  if (trl <= 6) return { name: 'Development', cls: 'band-development' };
+  return              { name: 'Deployment',   cls: 'band-deployment' };
 }
 
 function typeIcon(type) {
@@ -960,210 +1047,371 @@ function typeIcon(type) {
   return '▣';
 }
 
-/* ============================================================
-   ACCENT WORD HELPER
-   ============================================================ */
-function applyAccent(headline, accent) {
-  if (!accent || !accent.trim()) return esc(headline);
-  const re = new RegExp('\\b(' + accent.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')\\b', 'i');
-  return esc(headline).replace(re, '<span class="accent">$1</span>');
+function ragLabel(s) {
+  if (s === 'G') return 'On Track';
+  if (s === 'A') return 'At Risk';
+  if (s === 'R') return 'Off Track';
+  return s || '—';
+}
+
+function worstRag(products) {
+  if (!products || !products.length) return 'G';
+  if (products.some(p => (p.rag && p.rag.status) === 'R')) return 'R';
+  if (products.some(p => (p.rag && p.rag.status) === 'A')) return 'A';
+  return 'G';
+}
+
+function compChip(state) {
+  if (!state || state === 'n/a') return '<span class="comp-chip comp-na">—</span>';
+  const labels = { certified: 'Certified', aligned: 'Aligned', in_progress: 'In Progress', not_started: 'Not Started' };
+  const label = labels[state] || state;
+  return `<span class="comp-chip comp-${esc(state)}">${esc(label)}</span>`;
 }
 
 /* ============================================================
-   RENDER
+   LOAD PORTFOLIO & SET PAGE TITLE
    ============================================================ */
 const params = new URLSearchParams(window.location.search);
 const portfolioId = params.get('id');
-const all = loadPortfolios();
-const portfolio = all.find(p => p.id === portfolioId);
+let portfolio = null;
 
-const content = document.getElementById('page-content');
-
-if (!portfolio) {
-  content.innerHTML = `
-    <div class="notfound">
-      <h2>Portfolio not found</h2>
-      <p>This portfolio doesn't exist or has been deleted.</p>
-      <p style="margin-top:18px;"><a href="index.html">← Back to portfolios</a></p>
-    </div>
-  `;
-} else {
-  // Read-only mode
-  const isReadOnly = params.get('readonly') === '1';
-  if (isReadOnly) {
-    document.body.classList.add('read-only');
-  }
-
-  // Update top bar
-  document.getElementById('topbar-name').textContent = portfolio.name || 'Untitled Portfolio';
-  document.getElementById('topbar-meta').textContent =
-    portfolio.updatedAt ? 'Updated ' + fmtRelative(portfolio.updatedAt) : '';
-  document.getElementById('edit-context-btn').href  = `editor.html?id=${portfolioId}`;
-  document.getElementById('view-heatmap-btn').href    = `heatmap.html?id=${portfolioId}`;
-  document.getElementById('generate-deck-btn').href  = `deck.html?id=${portfolioId}`;
-  document.getElementById('view-roadmap-btn').href   = `output.html?id=${portfolioId}`;
-  document.title = (portfolio.name || 'Portfolio') + ' · Dashboard';
-
-  // Page title in foot
-  document.getElementById('foot-meta').textContent =
-    `${(portfolio.products||[]).length} product${(portfolio.products||[]).length===1?'':'s'} · updated ${fmtDate(portfolio.updatedAt)}`;
-
-  const sc = portfolio.strategicContext || {};
-  const hero = sc.hero || {};
-  const bets = (sc.bets || []).slice(0, 3);
-  const quarters = sc.quarters || [];
-  const currentQuarter = quarters[0];
-
-  // Strategic context summary
-  const ctxHTML = `
-    <section class="context-summary card rise d2">
-      <div class="context-label">Strategic Context</div>
-      ${hero.headline
-        ? `<div class="context-headline">${applyAccent(hero.headline, hero.accentWord)}</div>`
-        : `<div class="context-empty">No hero headline set — <a href="editor.html?id=${portfolioId}" style="color:var(--primary)">Edit Context</a> to add one.</div>`
-      }
-      ${bets.length ? `
-        <div class="context-bets">
-          ${bets.map(b => `
-            <span class="bet-pill">
-              <span class="bet-verb">${esc(b.verb || '')}</span>
-              ${esc(b.headline || '')}
-            </span>
-          `).join('')}
-        </div>
-      ` : ''}
-      ${currentQuarter ? `
-        <div class="context-quarter">
-          <span class="quarter-dot"></span>
-          <span><strong>${esc(currentQuarter.label || '')}</strong>${currentQuarter.theme ? ' — ' + esc(currentQuarter.theme) : ''}</span>
-        </div>
-      ` : ''}
-    </section>
-  `;
-
-  // Products section
-  const products = portfolio.products || [];
-
-  function productCardHTML(p) {
-    const name = (p.identity && p.identity.name) || 'Unnamed product';
-    const owner = (p.identity && p.identity.owner) || '';
-    const trl = p.technologyReadiness && p.technologyReadiness.trl;
-    const band = trlBand(trl);
-    const maturity = maturityLabel(p.type, p.maturity && p.maturity.level);
-    const commStage = p.commercializationStage;
-    const ragStatus = (p.rag && p.rag.status) || 'A';
-    const bizStage = p.businessStage || '';
-    const ms = p.nextMilestone || {};
-
-    return `
-      <article class="product-card card rise d3" data-product-id="${esc(p.id)}">
-        <div class="product-card-header">
-          <div class="product-type-icon ${esc(p.type || 'software')}" title="${esc(p.type || 'software')}">
-            ${typeIcon(p.type)}
-          </div>
-          <div>
-            <div class="product-name">${esc(name)}</div>
-            ${owner ? `<div class="product-owner">${esc(owner)}</div>` : ''}
-          </div>
-          <span class="rag-dot ${ragStatus}" title="RAG: ${ragStatus === 'G' ? 'On Track' : ragStatus === 'A' ? 'Caution' : 'At Risk'}" style="margin-left:auto;margin-top:3px;flex-shrink:0"></span>
-        </div>
-        <div class="chip-row">
-          <span class="chip ${band.cls}">${esc(band.label)}</span>
-          ${maturity ? `<span class="chip comm">${esc(maturity)}</span>` : ''}
-          ${commStage != null ? `<span class="chip stage">Comm ${commStage}/5</span>` : ''}
-          ${bizStage ? `<span class="chip stage">${esc(bizStage)}</span>` : ''}
-        </div>
-        ${ms.description ? `
-          <div class="product-milestone">
-            <div class="milestone-label">Next milestone</div>
-            <div class="milestone-text">${esc(ms.description)}</div>
-            ${ms.targetDate ? `<div class="milestone-date">${fmtDate(ms.targetDate)}</div>` : ''}
-          </div>
-        ` : ''}
-      </article>
-    `;
-  }
-
-  const addTileHTML = `
-    <article class="add-product-tile card rise d4" id="add-product-btn">
-      <div class="add-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>
-      <div class="add-label">Add product</div>
-      <div class="add-hint">Create a new product assessment</div>
-    </article>
-  `;
-
-  const productsHTML = `
-    <div class="section-head rise d3">
-      <span class="section-num">01</span>
-      <span class="section-title">Products</span>
-      <span class="section-count">${products.length} TOTAL</span>
-    </div>
-    <div class="products-grid">
-      ${products.map(productCardHTML).join('')}
-      ${addTileHTML}
-    </div>
-  `;
-
-  // Read-only banner
-  let bannerHTML = '';
-  if (isReadOnly) {
-    const snapDate = portfolio.snapshotDate ? fmtDate(portfolio.snapshotDate) : 'Unknown date';
-    const sourceLink = portfolio.sourceId
-      ? `<a href="dashboard.html?id=${portfolio.sourceId}">View current portfolio →</a>`
-      : '';
-    bannerHTML = `
-      <div class="readonly-banner">
-        <svg class="ro-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span><strong>Snapshot from ${snapDate}</strong> · Read only</span>
-        ${sourceLink ? `<span style="margin-left:auto">${sourceLink}</span>` : ''}
-      </div>
-    `;
-  }
-  content.innerHTML = bannerHTML + ctxHTML + productsHTML;
-
-  // Wire product card clicks → product.html
-  content.querySelectorAll('.product-card[data-product-id]').forEach(card => {
-    card.onclick = () => {
-      const pid = card.dataset.productId;
-      window.location.href = `product.html?portfolio=${portfolioId}&product=${pid}${isReadOnly ? '&readonly=1' : ''}`;
-    };
-  });
-
-  // Wire "Add product" tile
-  document.getElementById('add-product-btn').onclick = () => {
-    const newId = uuid();
-    const now = new Date().toISOString();
-    const NA = 'n/a';
-    const newProduct = {
-      id: newId, type: 'software',
-      identity: { name: '', owner: '', oneLiner: '', vision: '', currentCustomers: '' },
-      technologyReadiness: { trl: null, evidence: '', targetTrl: null, targetDate: null },
-      maturity: { level: null, evidence: '' },
-      commercializationStage: null,
-      businessStage: 'Concept',
-      investment: { fteCount: null, budgetTier: null, capacityNotes: '' },
-      rag: { status: 'A', reasoning: '' },
-      nextMilestone: { description: '', targetDate: null, owner: '' },
-      compliance: { iso21434:NA, aisXXX:NA, uneceR155:NA, certIn:NA, iso27001:NA, tisax:NA, custom:[] },
-      customerEvidence: [], productRisks: [], productRoadmap: [],
-      createdAt: now, updatedAt: now, lastEditedBy: 'me'
-    };
-    const latest = loadPortfolios();
-    const pf = latest.find(x => x.id === portfolioId);
-    if (!pf) { window.toast && window.toast.error('Portfolio not found'); return; }
-    pf.products = pf.products || [];
-    pf.products.push(newProduct);
-    pf.updatedAt = now;
-    savePortfolios(latest);
-    window.location.href = `product.html?portfolio=${portfolioId}&product=${newId}`;
-  };
+if (portfolioId) {
+  const all = loadPortfolios();
+  portfolio = all.find(p => p.id === portfolioId) || null;
 }
 
-// Snapshot button — Phase B, no-op for now
-window.__TOUR_PAGE_STEPS   = [2, 5];
-window.__TOUR_STEP_TARGETS = { 2: '#add-product-btn', 5: '#view-heatmap-btn' };
+if (portfolio) {
+  document.title = `${portfolio.name} · Board Deck`;
+  document.getElementById('topbar-name').textContent = portfolio.name;
+  document.getElementById('back-btn').href = `dashboard.html?id=${encodeURIComponent(portfolioId)}`;
+  renderDeck(portfolio);
+} else {
+  document.getElementById('deck-content').innerHTML = `
+    <div class="deck-body">
+      <div class="card empty-state">
+        <div class="empty-title">Portfolio not found</div>
+        <div class="empty-sub">The requested portfolio could not be loaded from your browser storage.</div>
+        <a href="index.html" class="btn primary">← Back to Portfolios</a>
+      </div>
+    </div>`;
+}
+
+/* ============================================================
+   RENDER DECK
+   ============================================================ */
+function renderDeck(pf) {
+  const sc  = pf.strategicContext || {};
+  const mh  = sc.masthead  || {};
+  const hero= sc.hero      || {};
+  const bets= sc.bets      || [];
+  const decs= sc.decisions || [];
+  const risks=sc.risks     || [];
+  const prods = (pf.products || []).slice().sort((a, b) => {
+    const ta = (a.technologyReadiness && a.technologyReadiness.trl) || 0;
+    const tb = (b.technologyReadiness && b.technologyReadiness.trl) || 0;
+    return tb - ta;
+  });
+
+  const today = new Date();
+  const plus90 = new Date(today.getTime() + 90 * 24 * 60 * 60 * 1000);
+  const worst  = worstRag(prods);
+  const trl6count = prods.filter(p => p.technologyReadiness && (p.technologyReadiness.trl || 0) >= 6).length;
+  const openDecisions = decs.filter(d => (d.status || '').toLowerCase() === 'open').length;
+
+  // Compliance framework columns
+  const FRAMEWORKS = [
+    { key: 'iso21434', label: 'ISO 21434' },
+    { key: 'aisXXX',   label: 'AIS-189'   },
+    { key: 'uneceR155',label: 'UNECE R155' },
+    { key: 'certIn',   label: 'CERT-IN'   },
+    { key: 'iso27001', label: 'ISO 27001'  },
+    { key: 'tisax',    label: 'TISAX'     }
+  ];
+
+  // Next 90 days milestones
+  let milestones = prods
+    .filter(p => p.nextMilestone && p.nextMilestone.description)
+    .map(p => ({
+      product: p.identity ? p.identity.name : '—',
+      description: p.nextMilestone.description,
+      targetDate: p.nextMilestone.targetDate || null,
+      owner: p.nextMilestone.owner || ''
+    }));
+
+  const withDate    = milestones.filter(m => m.targetDate && new Date(m.targetDate) <= plus90)
+                                .sort((a, b) => new Date(a.targetDate) - new Date(b.targetDate));
+  const noDate      = milestones.filter(m => !m.targetDate);
+  const afterWindow = milestones.filter(m => m.targetDate && new Date(m.targetDate) > plus90)
+                                .sort((a, b) => new Date(a.targetDate) - new Date(b.targetDate));
+  const sortedMs = [...withDate, ...noDate, ...afterWindow];
+
+  // RAG value classes
+  const ragPulseClass = worst === 'G' ? 'v-green' : worst === 'A' ? 'v-amber' : 'v-red';
+
+  // Build HTML
+  let html = `<div class="deck-body">`;
+
+  /* ── Section 1: Header ── */
+  html += `
+  <div class="deck-section">
+    <div class="card deck-header">
+      <div class="deck-company">${esc(mh.company || 'Portfolio')}</div>
+      <div class="deck-title">${esc(pf.name)}</div>
+      <div class="deck-meta-row">
+        ${mh.date    ? `<span class="deck-meta-chip"><strong>Date</strong> ${esc(mh.date)}</span>` : ''}
+        ${mh.version ? `<span class="deck-meta-chip"><strong>Ver</strong> ${esc(mh.version)}</span>` : ''}
+        ${mh.tagline ? `<span class="deck-meta-chip">${esc(mh.tagline)}</span>` : ''}
+      </div>
+    </div>
+  </div>`;
+
+  /* ── Section 2: Portfolio Pulse ── */
+  html += `
+  <div class="deck-section">
+    <div class="section-label">Portfolio Pulse</div>
+    <div class="pulse-grid">
+      <div class="pulse-card">
+        <div class="pulse-value v-sage">${prods.length}</div>
+        <div class="pulse-label">Products</div>
+      </div>
+      <div class="pulse-card">
+        <div class="pulse-value v-sage">${trl6count}</div>
+        <div class="pulse-label">TRL ≥ 6</div>
+      </div>
+      <div class="pulse-card">
+        <div class="pulse-value ${openDecisions > 0 ? 'v-amber' : 'v-sage'}">${openDecisions}</div>
+        <div class="pulse-label">Open Decisions</div>
+      </div>
+      <div class="pulse-card">
+        <div class="pulse-value ${ragPulseClass}">${worst}</div>
+        <div class="pulse-label">Portfolio RAG</div>
+      </div>
+    </div>
+  </div>`;
+
+  /* ── Section 3: Strategic Thesis ── */
+  if (hero.headline || bets.length) {
+    let headlineHtml = '';
+    if (hero.headline) {
+      const accent = hero.accentWord || '';
+      headlineHtml = accent
+        ? esc(hero.headline).replace(
+            new RegExp(`(${esc(accent)})`, 'i'),
+            '<span class="accent">$1</span>'
+          )
+        : esc(hero.headline);
+    }
+    html += `
+  <div class="deck-section">
+    <div class="section-label">Strategic Thesis</div>
+    <div class="card" style="padding: 28px 32px;">
+      ${headlineHtml ? `<div class="thesis-headline">${headlineHtml}</div>` : ''}
+      ${bets.length ? `
+      <div class="thesis-bets">
+        ${bets.slice(0, 3).map(b => `
+        <div class="bet-pill">
+          <span class="bet-verb">${esc(b.verb || '')}</span>
+          <span>${esc(b.headline || '')}</span>
+        </div>`).join('')}
+      </div>` : ''}
+    </div>
+  </div>`;
+  }
+
+  /* ── Section 4: Product Status Table ── */
+  if (prods.length) {
+    html += `
+  <div class="deck-section">
+    <div class="section-label">Product Status</div>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div class="table-scroll">
+        <table class="status-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Type</th>
+              <th>TRL</th>
+              <th>Stage</th>
+              <th>Business Stage</th>
+              <th>RAG</th>
+              <th>Next Milestone</th>
+              <th>Target Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${prods.map(p => {
+              const trl = p.technologyReadiness && p.technologyReadiness.trl;
+              const band = trlBand(trl);
+              const commStage = p.commercializationStage || '—';
+              const bizStage  = p.businessStage || '—';
+              const ragS      = (p.rag && p.rag.status) || 'G';
+              const msDesc    = p.nextMilestone && p.nextMilestone.description || '—';
+              const msDt      = p.nextMilestone && p.nextMilestone.targetDate;
+              const name      = (p.identity && p.identity.name) || 'Unnamed';
+              const type      = p.type || 'software';
+              return `
+            <tr>
+              <td class="product-name-cell">${typeIcon(type)} ${esc(name)}</td>
+              <td><span class="type-badge">${esc(type)}</span></td>
+              <td>
+                <div class="trl-cell">
+                  <span class="trl-num">${trl != null ? trl : '—'}</span>
+                  <span class="band-badge ${band.cls}">${band.name}</span>
+                </div>
+              </td>
+              <td><span class="stage-chip">${commStage !== null && commStage !== undefined ? commStage : '—'}</span></td>
+              <td><span class="biz-chip">${esc(bizStage)}</span></td>
+              <td><span class="rag-dot ${ragS.toLowerCase()}">${esc(ragS)}</span></td>
+              <td class="milestone-cell">${esc(msDesc)}</td>
+              <td class="milestone-date">${fmtDateShort(msDt)}</td>
+            </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+  }
+
+  /* ── Section 5: Compliance Snapshot ── */
+  if (prods.length) {
+    html += `
+  <div class="deck-section">
+    <div class="section-label">Compliance Snapshot</div>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div class="table-scroll">
+        <table class="compliance-table">
+          <thead>
+            <tr>
+              <th class="prod-col">Product</th>
+              ${FRAMEWORKS.map(f => `<th>${esc(f.label)}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${prods.map(p => {
+              const comp = p.compliance || {};
+              const name = (p.identity && p.identity.name) || 'Unnamed';
+              return `
+            <tr>
+              <td class="prod-name">${esc(name)}</td>
+              ${FRAMEWORKS.map(f => `<td>${compChip(comp[f.key])}</td>`).join('')}
+            </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+  }
+
+  /* ── Section 6: Open Decisions ── */
+  const top3decs = decs.slice(0, 3);
+  if (top3decs.length) {
+    html += `
+  <div class="deck-section">
+    <div class="section-label">Open Decisions</div>
+    <div class="decisions-list">
+      ${top3decs.map(d => {
+        const statusRaw = (d.status || '').toLowerCase();
+        const statusCls = statusRaw === 'open' ? 'status-open' : statusRaw === 'decided' ? 'status-decided' : 'status-deferred';
+        return `
+      <div class="decision-row">
+        <span class="decision-status ${statusCls}">${esc(d.status || '—')}</span>
+        <div class="decision-body">
+          <div class="decision-title">${esc(d.decision || d.title || '—')}</div>
+          <div class="decision-meta">${d.owner ? `Owner: ${esc(d.owner)}` : ''}${d.owner && (d.due || d.deadline) ? ' · ' : ''}${(d.due || d.deadline) ? `Due: ${esc(d.due || d.deadline)}` : ''}</div>
+        </div>
+      </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+  }
+
+  /* ── Section 7: Top Risks ── */
+  const top3risks = risks.slice(0, 3);
+  if (top3risks.length) {
+    html += `
+  <div class="deck-section">
+    <div class="section-label">Top Risks</div>
+    <div class="risks-list">
+      ${top3risks.map(r => {
+        const lh  = (r.likelihood || '').charAt(0).toUpperCase();
+        const imp = (r.impact     || '').charAt(0).toUpperCase();
+        return `
+      <div class="risk-row">
+        <div class="risk-badge">
+          <span class="risk-lh  level-${lh}">L:${lh}</span>
+          <span class="risk-imp level-${imp}">I:${imp}</span>
+        </div>
+        <div class="risk-body">
+          <div class="risk-title">${esc(r.risk || r.title || '—')}</div>
+          ${r.mitigation ? `<div class="risk-mitigation">${esc(r.mitigation)}</div>` : ''}
+        </div>
+      </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+  }
+
+  /* ── Section 8: Next 90 Days ── */
+  if (sortedMs.length) {
+    html += `
+  <div class="deck-section">
+    <div class="section-label">Next 90 Days</div>
+    <div class="card" style="padding: 8px 24px;">
+      <div class="milestones-list">
+        ${sortedMs.map(m => `
+        <div class="milestone-row">
+          <div class="ms-date-col">${m.targetDate ? fmtDateShort(m.targetDate) : '<span style="color:var(--text-muted);font-style:italic;font-size:11px">no date</span>'}</div>
+          <div class="ms-product"><span class="ms-product-name">${esc(m.product)}</span></div>
+          <div class="ms-desc">${esc(m.description)}</div>
+          ${m.owner ? `<div class="ms-owner">${esc(m.owner)}</div>` : ''}
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+  }
+
+  /* ── Section 9: Footer ── */
+  html += `
+  <div class="deck-section">
+    <div class="card deck-foot">
+      <div class="foot-left">Generated ${fmtDate(new Date().toISOString())}</div>
+      <div class="foot-center">Roadmap Builder · Confidential</div>
+      <div class="foot-right">${mh.version ? `v${esc(mh.version)}` : ''}</div>
+    </div>
+  </div>`;
+
+  html += `</div>`; // .deck-body
+
+  document.getElementById('deck-content').innerHTML = html;
+}
+
+/* ============================================================
+   DOWNLOAD HTML
+   ============================================================ */
+function downloadHTML() {
+  if (!portfolio) return;
+  const docClone = document.documentElement.cloneNode(true);
+  docClone.querySelectorAll('.deck-topbar').forEach(el => el.remove());
+  docClone.querySelectorAll('script').forEach(el => el.remove());
+  const titleEl = docClone.querySelector('title');
+  if (titleEl) titleEl.textContent = portfolio.name + ' · Board Deck';
+  const html = '<!DOCTYPE html>\n' + docClone.outerHTML;
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const safe = (portfolio.name || 'deck').replace(/[^a-z0-9_\-]+/gi, '_').replace(/^_+|_+$/g, '') || 'deck';
+  a.href = url;
+  a.download = `${safe}-deck.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+window.__TOUR_PAGE_STEPS   = [7];
+window.__TOUR_STEP_TARGETS = { 7: '#download-btn' };
 
 
 /* ============================================================
@@ -1454,30 +1702,8 @@ window.__TOUR_STEP_TARGETS = { 2: '#add-product-btn', 5: '#view-heatmap-btn' };
   }
 })();
 
-// ── Snapshot ─────────────────────────────────────────────────────────────────
-function doSnapshot() {
-  const snap = JSON.parse(JSON.stringify(portfolio));
-  snap.id = uuid();
-  snap.isSnapshot = true;
-  snap.snapshotDate = new Date().toISOString();
-  snap.name = portfolio.name + ' · Snapshot ' + fmtDate(snap.snapshotDate);
-  snap.sourceId = portfolio.id;
-  snap.createdAt = snap.snapshotDate;
-  snap.updatedAt = snap.snapshotDate;
-  const latest = loadPortfolios();
-  latest.push(snap);
-  savePortfolios(latest);
-  window.toast && window.toast.success('Snapshot saved — visible on the home page');
-}
-
-document.getElementById('snapshot-btn').onclick = () => {
-  window.toast && window.toast.confirm('Save a snapshot of this portfolio?', {
-    actions: [
-      { label: 'Cancel', variant: '' },
-      { label: 'Save Snapshot', variant: 'primary', onClick: doSnapshot }
-    ]
-  });
-};
+document.getElementById('download-btn').onclick = downloadHTML;
+document.getElementById('print-btn').onclick = () => window.print();
 
 /* ============================================================
    TOAST NOTIFICATION SYSTEM
@@ -1495,8 +1721,7 @@ document.getElementById('snapshot-btn').onclick = () => {
   const ICONS = {
     success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>',
     error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
-    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-    confirm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
   };
   function escSafe(s) {
     const d = document.createElement('div');
@@ -1505,44 +1730,21 @@ document.getElementById('snapshot-btn').onclick = () => {
   }
   function show(opts) {
     if (typeof opts === 'string') opts = { message: opts };
-    const o = Object.assign({ message:'', type:'info', duration:3200, actions:null }, opts);
+    const o = Object.assign({ message:'', type:'info', duration:3200 }, opts);
     const c = ensureContainer();
     const el = document.createElement('div');
     el.className = 'toast ' + o.type;
     el.innerHTML = `<div class="toast-icon">${ICONS[o.type]||ICONS.info}</div><div class="toast-msg">${escSafe(o.message)}</div>`;
-    if (o.actions && o.actions.length) {
-      const ad = document.createElement('div'); ad.className = 'toast-actions';
-      o.actions.forEach(a => {
-        const btn = document.createElement('button');
-        btn.className = 'toast-btn ' + (a.variant||'');
-        btn.textContent = a.label;
-        btn.onclick = () => { dismiss(); if (a.onClick) a.onClick(); };
-        ad.appendChild(btn);
-      });
-      el.querySelector('.toast-msg').appendChild(ad);
-    }
-    if (o.duration > 0) {
-      const prog = document.createElement('div');
-      prog.className = 'toast-progress';
-      prog.style.animationDuration = o.duration + 'ms';
-      el.appendChild(prog);
-    }
     c.appendChild(el);
     let t = null;
-    function dismiss() {
-      clearTimeout(t);
-      el.classList.add('out');
-      setTimeout(() => el.remove(), 220);
-    }
+    function dismiss() { clearTimeout(t); el.classList.add('out'); setTimeout(() => el.remove(), 220); }
     if (o.duration > 0) t = setTimeout(dismiss, o.duration);
     el.onclick = dismiss;
-    return { dismiss };
   }
   window.toast = {
     success: (msg, opts) => show(Object.assign({ message: msg, type: 'success' }, opts)),
-    error:   (msg, opts) => show(Object.assign({ message: msg, type: 'error',   duration: 5000 }, opts)),
-    info:    (msg, opts) => show(Object.assign({ message: msg, type: 'info' }, opts)),
-    confirm: (msg, opts) => show(Object.assign({ message: msg, type: 'confirm', duration: 0 }, opts))
+    error:   (msg, opts) => show(Object.assign({ message: msg, type: 'error', duration: 5000 }, opts)),
+    info:    (msg, opts) => show(Object.assign({ message: msg, type: 'info' }, opts))
   };
 })();
 </script>

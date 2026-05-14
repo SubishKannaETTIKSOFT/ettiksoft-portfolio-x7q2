@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
-<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roadmap Builder · Home</title>
+<title>ETTIKSOFT Portfolio Builder</title>
 <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230891B2%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3402,6 +3403,54 @@ body { background: var(--base-bg) !important; }
 /* Toast stays white-on-dark */
 .toast, .toast * { color: #ffffff !important; }
 
+
+/* -- Snapshot cards -- */
+.snapshot-card {
+  opacity: 0.72;
+  background: rgba(181,164,145,0.12) !important;
+}
+.snapshot-card:hover { opacity: 0.88; }
+.snapshot-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--secondary); background: rgba(181,164,145,0.15);
+  border: 1px solid rgba(181,164,145,0.30);
+  padding: 2px 6px; border-radius: 999px;
+}
+.snapshots-header {
+  display: flex; align-items: center; gap: 10px;
+  margin: 28px 0 10px; padding-top: 20px;
+  border-top: 1px solid rgba(46,74,82,0.08);
+}
+.section-label-sm {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.section-count-sm {
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  background: rgba(107,114,128,0.10); border-radius: 999px;
+  padding: 1px 7px;
+}
+
+/* ---- POLISH C3 ---- */
+/* Slim sage scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(94,138,123,0.38); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(94,138,123,0.58); }
+* { scrollbar-width: thin; scrollbar-color: rgba(94,138,123,0.38) transparent; }
+
+/* Topbar button height */
+.topbar .btn, .topbar button.btn, .topbar a.btn { min-height: 36px; }
+
+@media (max-width: 768px) {
+  .topbar { flex-wrap: wrap; gap: 6px; padding: 10px 14px; }
+  .topbar-actions { flex-wrap: wrap; gap: 6px; }
+  .hero h1 { font-size: clamp(28px, 8vw, 48px); }
+  .search-sort { flex-direction: column; gap: 8px; }
+  .list { padding: 0 12px 32px; gap: 12px; }
+  .card { padding: 16px 18px; }
+  .card .actions { flex-wrap: wrap; gap: 6px; }
+}
 </style>
 </head>
 
@@ -3615,7 +3664,7 @@ body { background: var(--base-bg) !important; }
 <div class="page">
 
   <header class="masthead rise d1">
-    <div class="brand">Roadmap Builder<span>· Home</span></div>
+    <div class="brand">ETTIKSOFT<span>· Portfolio Builder</span></div>
     <div class="meta" id="now"></div>
   </header>
 
@@ -3673,9 +3722,9 @@ body { background: var(--base-bg) !important; }
         </g>
       </svg>
     <div class="eyebrow">Single-page roadmaps for product teams</div>
-    <h1>Build a roadmap your team actually <span class="accent">uses</span>.</h1>
+    <h1>Manage your product <span class="accent">portfolio</span>.</h1>
     <p class="lede">
-      Fill a form, get a visually-rich one-page roadmap. Save as many as you want, edit anytime, download any of them as a self-contained HTML file you can share or print.
+      Capture TRL, MRL, and commercialization status for every product. Generate portfolio dashboards, heatmaps, and board-ready decks — all from one place, all offline.
     </p>
   </section>
 
@@ -3711,14 +3760,32 @@ body { background: var(--base-bg) !important; }
 
   <footer class="foot">
     <div>
-      Pure static site. Open in any browser. <strong>4 files, &lt; 100 KB</strong>. Edit any value in the HTML to retheme.
+      Pure static site. Open in any browser. <strong>7 files, &lt; 280 KB</strong>. Edit any value in the HTML to retheme.
     </div>
     <div class="right">v1.0 · localhost</div>
+    <button id="tour-retrigger-btn" title="Restart guided tour">?</button>
   </footer>
 
 </div>
 
 <script>
+/* ============================================================
+   DEMO BOOTSTRAP — seeds ETTIKSOFT data if localStorage is empty
+   Runs before migration; never overwrites existing user data.
+   ============================================================ */
+(function bootstrap() {
+  try {
+    var _key = 'roadmap-builder.portfolios';
+    var _raw = localStorage.getItem(_key);
+    var _existing = [];
+    try { _existing = JSON.parse(_raw || '[]'); } catch(e) {}
+    if (!Array.isArray(_existing) || _existing.length === 0) {
+      var _demo = {"id":"ettiksoft-001","name":"ETTIKSOFT Product Portfolio","isSnapshot":false,"snapshotDate":null,"createdAt":"2026-01-15T09:00:00.000Z","updatedAt":"2026-01-15T09:00:00.000Z","lastEditedBy":"me","strategicContext":{"masthead":{"company":"ETTIKSOFT","tagline":"Security · Connectivity · Autonomy","date":"2026-05-11","version":"2.0"},"hero":{"eyebrow":"Q2 2026 Product Roadmap","headline":"From prototype to production — ship security that scales","accentWord":"security","lede":"Three flagship products moving from lab to market this year. Hardware certification on track, cloud platform in beta, autonomous pen-test in concept."},"kpis":[{"value":"TRL 9","label":"HSM target by Q4","subscript":""},{"value":"3","label":"Products in portfolio","subscript":""},{"value":"£2.4M","label":"Pipeline value","subscript":"committed"}],"bets":[{"verb":"Certify","headline":"HSM for automotive market","lede":"ISO 21434 and UNECE R155 clearance unlocks Tier-1 pipeline worth £1.8M.","priority":"high"},{"verb":"Scale","headline":"CYPHERA to 50 enterprise tenants","lede":"Move from 3 pilot customers to 50 paying accounts by end of year.","priority":"high"},{"verb":"Validate","headline":"AUTOPENTRIX market fit","lede":"Three paid POCs with MSSP partners to confirm ICP before Series A.","priority":"medium"}],"actions":[{"text":"Complete HSM FIPS 140-3 Level 3 lab testing","owner":"HW Eng","due":"2026-06-30","priority":"high"},{"text":"Onboard 5 new CYPHERA design-partners","owner":"Sales","due":"2026-07-15","priority":"high"},{"text":"Kick off AUTOPENTRIX POC #1 with RedTeam Inc","owner":"BD","due":"2026-06-01","priority":"medium"}],"quarters":[{"label":"Q2 2026","theme":"Certify & Validate","milestones":"HSM lab cert complete · CYPHERA 10 tenants · AUTOPENTRIX POC #1"},{"label":"Q3 2026","theme":"Scale & Harden","milestones":"HSM first Tier-1 shipment · CYPHERA 30 tenants · AUTOPENTRIX POC #2-3"},{"label":"Q4 2026","theme":"Launch & Grow","milestones":"HSM ISO 21434 certified · CYPHERA 50 tenants · AUTOPENTRIX GA decision"}],"decisions":[{"decision":"AUTOPENTRIX build-vs-buy for LLM reasoning layer","status":"Open","owner":"CTO","deadline":"2026-06-15"}],"risks":[{"risk":"HSM silicon supply chain delay (14-week lead time)","likelihood":"Medium","impact":"High","mitigation":"Dual-source arrangement with two foundries in negotiation."},{"risk":"CYPHERA EU data residency compliance gap","likelihood":"Low","impact":"Medium","mitigation":"Legal review in progress; EU region deployment planned Q3."}]},"products":[{"id":"prod-hsm-001","type":"hardware","identity":{"name":"HSM Security Module","owner":"Dr. Priya Nair","oneLiner":"Automotive-grade hardware security module for key management and secure boot.","vision":"Become the de facto HSM for connected vehicles across EU Tier-1 suppliers by 2028.","currentCustomers":"Pilot with AutoSec GmbH (3 units on test bench); letter of intent from VehicleCorp."},"technologyReadiness":{"trl":4,"evidence":"Functional prototype validated in lab environment. FIPS 140-3 Level 3 pre-assessment passed.","targetTrl":9,"targetDate":"2026-12-31"},"maturity":{"level":3,"evidence":"Prototype manufacturing process defined. First article inspection complete on 10 units."},"commercializationStage":2,"businessStage":"Pre-GA","investment":{"fteCount":6,"budgetTier":"L","capacityNotes":"4 HW engineers, 1 firmware, 1 certification specialist. £380K allocated Q2-Q4."},"rag":{"status":"A","reasoning":"Silicon supply chain risk flagged. Dual-source negotiations ongoing; fallback adds 6-week delay."},"nextMilestone":{"description":"FIPS 140-3 Level 3 lab test completion and certification submission","targetDate":"2026-06-30","owner":"Dr. Priya Nair"},"compliance":{"iso21434":"in_progress","aisXXX":"not_started","uneceR155":"in_progress","certIn":"n/a","iso27001":"aligned","tisax":"not_started","custom":[{"name":"FIPS 140-3 Level 3","state":"in_progress"},{"name":"Common Criteria EAL4+","state":"not_started"}]},"customerEvidence":[{"name":"AutoSec GmbH","type":"pilot","since":"2026-02-01","notes":"3-unit lab evaluation, positive feedback on integration API."},{"name":"VehicleCorp","type":"prospect","since":"2026-04-10","notes":"LOI signed; conditional on FIPS cert."}],"productRisks":[{"risk":"Silicon supply chain delay (14-week lead time)","likelihood":"M","impact":"H","mitigation":"Dual-source arrangement in negotiation."}],"productRoadmap":[{"title":"FIPS 140-3 lab cert","targetDate":"2026-06-30","status":"In progress"},{"title":"ISO 21434 audit","targetDate":"2026-09-30","status":"Planned"},{"title":"First Tier-1 shipment (AutoSec)","targetDate":"2026-10-15","status":"Planned"}],"createdAt":"2026-01-15T09:00:00.000Z","updatedAt":"2026-01-15T09:00:00.000Z","lastEditedBy":"me"},{"id":"prod-cyphera-001","type":"software","identity":{"name":"CYPHERA","owner":"James Okafor","oneLiner":"Cloud-native cryptographic key lifecycle management platform for enterprise.","vision":"The Stripe of cryptographic infrastructure — so simple any developer can secure their stack.","currentCustomers":"FinTrust Ltd (paying), SecureLogix (paying), DataVault Co (pilot). 3 total customers."},"technologyReadiness":{"trl":6,"evidence":"System prototype demonstrated in operational environment. 99.95% uptime over 90-day pilot.","targetTrl":8,"targetDate":"2026-09-30"},"maturity":{"level":3,"evidence":"Limited production deployment with 3 customers. SLAs met. On-call runbook established."},"commercializationStage":4,"businessStage":"Beta","investment":{"fteCount":8,"budgetTier":"L","capacityNotes":"5 engineers, 2 DevOps, 1 PM. AWS credits + £520K cash budget for FY2026."},"rag":{"status":"G","reasoning":"Ahead of customer acquisition target. EU data residency gap is low risk given Q3 timeline."},"nextMilestone":{"description":"Onboard 5 new design-partner customers to reach 10-tenant milestone","targetDate":"2026-07-15","owner":"James Okafor"},"compliance":{"iso21434":"n/a","aisXXX":"n/a","uneceR155":"n/a","certIn":"in_progress","iso27001":"certified","tisax":"n/a","custom":[{"name":"SOC 2 Type II","state":"in_progress"},{"name":"GDPR Article 32","state":"aligned"}]},"customerEvidence":[{"name":"FinTrust Ltd","type":"paid","since":"2026-01-01","notes":"Flagship customer. Full KMS workload migrated. NPS 72."},{"name":"SecureLogix","type":"paid","since":"2026-03-01","notes":"Certificate automation use case."},{"name":"DataVault Co","type":"pilot","since":"2026-04-15","notes":"Evaluating for 50K key/month workload."}],"productRisks":[{"risk":"EU data residency compliance gap","likelihood":"L","impact":"M","mitigation":"EU region deployment planned Q3 2026."}],"productRoadmap":[{"title":"10-tenant milestone","targetDate":"2026-07-15","status":"In progress"},{"title":"EU region deployment","targetDate":"2026-09-01","status":"Planned"},{"title":"SOC 2 Type II audit","targetDate":"2026-10-31","status":"Planned"},{"title":"50-tenant GA","targetDate":"2026-12-31","status":"Planned"}],"createdAt":"2026-01-15T09:00:00.000Z","updatedAt":"2026-01-15T09:00:00.000Z","lastEditedBy":"me"},{"id":"prod-autopentrix-001","type":"software","identity":{"name":"AUTOPENTRIX","owner":"Selin Çelik","oneLiner":"LLM-powered autonomous penetration testing platform for continuous red-team coverage.","vision":"Every company gets Fortune-500 red-team quality — automated, continuous, affordable.","currentCustomers":"No paying customers yet. Three MSSP partners in POC discussions."},"technologyReadiness":{"trl":5,"evidence":"Technology validated in relevant environment. Internal red-team CTF scored 68% find rate vs human team.","targetTrl":7,"targetDate":"2026-12-31"},"maturity":{"level":1,"evidence":"Concept-stage OperationalReadiness. Single-tenant prototype only; no multi-tenant or SLA capability yet."},"commercializationStage":1,"businessStage":"Concept","investment":{"fteCount":3,"budgetTier":"S","capacityNotes":"2 ML engineers, 1 security researcher. £95K seed allocation. LLM API costs ~£8K/month at current scale."},"rag":{"status":"A","reasoning":"ICP not yet confirmed. POC pipeline dependent on MSSP relationship that is early-stage."},"nextMilestone":{"description":"First paid POC with RedTeam Inc MSSP partner (scope defined, contract pending)","targetDate":"2026-06-01","owner":"Selin Çelik"},"compliance":{"iso21434":"n/a","aisXXX":"not_started","uneceR155":"n/a","certIn":"n/a","iso27001":"not_started","tisax":"n/a","custom":[]},"customerEvidence":[],"productRisks":[{"risk":"LLM reasoning quality insufficient for complex targets","likelihood":"M","impact":"H","mitigation":"Fine-tuning pipeline in progress; fallback to human-in-loop for complex scopes."},{"risk":"Legal liability for autonomous exploitation actions","likelihood":"L","impact":"H","mitigation":"Scope-limiting architecture (no destructive payloads); legal review Q2."}],"productRoadmap":[{"title":"POC #1 with RedTeam Inc","targetDate":"2026-06-01","status":"Planned"},{"title":"Multi-tenant architecture","targetDate":"2026-09-30","status":"Planned"},{"title":"POC #2 and #3","targetDate":"2026-09-30","status":"Planned"}],"createdAt":"2026-01-15T09:00:00.000Z","updatedAt":"2026-01-15T09:00:00.000Z","lastEditedBy":"me"}]};
+      localStorage.setItem(_key, JSON.stringify([_demo]));
+    }
+  } catch(e) {}
+})();
+
 /* ============================================================
    DATA MODEL MIGRATION  v1→v2  (roadmaps → portfolios)
    Runs once on every page load; idempotent after first run.
@@ -3791,6 +3858,294 @@ try { (function migrateToPortfolios() {
    STORAGE
    ============================================================ */
 const STORAGE_KEY = 'roadmap-builder.portfolios';
+
+window.__TOUR_PAGE_STEPS   = [1];
+window.__TOUR_STEP_TARGETS = { 1: '#create-btn' };
+
+/* ============================================================
+   GUIDED TOUR  v1.0
+   ============================================================ */
+(function tourInit() {
+  var SEEN_KEY    = 'roadmap-builder.tour-seen';
+  var STEP_KEY    = 'roadmap-builder.tour-step';
+  var TOTAL       = 7;
+  var PAGE_STEPS  = window.__TOUR_PAGE_STEPS   || [];
+  var STEP_TARGETS= window.__TOUR_STEP_TARGETS || {};
+
+  var STEPS = {
+    1: 'Start here. Create a portfolio for your product line. A portfolio holds all your products and generates your board outputs.',
+    2: 'Your portfolio dashboard. Add each product you want to track. Each gets its own assessment.',
+    3: 'Assess each product’s Technology Readiness Level. Be honest and conservative — TRL is retrospective, based on what’s already demonstrated.',
+    4: 'Track regulatory alignment per product. ISO 21434 and AIS-189 are the two that matter most for your OEM conversations.',
+    5: 'The heatmap plots your entire portfolio on one slide. Dot size = investment. Color = health. Use this in board meetings.',
+    6: 'Each dot is a product. Hover for details, click to open the assessment. The goal: move products up and to the right over time.',
+    7: 'Generate your board deck. Download a self-contained file you can email or present offline. Updates automatically as your data changes.'
+  };
+
+  function getPortfolios() {
+    try { return JSON.parse(localStorage.getItem('roadmap-builder.portfolios') || '[]'); } catch(e) { return []; }
+  }
+  function firstActivePortfolio() {
+    var all = getPortfolios();
+    for (var i = 0; i < all.length; i++) { if (!all[i].isSnapshot) return all[i]; }
+    return null;
+  }
+  function firstProduct(pf) {
+    return (pf && pf.products && pf.products.length) ? pf.products[0] : null;
+  }
+  function getStep()  { return parseInt(localStorage.getItem(STEP_KEY)) || 1; }
+  function setStep(n) { localStorage.setItem(STEP_KEY, String(n)); }
+  function markSeen() { localStorage.setItem(SEEN_KEY, 'true'); localStorage.removeItem(STEP_KEY); }
+  function isSeen()   { return !!localStorage.getItem(SEEN_KEY); }
+
+  function wireRetrigger() {
+    var btn = document.getElementById('tour-retrigger-btn');
+    if (!btn) return;
+    btn.onclick = function() {
+      localStorage.removeItem(SEEN_KEY);
+      localStorage.removeItem(STEP_KEY);
+      window.location.href = 'index.html';
+    };
+  }
+
+  // Wire [?] button regardless of seen state
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireRetrigger);
+  } else {
+    wireRetrigger();
+  }
+  if (isSeen()) return;
+
+  var currentStep = getStep();
+  if (!PAGE_STEPS.length || PAGE_STEPS.indexOf(currentStep) === -1) return;
+
+  // ── Injected styles ───────────────────────────────────────────────────
+  function injectStyles() {
+    if (document.getElementById('tour-styles')) return;
+    var s = document.createElement('style');
+    s.id = 'tour-styles';
+    s.textContent =
+      '#tour-overlay{position:fixed;inset:0;z-index:9000;pointer-events:none;}' +
+      '#tour-spotlight{position:fixed;z-index:9001;pointer-events:none;border-radius:10px;' +
+        'box-shadow:0 0 0 9999px rgba(15,23,42,0.70);outline:2px solid rgba(255,255,255,0.55);' +
+        'transition:top 220ms cubic-bezier(0.16,1,0.3,1),left 220ms cubic-bezier(0.16,1,0.3,1),' +
+        'width 220ms cubic-bezier(0.16,1,0.3,1),height 220ms cubic-bezier(0.16,1,0.3,1);}' +
+      '#tour-tooltip{position:fixed;z-index:9002;pointer-events:auto;' +
+        'background:rgba(255,255,252,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);' +
+        'border:1px solid rgba(94,138,123,0.25);border-radius:14px;' +
+        'box-shadow:0 8px 32px rgba(44,74,82,0.22);' +
+        'padding:18px 20px 20px;width:480px;max-width:calc(100vw - 32px);}' +
+      '.tour-step-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}' +
+      '.tour-step-badge{font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;' +
+        'font-family:ui-monospace,monospace;color:#5E8A7B;' +
+        'background:rgba(94,138,123,0.10);border:1px solid rgba(94,138,123,0.18);' +
+        'padding:2px 8px;border-radius:999px;}' +
+      '.tour-x-btn{background:none;border:none;cursor:pointer;pointer-events:auto;' +
+        'color:#6B7280;font-size:16px;line-height:1;padding:2px 6px;border-radius:6px;}' +
+      '.tour-x-btn:hover{background:rgba(107,114,128,0.10);color:#1F2937;}' +
+      '.tour-edge-msg{font-size:12.5px;color:#92400E;background:rgba(217,119,6,0.08);' +
+        'border:1px solid rgba(217,119,6,0.22);border-radius:8px;' +
+        'padding:8px 12px;margin-bottom:12px;line-height:1.5;font-family:inherit;}' +
+      '.tour-text{font-size:13.5px;line-height:1.58;color:#1F2937;' +
+        'margin-bottom:16px;font-family:-apple-system,system-ui,sans-serif;}' +
+      '.tour-actions{display:flex;align-items:center;gap:6px;}' +
+      '.tour-spacer{flex:1;}' +
+      '.tour-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;' +
+        'font-size:12px;font-weight:600;font-family:-apple-system,system-ui,sans-serif;' +
+        'cursor:pointer;pointer-events:auto;border:1px solid rgba(46,74,82,0.15);' +
+        'transition:all 120ms ease;white-space:nowrap;}' +
+      '.tour-btn.t-ghost{background:transparent;color:#6B7280;}' +
+      '.tour-btn.t-ghost:hover{background:rgba(94,138,123,0.08);color:#1F2937;}' +
+      '.tour-btn.t-primary{background:linear-gradient(135deg,#5E8A7B 0%,#2C4A52 100%);' +
+        'color:#fff;border-color:transparent;}' +
+      '.tour-btn.t-primary:hover{opacity:0.88;}' +
+      '.tour-btn:disabled{opacity:0.38;cursor:not-allowed;pointer-events:none;}' +
+      '#tour-retrigger-btn{display:inline-flex;align-items:center;justify-content:center;' +
+        'width:26px;height:26px;border-radius:50%;border:1px solid rgba(46,74,82,0.18);' +
+        'background:rgba(255,255,252,0.70);backdrop-filter:blur(8px);' +
+        'font-size:12px;font-weight:700;color:#6B7280;cursor:pointer;' +
+        'font-family:ui-monospace,monospace;transition:all 120ms ease;flex-shrink:0;line-height:1;}' +
+      '#tour-retrigger-btn:hover{background:rgba(94,138,123,0.12);color:#5E8A7B;' +
+        'border-color:rgba(94,138,123,0.30);}';
+    document.head.appendChild(s);
+  }
+
+  // ── Overlay DOM ───────────────────────────────────────────────────────
+  function buildOverlay() {
+    if (document.getElementById('tour-overlay')) return;
+    var ov = document.createElement('div');
+    ov.id = 'tour-overlay';
+    ov.innerHTML =
+      '<div id="tour-spotlight"></div>' +
+      '<div id="tour-tooltip">' +
+        '<div class="tour-step-row">' +
+          '<span class="tour-step-badge" id="tour-step-badge">1 of ' + TOTAL + '</span>' +
+          '<button class="tour-x-btn" id="tour-x" title="Skip tour">×</button>' +
+        '</div>' +
+        '<div class="tour-edge-msg" id="tour-edge-msg" style="display:none"></div>' +
+        '<div class="tour-text" id="tour-text"></div>' +
+        '<div class="tour-actions">' +
+          '<button class="tour-btn t-ghost" id="tour-back">← Back</button>' +
+          '<span class="tour-spacer"></span>' +
+          '<button class="tour-btn t-ghost" id="tour-skip">Skip tour</button>' +
+          '<button class="tour-btn t-primary" id="tour-next">Next →</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(ov);
+  }
+
+  // ── Spotlight + tooltip positioning ──────────────────────────────────
+  function positionSpotlight(el) {
+    var spot = document.getElementById('tour-spotlight');
+    var tip  = document.getElementById('tour-tooltip');
+    if (!spot || !tip) return;
+    if (!el) {
+      spot.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;' +
+        'box-shadow:0 0 0 9999px rgba(15,23,42,0.70);border-radius:10px;';
+      tip.style.top = ''; tip.style.bottom = '32px';
+      tip.style.left = '50%';
+      tip.style.transform = 'translateX(-50%)';
+      return;
+    }
+    tip.style.transform = '';
+    var pad = 8;
+    var r   = el.getBoundingClientRect();
+    spot.style.cssText =
+      'position:fixed;' +
+      'top:'    + (r.top    - pad) + 'px;' +
+      'left:'   + (r.left   - pad) + 'px;' +
+      'width:'  + (r.width  + pad * 2) + 'px;' +
+      'height:' + (r.height + pad * 2) + 'px;' +
+      'border-radius:10px;' +
+      'box-shadow:0 0 0 9999px rgba(15,23,42,0.70);' +
+      'outline:2px solid rgba(255,255,255,0.55);';
+    // Fixed bottom centre — spotlight tracks element, tooltip stays put
+    tip.style.top = ''; tip.style.bottom = '32px';
+    tip.style.left = '50%';
+    tip.style.transform = 'translateX(-50%)';
+  }
+
+  // ── Step rendering ────────────────────────────────────────────────────
+  var activeStep = currentStep;
+
+  function renderStep(step) {
+    activeStep = step;
+    var badge   = document.getElementById('tour-step-badge');
+    var textEl  = document.getElementById('tour-text');
+    var edgeEl  = document.getElementById('tour-edge-msg');
+    var backBtn = document.getElementById('tour-back');
+    var nextBtn = document.getElementById('tour-next');
+    if (badge)   badge.textContent  = step + ' of ' + TOTAL;
+    if (textEl)  textEl.textContent = STEPS[step] || '';
+    if (edgeEl)  edgeEl.style.display = 'none';
+    if (backBtn) backBtn.disabled   = (step === 1);
+    if (nextBtn) { nextBtn.textContent = (step === TOTAL) ? 'Finish ✓' : 'Next →'; nextBtn.disabled = false; }
+
+    // Edge case: step 1 and no portfolio
+    if (step === 1 && edgeEl) {
+      if (!firstActivePortfolio()) {
+        edgeEl.textContent = 'Create your portfolio first using the button below. The tour will continue automatically when you land on the dashboard.';
+        edgeEl.style.display = 'block';
+        if (nextBtn) nextBtn.disabled = true;
+      }
+    }
+    var sel = STEP_TARGETS[step];
+    var el  = sel ? document.querySelector(sel) : null;
+    setTimeout(function() { positionSpotlight(el); }, 60);
+  }
+
+  // ── Navigation ────────────────────────────────────────────────────────
+  function navTo(step) {
+    var pf = firstActivePortfolio();
+    var pr = pf ? firstProduct(pf) : null;
+
+    // Same-page transitions (product.html steps 3 <-> 4)
+    var onProductPage = (PAGE_STEPS.indexOf(3) !== -1 || PAGE_STEPS.indexOf(4) !== -1);
+    if (onProductPage && (step === 3 || step === 4)) {
+      setStep(step);
+      var targetId = (step === 3) ? 's2' : 's7';
+      var targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(function() { renderStep(step); }, 350);
+      } else {
+        renderStep(step);
+      }
+      return;
+    }
+
+    setStep(step);
+    switch (step) {
+      case 1: window.location.href = 'index.html'; break;
+      case 2: if (pf) { window.location.href = 'dashboard.html?id=' + encodeURIComponent(pf.id); } break;
+      case 3:
+        if (pf && pr) {
+          window.location.href = 'product.html?portfolio=' + encodeURIComponent(pf.id) + '&product=' + encodeURIComponent(pr.id);
+        } else {
+          // No products yet: skip to step 5
+          setStep(5);
+          if (pf) window.location.href = 'dashboard.html?id=' + encodeURIComponent(pf.id);
+        }
+        break;
+      case 5: if (pf) { window.location.href = 'dashboard.html?id=' + encodeURIComponent(pf.id); } break;
+      case 6: if (pf) { window.location.href = 'heatmap.html?id='   + encodeURIComponent(pf.id); } break;
+      case 7: if (pf) { window.location.href = 'deck.html?id='      + encodeURIComponent(pf.id); } break;
+    }
+  }
+
+  function doNext() {
+    var step = activeStep;
+    if (step === TOTAL) { markSeen(); var ov = document.getElementById('tour-overlay'); if (ov) ov.remove(); return; }
+    if (step === 1 && !firstActivePortfolio()) return; // edge: no portfolio
+    if (step === 3) { navTo(4); return; }
+    if (step === 4) { navTo(5); return; }
+    navTo(step + 1);
+  }
+
+  function doBack() {
+    var step = activeStep;
+    if (step <= 1) return;
+    if (step === 4) { navTo(3); return; }
+    navTo(step - 1);
+  }
+
+  function doSkip() {
+    markSeen();
+    var ov = document.getElementById('tour-overlay');
+    if (ov) ov.remove();
+  }
+
+  // ── Boot ──────────────────────────────────────────────────────────────
+  function init() {
+    wireRetrigger();
+    injectStyles();
+    buildOverlay();
+
+    document.getElementById('tour-x').onclick    = doSkip;
+    document.getElementById('tour-skip').onclick = doSkip;
+    document.getElementById('tour-back').onclick = doBack;
+    document.getElementById('tour-next').onclick = doNext;
+
+    renderStep(currentStep);
+
+    var _t;
+    function onScrollResize() {
+      clearTimeout(_t);
+      _t = setTimeout(function() {
+        var sel = STEP_TARGETS[activeStep];
+        positionSpotlight(sel ? document.querySelector(sel) : null);
+      }, 100);
+    }
+    window.addEventListener('resize',  onScrollResize);
+    window.addEventListener('scroll',  onScrollResize, { passive: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 
 function loadPortfolios() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
@@ -3883,21 +4238,23 @@ function del(id) {
 function render() {
   const list = document.getElementById('list');
   const countEl = document.getElementById('count');
-  const all = loadPortfolios().sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  const sorted = loadPortfolios().sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  const active    = sorted.filter(r => !r.isSnapshot);
+  const snapshots = sorted.filter(r =>  r.isSnapshot);
 
-  countEl.textContent = all.length === 0 ? 'NONE YET' : `${all.length} TOTAL`;
+  countEl.textContent = active.length === 0 ? 'NONE YET' : `${active.length} TOTAL`;
 
-  if (all.length === 0) {
+  if (sorted.length === 0) {
     list.innerHTML = `
       <div class="empty">
         <span class="arrow icn" style="margin-bottom:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></span>
-        No roadmaps yet. Click <strong>+ Create new roadmap</strong> above to start.
+        No portfolios yet. Click <strong>+ Create new portfolio</strong> above to start.
       </div>
     `;
     return;
   }
 
-  list.innerHTML = all.map(r => {
+  function activeCardHTML(r) {
     const sc = r.strategicContext || r.data || {};
     const products = (r.products || []).length;
     const actions = (sc.actions || []).length;
@@ -3905,7 +4262,7 @@ function render() {
     return `
       <article class="card" data-id="${r.id}">
         <div class="info">
-          <div class="name">${escapeHtml(r.name || 'Untitled roadmap')}</div>
+          <div class="name">${escapeHtml(r.name || 'Untitled portfolio')}</div>
           <div class="meta">
             ${company ? `<span>${escapeHtml(company)}</span><span class="dot">·</span>` : ''}
             <span>UPDATED ${fmtRelative(r.updatedAt).toUpperCase()}</span>
@@ -3923,11 +4280,47 @@ function render() {
         </div>
       </article>
     `;
-  }).join('');
+  }
 
-  list.querySelectorAll('.card').forEach(card => {
+  function snapshotCardHTML(r) {
+    const snapDate = r.snapshotDate ? fmtDate(r.snapshotDate) : '';
+    const products = (r.products || []).length;
+    return `
+      <article class="card snapshot-card" data-id="${r.id}">
+        <div class="info">
+          <div class="name">${escapeHtml(r.name || 'Snapshot')}</div>
+          <div class="meta">
+            ${snapDate ? `<span class="snapshot-badge">SNAPSHOT \xb7 ${escapeHtml(snapDate)}</span><span class="dot">\xb7</span>` : ''}
+            <span>${products} PRODUCT${products===1?'':'S'}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="dashboard.html?id=${r.id}&readonly=1" class="btn">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>View
+          </a>
+          <button class="btn-tiny danger" data-action="delete"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>Delete</button>
+        </div>
+      </article>
+    `;
+  }
+
+  const snapshotSection = snapshots.length ? `
+    <div class="snapshots-header">
+      <span class="section-label-sm">Snapshots</span>
+      <span class="section-count-sm">${snapshots.length}</span>
+    </div>
+    ${snapshots.map(snapshotCardHTML).join('')}
+  ` : '';
+
+  list.innerHTML = active.map(activeCardHTML).join('') + snapshotSection;
+
+  list.querySelectorAll('.card:not(.snapshot-card)').forEach(card => {
     const id = card.dataset.id;
     card.querySelector('[data-action="duplicate"]').onclick = () => duplicate(id);
+    card.querySelector('[data-action="delete"]').onclick = () => del(id);
+  });
+  list.querySelectorAll('.snapshot-card').forEach(card => {
+    const id = card.dataset.id;
     card.querySelector('[data-action="delete"]').onclick = () => del(id);
   });
 }
@@ -4102,20 +4495,25 @@ document.getElementById('sort-select').addEventListener('change', (e) => {
 });
 
 // ============================================================
-// REPLACE render() to use filtered/sorted + SVG empty art
+// REPLACE render() to use filtered/sorted + SVG empty art + snapshot grouping
 // ============================================================
 const _origRender = render;
 window.render = function() {
   const list = document.getElementById('list');
   const countEl = document.getElementById('count');
-  const all = getFilteredSorted();
-  const totalAll = loadPortfolios().length;
+  // getFilteredSorted operates on all portfolios; we split after
+  const filtered = getFilteredSorted();
+  const active    = filtered.filter(r => !r.isSnapshot);
+  const allActive = loadPortfolios().filter(r => !r.isSnapshot);
+  // Snapshots: always show all (search doesn't filter them)
+  const snapshots = loadPortfolios().filter(r => !!r.isSnapshot)
+                      .sort((a,b) => new Date(b.snapshotDate||0) - new Date(a.snapshotDate||0));
 
-  countEl.textContent = totalAll === 0 ? 'NONE YET'
-    : (searchQuery ? `${all.length} OF ${totalAll}` : `${totalAll} TOTAL`);
+  countEl.textContent = allActive.length === 0 ? 'NONE YET'
+    : (searchQuery ? `${active.length} OF ${allActive.length}` : `${allActive.length} TOTAL`);
 
-  if (all.length === 0) {
-    if (totalAll === 0) {
+  if (active.length === 0 && snapshots.length === 0) {
+    if (allActive.length === 0) {
       list.innerHTML = `
         <div class="empty">
           <svg class="empty-art" viewBox="0 0 96 72" fill="none">
@@ -4143,7 +4541,7 @@ window.render = function() {
     return;
   }
 
-  list.innerHTML = all.map(r => {
+  function activeCardHTML(r) {
     const sc = r.strategicContext || r.data || {};
     const products = (r.products || []).length;
     const actions = (sc.actions || []).length;
@@ -4169,11 +4567,47 @@ window.render = function() {
         </div>
       </article>
     `;
-  }).join('');
+  }
 
-  list.querySelectorAll('.card').forEach(card => {
+  function snapshotCardHTML(r) {
+    const snapDate = r.snapshotDate ? fmtDate(r.snapshotDate) : '';
+    const products = (r.products || []).length;
+    return `
+      <article class="card snapshot-card" data-id="${r.id}">
+        <div class="info">
+          <div class="name">${escapeHtml(r.name || 'Snapshot')}</div>
+          <div class="meta">
+            ${snapDate ? `<span class="snapshot-badge">SNAPSHOT \xb7 ${escapeHtml(snapDate)}</span><span class="dot">\xb7</span>` : ''}
+            <span>${products} PRODUCT${products===1?'':'S'}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="dashboard.html?id=${r.id}&readonly=1" class="btn">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>View
+          </a>
+          <button class="btn-tiny danger" data-action="delete"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>Delete</button>
+        </div>
+      </article>
+    `;
+  }
+
+  const snapshotSection = snapshots.length ? `
+    <div class="snapshots-header">
+      <span class="section-label-sm">Snapshots</span>
+      <span class="section-count-sm">${snapshots.length}</span>
+    </div>
+    ${snapshots.map(snapshotCardHTML).join('')}
+  ` : '';
+
+  list.innerHTML = active.map(activeCardHTML).join('') + snapshotSection;
+
+  list.querySelectorAll('.card:not(.snapshot-card)').forEach(card => {
     const id = card.dataset.id;
     card.querySelector('[data-action="duplicate"]').onclick = () => duplicate(id);
+    card.querySelector('[data-action="delete"]').onclick = () => del(id);
+  });
+  list.querySelectorAll('.snapshot-card').forEach(card => {
+    const id = card.dataset.id;
     card.querySelector('[data-action="delete"]').onclick = () => del(id);
   });
 };
