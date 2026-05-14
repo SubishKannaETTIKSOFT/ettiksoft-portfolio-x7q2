@@ -81,4 +81,38 @@ Hard refresh after CSS changes: `Ctrl/Cmd + Shift + R`.
 - Don't add tracking, analytics, or any network requests beyond Google Fonts.
 - Don't refactor into multiple JS/CSS files. Each HTML file is self-contained on purpose so users can download a single file and host it anywhere.
 - Don't switch the inline-style preview pane fix back to CSS. It will regress.
+
+---
+
+## Session 14 May 2026 — End-of-day state
+
+**Status:** Authentication 95% complete. One Azure admin change pending — blocks final test.
+
+**What works:**
+- Tool deployed to GitHub Pages
+- URL: https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2/
+- MSAL loads from local bundle (no CDN)
+- Loading overlay prevents page flash
+- Error handling with retry button (no infinite loops)
+- Dedicated app registration: ettiksoft-portfolio-auth
+- ClientId: 7d009dc9-11a5-4f31-b984-cdcb526bdfd8
+- TenantId: f5d1d2b4-0083-43ed-92b3-f80cb2db9f27
+- 3 redirect URIs registered in Azure
+
+**Pending blocker:**
+Azure app registration platform type is "Web" but needs to be "Single-Page Application" (SPA).
+Error: AADSTS9002326 cross-origin token redemption.
+
+Admin (Gowthami) needs to:
+1. Azure → ettiksoft-portfolio-auth → Authentication
+2. Add platform → Single-page application
+3. Add SPA URIs: x7q2/ and x7q2 (both)
+4. Delete the existing "Web" platform entirely
+5. Save
+
+**Resume next session:**
+- Verify Azure platform change with screenshot
+- Test live URL in Edge InPrivate
+- If working: enter real ETTIKSOFT product data (CYPHERA, AUTOPENTRIX, CYMAS, HSM, E-SUMO)
+- Run 5-minute demo rehearsal for KAM presentation
 - Don't add `overflow: hidden` to card surfaces — it clips the indigo glow shadows that give depth.
