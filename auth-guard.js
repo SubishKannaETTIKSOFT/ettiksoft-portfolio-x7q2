@@ -4,7 +4,6 @@
    Microsoft MSAL login restricted to @ettiksoft.com.
    ============================================================ */
 (async function () {
-  // Skip auth on localhost
   const isLocal =
     window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1";
@@ -21,69 +20,78 @@
 
   const cfg = ETTIKSOFT_AUTH_CONFIG;
 
-  const msalInstance = new msal.PublicClientApplication({
+  const msalConfig = {
     auth: {
       clientId: cfg.clientId,
       authority: cfg.authority,
-      redirectUri: cfg.redirectUri
+      redirectUri: "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2"
     },
     cache: {
-      cacheLocation: "localStorage",
-      storeAuthStateInCookie: false
+      cacheLocation: "sessionStorage",
+      storeAuthStateInCookie: true
     }
-  });
+  };
 
+  const msalInstance = new msal.PublicClientApplication(msalConfig);
   await msalInstance.initialize();
 
-  // Handle redirect response (returning from login)
-  // redirectUri must match exactly what was passed to loginRedirect
-  const response = await msalInstance.handleRedirectPromise(cfg.redirectUri);
+  // CRITICAL: Always handle redirect first
+  // This processes the auth code from Microsoft
+  let tokenResponse = null;
+  try {
+    tokenResponse = await msalInstance.handleRedirectPromise();
+  } catch (err) {
+    console.error("Redirect error:", err);
+    // Clear any bad state and try fresh login
+    sessionStorage.clear();
+    await msalInstance.loginRedirect({
+      scopes: ["User.Read"],
+      redirectUri: "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2"
+    });
+    return;
+  }
 
-  const accounts = msalInstance.getAllAccounts();
-  const activeAccount = response?.account || accounts[0];
+  // Check if we just completed a login
+  const account = tokenResponse?.account ||
+                  msalInstance.getAllAccounts()[0];
 
-  if (activeAccount) {
-    const email = activeAccount.username;
-
-    // Enforce @ettiksoft.com domain
-    if (!email.endsWith(cfg.allowedDomain)) {
+  if (account) {
+    // Validate domain
+    if (!account.username.endsWith("@ettiksoft.com")) {
       await msalInstance.logoutRedirect({
-        postLogoutRedirectUri: cfg.redirectUri
+        postLogoutRedirectUri: "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2"
       });
       return;
     }
 
-    // Store user info globally
+    // Success - set active account and show user
+    msalInstance.setActiveAccount(account);
     window.__ETTIKSOFT_USER__ = {
-      name: activeAccount.name,
-      email: email
+      name: account.name,
+      email: account.username
     };
 
-    // Show user name in topbar if badge exists
     const badge = document.getElementById("auth-user-badge");
     if (badge) {
-      badge.textContent = activeAccount.name;
+      badge.textContent = account.name;
       badge.style.display = "inline-flex";
     }
 
-    // Wire logout button if exists
     const logoutBtn = document.getElementById("auth-logout-btn");
     if (logoutBtn) {
       logoutBtn.addEventListener("click", async () => {
+        msalInstance.setActiveAccount(account);
         await msalInstance.logoutRedirect({
-          postLogoutRedirectUri: cfg.redirectUri
+          postLogoutRedirectUri: "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2"
         });
       });
     }
-
-    return; // Authenticated successfully
+    return; // Authenticated - let page load
   }
 
-  // No account found — redirect to Microsoft login
-  // redirectUri passed explicitly here (MSAL requirement — msalConfig alone is not enough)
+  // No account - go to login
   await msalInstance.loginRedirect({
     scopes: ["User.Read"],
-    prompt: "select_account",
     redirectUri: "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2"
   });
 })();
