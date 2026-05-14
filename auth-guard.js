@@ -10,11 +10,10 @@
     window.location.hostname === "127.0.0.1";
   if (isLocal) return;
 
-  // Load MSAL from CDN
+  // Load MSAL from local bundle (no CDN dependency)
   await new Promise((resolve, reject) => {
     const script = document.createElement("script");
-    script.src =
-      "https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js";
+    script.src = "./msal-browser.min.js";
     script.onload = resolve;
     script.onerror = reject;
     document.head.appendChild(script);
