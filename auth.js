@@ -1,0 +1,16 @@
+/* ============================================================
+   ETTIKSOFT Auth Config
+   Used by auth-guard.js — loaded before any page scripts.
+   ============================================================ */
+const ETTIKSOFT_AUTH_CONFIG = {
+  clientId: "8f5be0be-571c-4dce-9918-72163821c405",
+  authority: "https://login.microsoftonline.com/f5d1d2b4-0083-43ed-92b3-f80cb2db9f27",
+  allowedDomain: "@ettiksoft.com",
+  get redirectUri() {
+    const isLocal = window.location.hostname === "localhost" ||
+                    window.location.hostname === "127.0.0.1";
+    return isLocal
+      ? "http://localhost:8765"
+      : "https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2";
+  }
+};

@@ -3617,6 +3617,8 @@ body { background: var(--base-bg) !important; }
 }
 /* ---- END SECURITY FOOTER NOTICE ---- */
 </style>
+  <script src="./auth.js"></script>
+  <script src="./auth-guard.js"></script>
 </head>
 
 <body>
@@ -3835,6 +3837,7 @@ body { background: var(--base-bg) !important; }
     <span class="save-state" id="save-state">All changes saved</span>
     <button class="btn" id="preview-toggle-btn" title="Toggle live preview (Ctrl/Cmd+P)"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="label-text">Preview</span></button>
     <span class="toolbar-divider"></span>
+    <span id="auth-user-badge" style="display:none;font-size:11px;color:var(--text-muted,#6B7280);background:rgba(94,138,123,0.12);padding:4px 10px;border-radius:20px;margin-left:8px;align-items:center;"></span>
     <a href="#" class="btn primary" id="view-output-btn">View output<span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></a>
   </div>
 </div>
@@ -5189,6 +5192,7 @@ setTimeout(() => {
 })();
 
 </script>
+<button id="auth-logout-btn" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-muted,#6B7280);padding:0;margin-left:12px;text-decoration:underline;">Sign out</button>
 <div class="sec-footer-notice" style="max-width:1080px;margin:12px auto 24px;padding:0 24px;"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0;opacity:0.7"><path d="M8 1.5L2 4v4c0 3.534 2.507 6.837 6 7.6C11.493 14.837 14 11.534 14 8V4L8 1.5z"/></svg>ETTIKSOFT internal &nbsp;·&nbsp; Data stays in your browser &nbsp;·&nbsp; No customer-confidential information</div>
 </body>
 </html>

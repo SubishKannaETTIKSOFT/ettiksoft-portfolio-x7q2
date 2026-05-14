@@ -841,6 +841,8 @@ body {
 }
 /* ---- END SECURITY FOOTER NOTICE ---- */
 </style>
+  <script src="./auth.js"></script>
+  <script src="./auth-guard.js"></script>
 </head>
 
 <body>
@@ -922,6 +924,8 @@ body {
         <span>Download HTML</span>
       </button>
     </nav>
+    <span id="auth-user-badge" style="display:none;font-size:11px;color:var(--text-muted,#6B7280);background:rgba(94,138,123,0.12);padding:4px 10px;border-radius:20px;margin-left:8px;align-items:center;"></span>
+    <button id="auth-logout-btn" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-muted,#6B7280);padding:0;margin-left:12px;text-decoration:underline;">Sign out</button>
   </header>
 
   <div id="deck-content"></div>

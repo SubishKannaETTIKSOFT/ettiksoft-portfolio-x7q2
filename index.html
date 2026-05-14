@@ -3488,6 +3488,8 @@ body { background: var(--base-bg) !important; }
 }
 /* ---- END SECURITY BANNER ---- */
 </style>
+  <script src="./auth.js"></script>
+  <script src="./auth-guard.js"></script>
 </head>
 
 <body>
@@ -3702,6 +3704,7 @@ body { background: var(--base-bg) !important; }
   <header class="masthead rise d1">
     <div class="brand">ETTIKSOFT<span>· Portfolio Builder</span></div>
     <div class="meta" id="now"></div>
+  <span id="auth-user-badge" style="display:none;font-size:11px;color:var(--text-muted,#6B7280);background:rgba(94,138,123,0.12);padding:4px 10px;border-radius:20px;margin-left:8px;align-items:center;"></span>
   </header>
 
 
@@ -3815,6 +3818,7 @@ body { background: var(--base-bg) !important; }
     </div>
     <div class="right">v1.0 · localhost</div>
     <button id="tour-retrigger-btn" title="Restart guided tour">?</button>
+  <button id="auth-logout-btn" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-muted,#6B7280);padding:0;margin-left:12px;text-decoration:underline;">Sign out</button>
   </footer>
 
 </div>
