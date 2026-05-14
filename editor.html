@@ -3622,6 +3622,14 @@ body { background: var(--base-bg) !important; }
 </head>
 
 <body>
+<div id="auth-loading" style="position:fixed;inset:0;background:#F7F4ED;z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
+  <div style="text-align:center;color:#6B7280;">
+    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:#5E8A7B;border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
+    <div>Signing you in…</div>
+  </div>
+</div>
+<style>@keyframes authspin{to{transform:rotate(360deg);}}</style>
+
   <svg class="schematic-bg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
       <pattern id="dot-grid" width="40" height="40" patternUnits="userSpaceOnUse">
