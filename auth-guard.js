@@ -81,12 +81,6 @@
 
   // No account found — redirect to Microsoft login
   // redirectUri passed explicitly here (MSAL requirement — msalConfig alone is not enough)
-  console.log('REDIRECT URI BEING SENT:', cfg.redirectUri);
-  console.log('MSAL CONFIG:', JSON.stringify({
-    clientId: cfg.clientId,
-    authority: cfg.authority,
-    redirectUri: cfg.redirectUri
-  }));
   await msalInstance.loginRedirect({
     scopes: ["User.Read"],
     prompt: "select_account",
