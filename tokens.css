@@ -72,16 +72,23 @@ code, pre, .mono {
   font-family: 'Geist Mono', 'SF Mono', Menlo, monospace;
 }
 
-/* Force opaque backgrounds — prevent browser theme bleed */
-html {
-  background-color: #FAFAFA !important;
+html,
+html[data-theme="light"],
+html[data-theme="dark"] {
   min-height: 100%;
 }
-[data-theme="dark"] html,
-html[data-theme="dark"] {
-  background-color: #0A0A0A !important;
+
+html[data-theme="light"],
+html:not([data-theme]) {
+  background-color: #FAFAFA;
 }
+
+html[data-theme="dark"] {
+  background-color: #0A0A0A;
+}
+
 body {
-  background-color: var(--bg-page) !important;
+  background-color: var(--bg-page);
   min-height: 100vh;
+  margin: 0;
 }

@@ -933,7 +933,7 @@ body::before {
   flex: 1;
   width: 100%;
   border: 0;
-  background: white;
+  background: var(--bg-canvas);
 }
 
 .preview-skel {
@@ -3531,7 +3531,7 @@ html {
 }
 body { background: var(--base-bg) !important; }
 .depth-orb.o1 {
-  background: radial-gradient(circle, var(--brand-primary) 0%, rgba(94,138,123,0) 65%) !important;
+  background: radial-gradient(circle, var(--brand-primary) 0%, rgba(232,51,74,0) 65%) !important;
   opacity: 0.22 !important;
   animation-duration: 100s !important;
 }
@@ -3567,7 +3567,7 @@ body { background: var(--base-bg) !important; }
   color: #fff !important;
   box-shadow:
     0 1px 0 rgba(255,255,255,0.20) inset,
-    0 4px 12px -4px rgba(94,138,123,0.45),
+    0 4px 12px -4px rgba(232,51,74,0.45),
     0 8px 24px -8px rgba(44,74,82,0.35) !important;
 }
 .sec, .card, .bet, .product, .panel, .risk-card, .kpi, .empty, .masthead, .foot {
@@ -3593,9 +3593,9 @@ body { background: var(--base-bg) !important; }
 /* Slim sage scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(94,138,123,0.38); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(94,138,123,0.58); }
-* { scrollbar-width: thin; scrollbar-color: rgba(94,138,123,0.38) transparent; }
+::-webkit-scrollbar-thumb { background: rgba(232,51,74,0.38); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(232,51,74,0.58); }
+* { scrollbar-width: thin; scrollbar-color: rgba(232,51,74,0.38) transparent; }
 
 /* Topbar button height */
 .topbar .btn, .topbar button.btn, .topbar a.btn { min-height: 36px; }
@@ -3850,7 +3850,7 @@ body { background: var(--base-bg) !important; }
     <span class="save-state" id="save-state">All changes saved</span>
     <button class="btn" id="preview-toggle-btn" title="Toggle live preview (Ctrl/Cmd+P)"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="label-text">Preview</span></button>
     <span class="toolbar-divider"></span>
-    <span id="auth-user-badge" style="display:none;font-size:11px;color:var(--text-muted,#6B7280);background:rgba(94,138,123,0.12);padding:4px 10px;border-radius:20px;margin-left:8px;align-items:center;"></span>
+    <span id="auth-user-badge" style="display:none;font-size:11px;color:var(--text-muted,#6B7280);background:rgba(232,51,74,0.12);padding:4px 10px;border-radius:20px;margin-left:8px;align-items:center;"></span>
     <a href="#" class="btn primary" id="view-output-btn">View output<span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></a>
   </div>
 </div>
