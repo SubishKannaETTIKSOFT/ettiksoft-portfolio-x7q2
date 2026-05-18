@@ -1,0 +1,73 @@
+/* ETTIKSOFT Design Tokens — v1 */
+:root,
+[data-theme="light"] {
+  --bg-page: #FAFAFA;
+  --bg-canvas: #FFFFFF;
+  --bg-subtle: #F4F4F5;
+  --bg-elevated: #FFFFFF;
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --fg-primary: #09090B;
+  --fg-secondary: #52525B;
+  --fg-tertiary: #71717A;
+  --fg-muted: #A1A1AA;
+  --border-default: #E4E4E7;
+  --border-subtle: #F4F4F5;
+  --brand-primary: #E8334A;
+  --brand-primary-hover: #D12D42;
+  --brand-primary-active: #B82639;
+  --brand-primary-fg: #FFFFFF;
+  --brand-primary-subtle: #FEE7EA;
+  --status-done: #10B981;
+  --status-in-progress: #3B82F6;
+  --status-at-risk: #F59E0B;
+  --status-blocked: #EF4444;
+  --status-todo: #94A3B8;
+  --product-cyphera: #6366F1;
+  --product-cymas: #10B981;
+  --product-autopentrix: #F59E0B;
+  --product-esumo: #EF4444;
+  --product-hsm: #8B5CF6;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg-page: #0A0A0A;
+  --bg-canvas: #111113;
+  --bg-subtle: #1A1A1C;
+  --bg-elevated: #1A1A1C;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --fg-primary: #FAFAFA;
+  --fg-secondary: #A1A1AA;
+  --fg-tertiary: #71717A;
+  --fg-muted: #52525B;
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --brand-primary-subtle: rgba(232, 51, 74, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-page);
+  color: var(--fg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.005em;
+}
+
+code, pre, .mono {
+  font-family: 'Geist Mono', 'SF Mono', Menlo, monospace;
+}

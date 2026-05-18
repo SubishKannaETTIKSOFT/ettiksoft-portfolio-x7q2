@@ -4,6 +4,11 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <script src="theme.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Board Deck · Roadmap Builder</title>
   <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
@@ -16,8 +21,8 @@
    TIDELAND DESIGN TOKENS
    ============================================================ */
 :root {
-  --base-bg:       #F7F4ED;
-  --primary:       #5E8A7B;
+  --base-bg:       var(--bg-page);
+  --primary:       var(--brand-primary);
   --primary-dark:  #2C4A52;
   --secondary:     #B5A491;
   --anchor:        #2C4A52;
@@ -93,7 +98,7 @@ body {
 .depth-orb.o1 {
   width: 700px; height: 700px;
   top: -180px; left: -120px;
-  background: radial-gradient(circle at 40% 40%, #5E8A7B 0%, transparent 70%);
+  background: radial-gradient(circle at 40% 40%, var(--brand-primary) 0%, transparent 70%);
   opacity: 0.22;
   animation: orbDrift1 100s ease-in-out infinite;
 }
@@ -846,9 +851,9 @@ body {
 </head>
 
 <body>
-<div id="auth-loading" style="position:fixed;inset:0;background:#F7F4ED;z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
+<div id="auth-loading" style="position:fixed;inset:0;background:var(--bg-page);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
   <div style="text-align:center;color:#6B7280;">
-    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:#5E8A7B;border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
+    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:var(--brand-primary);border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
     <div>Signing you in…</div>
   </div>
 </div>
@@ -859,11 +864,11 @@ body {
 <svg class="schematic-bg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
     <linearGradient id="sg-grad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#5E8A7B"/>
+      <stop offset="0%" stop-color="var(--brand-primary)"/>
       <stop offset="100%" stop-color="#2C4A52"/>
     </linearGradient>
   </defs>
-  <g stroke="#5E8A7B" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="var(--brand-primary)" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <rect x="60" y="60" width="520" height="380" rx="12" stroke-width="1.2" opacity="0.45"/>
     <path d="M 80 160 H 200 V 120 H 380 V 160 H 440" stroke-width="1.5" opacity="0.55"/>
     <path d="M 80 220 H 160 V 260 H 340 V 220 H 560" stroke-width="1.5" opacity="0.50"/>
@@ -871,7 +876,7 @@ body {
     <path d="M 200 160 V 340" stroke-width="1" opacity="0.30"/>
     <path d="M 380 160 V 220" stroke-width="1" opacity="0.30"/>
     <rect x="220" y="180" width="160" height="120" rx="6" stroke-width="1.4" opacity="0.55"/>
-    <text x="300" y="246" font-size="9" text-anchor="middle" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.65">MCU-HSM</text>
+    <text x="300" y="246" font-size="9" text-anchor="middle" font-family="ui-monospace,monospace" fill="var(--brand-primary)" stroke="none" opacity="0.65">MCU-HSM</text>
     <g opacity="0.40" stroke-width="1">
       <line x1="200" y1="196" x2="220" y2="196"/><line x1="200" y1="212" x2="220" y2="212"/>
       <line x1="200" y1="228" x2="220" y2="228"/><line x1="200" y1="244" x2="220" y2="244"/>
@@ -888,10 +893,10 @@ body {
     <g opacity="0.38" stroke-width="1">
       <rect x="430" y="188" width="14" height="8" rx="1"/><rect x="430" y="204" width="14" height="8" rx="1"/>
     </g>
-    <g fill="#5E8A7B" opacity="0.45">
+    <g fill="var(--brand-primary)" opacity="0.45">
       <circle cx="160" cy="260" r="3.5"/><circle cx="340" cy="220" r="3.5"/><circle cx="440" cy="300" r="3.5"/>
     </g>
-    <g opacity="0.28" stroke-width="0.7" fill="#5E8A7B">
+    <g opacity="0.28" stroke-width="0.7" fill="var(--brand-primary)">
       <line x1="220" y1="316" x2="380" y2="316"/>
       <line x1="220" y1="311" x2="220" y2="321"/><line x1="380" y1="311" x2="380" y2="321"/>
       <text x="300" y="330" font-size="7.5" text-anchor="middle" stroke="none" font-family="ui-monospace,monospace">160.0</text>
@@ -902,8 +907,8 @@ body {
     </g>
     <path d="M 620 260 H 1860" stroke-width="0.8" opacity="0.18" stroke-dasharray="4 8"/>
     <path d="M 620 400 H 1860" stroke-width="0.8" opacity="0.14" stroke-dasharray="4 8"/>
-    <text x="68" y="54" font-size="8.5" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SCH-003 · PORTFOLIO-DECK · REV 1.0</text>
-    <text x="1852" y="1182" font-size="8.5" text-anchor="end" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.35">SHEET 1/1</text>
+    <text x="68" y="54" font-size="8.5" font-family="ui-monospace,monospace" fill="var(--brand-primary)" stroke="none" opacity="0.35">SCH-003 · PORTFOLIO-DECK · REV 1.0</text>
+    <text x="1852" y="1182" font-size="8.5" text-anchor="end" font-family="ui-monospace,monospace" fill="var(--brand-primary)" stroke="none" opacity="0.35">SHEET 1/1</text>
   </g>
 </svg>
 
@@ -1519,7 +1524,7 @@ window.__TOUR_STEP_TARGETS = { 7: '#download-btn' };
         'padding:18px 20px 20px;width:480px;max-width:calc(100vw - 32px);}' +
       '.tour-step-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}' +
       '.tour-step-badge{font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;' +
-        'font-family:ui-monospace,monospace;color:#5E8A7B;' +
+        'font-family:ui-monospace,monospace;color:var(--brand-primary);' +
         'background:rgba(94,138,123,0.10);border:1px solid rgba(94,138,123,0.18);' +
         'padding:2px 8px;border-radius:999px;}' +
       '.tour-x-btn{background:none;border:none;cursor:pointer;pointer-events:auto;' +
@@ -1538,7 +1543,7 @@ window.__TOUR_STEP_TARGETS = { 7: '#download-btn' };
         'transition:all 120ms ease;white-space:nowrap;}' +
       '.tour-btn.t-ghost{background:transparent;color:#6B7280;}' +
       '.tour-btn.t-ghost:hover{background:rgba(94,138,123,0.08);color:#1F2937;}' +
-      '.tour-btn.t-primary{background:linear-gradient(135deg,#5E8A7B 0%,#2C4A52 100%);' +
+      '.tour-btn.t-primary{background:linear-gradient(135deg,var(--brand-primary) 0%,#2C4A52 100%);' +
         'color:#fff;border-color:transparent;}' +
       '.tour-btn.t-primary:hover{opacity:0.88;}' +
       '.tour-btn:disabled{opacity:0.38;cursor:not-allowed;pointer-events:none;}' +
@@ -1547,7 +1552,7 @@ window.__TOUR_STEP_TARGETS = { 7: '#download-btn' };
         'background:rgba(255,255,252,0.70);backdrop-filter:blur(8px);' +
         'font-size:12px;font-weight:700;color:#6B7280;cursor:pointer;' +
         'font-family:ui-monospace,monospace;transition:all 120ms ease;flex-shrink:0;line-height:1;}' +
-      '#tour-retrigger-btn:hover{background:rgba(94,138,123,0.12);color:#5E8A7B;' +
+      '#tour-retrigger-btn:hover{background:rgba(94,138,123,0.12);color:var(--brand-primary);' +
         'border-color:rgba(94,138,123,0.30);}';
     document.head.appendChild(s);
   }

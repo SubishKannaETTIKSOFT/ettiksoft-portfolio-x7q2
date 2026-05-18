@@ -4,6 +4,11 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <script src="theme.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Assessment · Roadmap Builder</title>
   <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
@@ -15,8 +20,8 @@
    TIDELAND DESIGN TOKENS
    ============================================================ */
 :root {
-  --base-bg:       #F7F4ED;
-  --primary:       #5E8A7B;
+  --base-bg:       var(--bg-page);
+  --primary:       var(--brand-primary);
   --primary-dark:  #2C4A52;
   --secondary:     #B5A491;
   --anchor:        #2C4A52;
@@ -58,7 +63,7 @@ body {
 .depth-orbs { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
 .depth-orb  { position:absolute; border-radius:50%; filter:blur(85px); }
 .depth-orb.o1 { width:600px;height:600px;top:-160px;left:-100px;
-  background:radial-gradient(circle at 40% 40%,#5E8A7B 0%,transparent 70%);
+  background:radial-gradient(circle at 40% 40%,var(--brand-primary) 0%,transparent 70%);
   opacity:0.20; animation:od1 100s ease-in-out infinite; }
 .depth-orb.o2 { width:500px;height:500px;bottom:-80px;right:-60px;
   background:radial-gradient(circle at 60% 60%,#B5A491 0%,transparent 70%);
@@ -403,9 +408,9 @@ body.read-only .dyn-remove { display: none !important; }
   <script src="./auth-guard.js"></script>
 </head>
 <body>
-<div id="auth-loading" style="position:fixed;inset:0;background:#F7F4ED;z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
+<div id="auth-loading" style="position:fixed;inset:0;background:var(--bg-page);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
   <div style="text-align:center;color:#6B7280;">
-    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:#5E8A7B;border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
+    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:var(--brand-primary);border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
     <div>Signing you in…</div>
   </div>
 </div>
@@ -414,7 +419,7 @@ body.read-only .dyn-remove { display: none !important; }
 
 <!-- Background -->
 <svg class="schematic-bg" viewBox="0 0 1920 1200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <g stroke="#5E8A7B" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="var(--brand-primary)" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <rect x="80" y="80" width="440" height="300" rx="10" stroke-width="1" opacity="0.40"/>
     <path d="M100 180 H 220 V 140 H 360 V 180 H 480" stroke-width="1.4" opacity="0.50"/>
     <path d="M100 240 H 180 V 270 H 340 V 240 H 480" stroke-width="1.4" opacity="0.45"/>
@@ -425,7 +430,7 @@ body.read-only .dyn-remove { display: none !important; }
       <line x1="340" y1="205" x2="360" y2="205"/><line x1="340" y1="220" x2="360" y2="220"/>
       <line x1="340" y1="235" x2="360" y2="235"/><line x1="340" y1="250" x2="360" y2="250"/>
     </g>
-    <g fill="#5E8A7B" opacity="0.40">
+    <g fill="var(--brand-primary)" opacity="0.40">
       <circle cx="180" cy="270" r="3"/><circle cx="340" cy="240" r="3"/>
     </g>
     <path d="M 560 200 H 1860" stroke-width="0.7" opacity="0.14" stroke-dasharray="5 9"/>
@@ -434,7 +439,7 @@ body.read-only .dyn-remove { display: none !important; }
       <g transform="translate(1350,180)"><line x1="-7" y1="0" x2="7" y2="0"/><line x1="0" y1="-7" x2="0" y2="7"/><circle r="10" fill="none" stroke-width="0.5"/></g>
       <g transform="translate(1600,450)"><line x1="-6" y1="0" x2="6" y2="0"/><line x1="0" y1="-6" x2="0" y2="6"/><circle r="8" fill="none" stroke-width="0.5"/></g>
     </g>
-    <text x="88" y="72" font-size="8" font-family="ui-monospace,monospace" fill="#5E8A7B" stroke="none" opacity="0.32">SCH-003 · PRODUCT-ASSESS · REV 1.0</text>
+    <text x="88" y="72" font-size="8" font-family="ui-monospace,monospace" fill="var(--brand-primary)" stroke="none" opacity="0.32">SCH-003 · PRODUCT-ASSESS · REV 1.0</text>
   </g>
 </svg>
 <div class="depth-orbs"><div class="depth-orb o1"></div><div class="depth-orb o2"></div><div class="depth-orb o3"></div></div>
@@ -1090,7 +1095,7 @@ window.__TOUR_STEP_TARGETS = { 3: '#s2', 4: '#s7' };
         'padding:18px 20px 20px;width:480px;max-width:calc(100vw - 32px);}' +
       '.tour-step-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}' +
       '.tour-step-badge{font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;' +
-        'font-family:ui-monospace,monospace;color:#5E8A7B;' +
+        'font-family:ui-monospace,monospace;color:var(--brand-primary);' +
         'background:rgba(94,138,123,0.10);border:1px solid rgba(94,138,123,0.18);' +
         'padding:2px 8px;border-radius:999px;}' +
       '.tour-x-btn{background:none;border:none;cursor:pointer;pointer-events:auto;' +
@@ -1109,7 +1114,7 @@ window.__TOUR_STEP_TARGETS = { 3: '#s2', 4: '#s7' };
         'transition:all 120ms ease;white-space:nowrap;}' +
       '.tour-btn.t-ghost{background:transparent;color:#6B7280;}' +
       '.tour-btn.t-ghost:hover{background:rgba(94,138,123,0.08);color:#1F2937;}' +
-      '.tour-btn.t-primary{background:linear-gradient(135deg,#5E8A7B 0%,#2C4A52 100%);' +
+      '.tour-btn.t-primary{background:linear-gradient(135deg,var(--brand-primary) 0%,#2C4A52 100%);' +
         'color:#fff;border-color:transparent;}' +
       '.tour-btn.t-primary:hover{opacity:0.88;}' +
       '.tour-btn:disabled{opacity:0.38;cursor:not-allowed;pointer-events:none;}' +
@@ -1118,7 +1123,7 @@ window.__TOUR_STEP_TARGETS = { 3: '#s2', 4: '#s7' };
         'background:rgba(255,255,252,0.70);backdrop-filter:blur(8px);' +
         'font-size:12px;font-weight:700;color:#6B7280;cursor:pointer;' +
         'font-family:ui-monospace,monospace;transition:all 120ms ease;flex-shrink:0;line-height:1;}' +
-      '#tour-retrigger-btn:hover{background:rgba(94,138,123,0.12);color:#5E8A7B;' +
+      '#tour-retrigger-btn:hover{background:rgba(94,138,123,0.12);color:var(--brand-primary);' +
         'border-color:rgba(94,138,123,0.30);}';
     document.head.appendChild(s);
   }

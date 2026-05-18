@@ -4,6 +4,11 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <script src="theme.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ETTIKSOFT Portfolio Builder</title>
 <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230891B2%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
@@ -3325,8 +3330,8 @@ html {
 
 /* ---- TIDELAND THEME OVERRIDE ---- */
 :root {
-  --base-bg: #F7F4ED;
-  --primary: #5E8A7B;
+  --base-bg: var(--bg-page);
+  --primary: var(--brand-primary);
   --secondary: #B5A491;
   --anchor: #2C4A52;
   --highlight: #C99B6B;
@@ -3335,7 +3340,7 @@ html {
   --glass-bg-t: rgba(255, 255, 252, 0.70);
   --glass-border-t: rgba(46, 74, 82, 0.10);
   /* remap legacy Aurora tokens so all var(--brand) usages follow */
-  --brand: #5E8A7B;
+  --brand: var(--brand-primary);
   --brand-hover: #2C4A52;
   --brand-soft: #EEF5F3;
   --brand-fg: #2C4A52;
@@ -3343,7 +3348,7 @@ html {
 body { background: var(--base-bg) !important; }
 /* Orbs → sage / taupe / amber */
 .depth-orb.o1 {
-  background: radial-gradient(circle, #5E8A7B 0%, rgba(94,138,123,0) 65%) !important;
+  background: radial-gradient(circle, var(--brand-primary) 0%, rgba(94,138,123,0) 65%) !important;
   opacity: 0.22 !important;
   animation-duration: 100s !important;
 }
@@ -3364,17 +3369,17 @@ body { background: var(--base-bg) !important; }
 /* Schematic SVG strokes → sage */
 .schematic-bg path, .schematic-bg line, .schematic-bg rect,
 .schematic-bg circle, .schematic-bg polyline, .schematic-bg polygon {
-  stroke: #5E8A7B !important;
+  stroke: var(--brand-primary) !important;
   fill: none !important;
 }
-.schematic-bg text { fill: #5E8A7B !important; stroke: none !important; }
-.schematic-bg linearGradient stop:first-child { stop-color: #5E8A7B !important; }
+.schematic-bg text { fill: var(--brand-primary) !important; stroke: none !important; }
+.schematic-bg linearGradient stop:first-child { stop-color: var(--brand-primary) !important; }
 .schematic-bg linearGradient stop:last-child  { stop-color: #2C4A52 !important; }
 /* Primary button → sage→marine (match full specificity of existing rule) */
 .btn.primary, button.btn.primary, a.btn.primary,
 .btn.primary:hover, button.btn.primary:hover, a.btn.primary:hover {
-  background: linear-gradient(135deg, #5E8A7B 0%, #2C4A52 100%) !important;
-  border-color: #5E8A7B !important;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, #2C4A52 100%) !important;
+  border-color: var(--brand-primary) !important;
   color: #fff !important;
   box-shadow:
     0 1px 0 rgba(255,255,255,0.20) inset,
@@ -3390,7 +3395,7 @@ body { background: var(--base-bg) !important; }
 }
 /* Hero accent → marine→sage→amber */
 .hero h1 .accent {
-  background: linear-gradient(135deg, #2C4A52 0%, #5E8A7B 50%, #C99B6B 100%) !important;
+  background: linear-gradient(135deg, #2C4A52 0%, var(--brand-primary) 50%, #C99B6B 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
@@ -3398,7 +3403,7 @@ body { background: var(--base-bg) !important; }
 }
 /* Progress / reading bar */
 .reading-progress .bar, .progress-bar {
-  background: linear-gradient(90deg, #5E8A7B, #2C4A52) !important;
+  background: linear-gradient(90deg, var(--brand-primary), #2C4A52) !important;
 }
 /* Toast stays white-on-dark */
 .toast, .toast * { color: #ffffff !important; }
@@ -3493,9 +3498,9 @@ body { background: var(--base-bg) !important; }
 </head>
 
 <body>
-<div id="auth-loading" style="position:fixed;inset:0;background:#F7F4ED;z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
+<div id="auth-loading" style="position:fixed;inset:0;background:var(--bg-page);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
   <div style="text-align:center;color:#6B7280;">
-    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:#5E8A7B;border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
+    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:var(--brand-primary);border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
     <div>Signing you in…</div>
   </div>
 </div>
@@ -4000,7 +4005,7 @@ window.__TOUR_STEP_TARGETS = { 1: '#create-btn' };
         'padding:18px 20px 20px;width:480px;max-width:calc(100vw - 32px);}' +
       '.tour-step-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}' +
       '.tour-step-badge{font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;' +
-        'font-family:ui-monospace,monospace;color:#5E8A7B;' +
+        'font-family:ui-monospace,monospace;color:var(--brand-primary);' +
         'background:rgba(94,138,123,0.10);border:1px solid rgba(94,138,123,0.18);' +
         'padding:2px 8px;border-radius:999px;}' +
       '.tour-x-btn{background:none;border:none;cursor:pointer;pointer-events:auto;' +
@@ -4019,7 +4024,7 @@ window.__TOUR_STEP_TARGETS = { 1: '#create-btn' };
         'transition:all 120ms ease;white-space:nowrap;}' +
       '.tour-btn.t-ghost{background:transparent;color:#6B7280;}' +
       '.tour-btn.t-ghost:hover{background:rgba(94,138,123,0.08);color:#1F2937;}' +
-      '.tour-btn.t-primary{background:linear-gradient(135deg,#5E8A7B 0%,#2C4A52 100%);' +
+      '.tour-btn.t-primary{background:linear-gradient(135deg,var(--brand-primary) 0%,#2C4A52 100%);' +
         'color:#fff;border-color:transparent;}' +
       '.tour-btn.t-primary:hover{opacity:0.88;}' +
       '.tour-btn:disabled{opacity:0.38;cursor:not-allowed;pointer-events:none;}' +
@@ -4028,7 +4033,7 @@ window.__TOUR_STEP_TARGETS = { 1: '#create-btn' };
         'background:rgba(255,255,252,0.70);backdrop-filter:blur(8px);' +
         'font-size:12px;font-weight:700;color:#6B7280;cursor:pointer;' +
         'font-family:ui-monospace,monospace;transition:all 120ms ease;flex-shrink:0;line-height:1;}' +
-      '#tour-retrigger-btn:hover{background:rgba(94,138,123,0.12);color:#5E8A7B;' +
+      '#tour-retrigger-btn:hover{background:rgba(94,138,123,0.12);color:var(--brand-primary);' +
         'border-color:rgba(94,138,123,0.30);}';
     document.head.appendChild(s);
   }

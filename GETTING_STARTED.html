@@ -3,6 +3,11 @@
 <head>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <script src="theme.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Roadmap Builder · Getting Started</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -460,9 +465,9 @@ a:hover { color: var(--ink); }
 </head>
 
 <body>
-<div id="auth-loading" style="position:fixed;inset:0;background:#F7F4ED;z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
+<div id="auth-loading" style="position:fixed;inset:0;background:var(--bg-page);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;">
   <div style="text-align:center;color:#6B7280;">
-    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:#5E8A7B;border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
+    <div style="width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:var(--brand-primary);border-radius:50%;animation:authspin 0.8s linear infinite;margin:0 auto 16px;"></div>
     <div>Signing you in…</div>
   </div>
 </div>
