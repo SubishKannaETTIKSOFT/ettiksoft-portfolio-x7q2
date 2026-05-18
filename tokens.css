@@ -71,3 +71,17 @@ html, body {
 code, pre, .mono {
   font-family: 'Geist Mono', 'SF Mono', Menlo, monospace;
 }
+
+/* Force opaque backgrounds — prevent browser theme bleed */
+html {
+  background-color: #FAFAFA !important;
+  min-height: 100%;
+}
+[data-theme="dark"] html,
+html[data-theme="dark"] {
+  background-color: #0A0A0A !important;
+}
+body {
+  background-color: var(--bg-page) !important;
+  min-height: 100vh;
+}

@@ -3393,13 +3393,13 @@ body { background: var(--base-bg) !important; }
   backdrop-filter: blur(22px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
 }
-/* Hero accent → marine→sage→amber */
+/* Hero accent → solid Ettiksoft red, no gradient */
 .hero h1 .accent {
-  background: linear-gradient(135deg, #2C4A52 0%, var(--brand-primary) 50%, #C99B6B 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: var(--brand-primary) !important;
+  color: var(--brand-primary) !important;
 }
 /* Progress / reading bar */
 .reading-progress .bar, .progress-bar {
