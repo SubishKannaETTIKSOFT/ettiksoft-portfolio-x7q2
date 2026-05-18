@@ -45,22 +45,18 @@
 
     await msalInstance.initialize();
 
-    // Check for existing account first
-    const accounts = msalInstance.getAllAccounts();
-    let account = accounts[0];
+    // Handle the redirect response first (runs after Microsoft sends user back)
+    const tokenResponse = await msalInstance.handleRedirectPromise();
+
+    const account = tokenResponse?.account || msalInstance.getAllAccounts()[0];
 
     if (!account) {
-      // No existing session — trigger popup login
-      try {
-        const loginResponse = await msalInstance.loginPopup({
-          scopes: ["User.Read"],
-          prompt: "select_account"
-        });
-        account = loginResponse.account;
-      } catch (popupError) {
-        showError("Could not complete sign-in. " + (popupError.message || "Please try again."));
-        return;
-      }
+      // No session — send to Microsoft login via redirect (works on all browsers)
+      await msalInstance.loginRedirect({
+        scopes: ["User.Read"],
+        prompt: "select_account"
+      });
+      return; // Page will reload after redirect completes
     }
 
     // Validate domain
