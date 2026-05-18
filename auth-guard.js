@@ -45,52 +45,51 @@
 
     await msalInstance.initialize();
 
-    // Process redirect from Microsoft (if any)
-    const tokenResponse = await msalInstance.handleRedirectPromise();
+    // Check for existing account first
+    const accounts = msalInstance.getAllAccounts();
+    let account = accounts[0];
 
-    // Get account from response or existing session
-    const account = tokenResponse?.account ||
-                    msalInstance.getAllAccounts()[0];
-
-    if (account) {
-      // Domain restriction
-      if (!account.username.endsWith(cfg.allowedDomain)) {
-        showError("Access restricted to @ettiksoft.com accounts only.");
-        setTimeout(() => msalInstance.logoutRedirect(), 3000);
+    if (!account) {
+      // No existing session — trigger popup login
+      try {
+        const loginResponse = await msalInstance.loginPopup({
+          scopes: ["User.Read"],
+          prompt: "select_account"
+        });
+        account = loginResponse.account;
+      } catch (popupError) {
+        showError("Could not complete sign-in. " + (popupError.message || "Please try again."));
         return;
       }
+    }
 
-      // Authenticated successfully
-      msalInstance.setActiveAccount(account);
-      window.__ETTIKSOFT_USER__ = {
-        name: account.name,
-        email: account.username
-      };
-
-      const badge = document.getElementById("auth-user-badge");
-      if (badge) {
-        badge.textContent = account.name;
-        badge.style.display = "inline-flex";
-      }
-
-      const logoutBtn = document.getElementById("auth-logout-btn");
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", async () => {
-          await msalInstance.logoutRedirect();
-        });
-      }
-
-      // Remove loading overlay — reveal the app
-      const overlay = document.getElementById("auth-loading");
-      if (overlay) overlay.remove();
+    // Validate domain
+    if (!account.username.endsWith(cfg.allowedDomain)) {
+      showError("Access restricted to " + cfg.allowedDomain + " accounts only.");
+      setTimeout(() => msalInstance.logoutRedirect(), 3000);
       return;
     }
 
-    // No account — start login flow
-    await msalInstance.loginRedirect({
-      scopes: ["User.Read"],
-      prompt: "select_account"
-    });
+    msalInstance.setActiveAccount(account);
+    window.__ETTIKSOFT_USER__ = {
+      name: account.name,
+      email: account.username
+    };
+
+    const badge = document.getElementById("auth-user-badge");
+    if (badge) {
+      badge.textContent = account.name;
+      badge.style.display = "inline-flex";
+    }
+
+    const logoutBtn = document.getElementById("auth-logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        await msalInstance.logoutRedirect();
+      });
+    }
+
+    document.getElementById("auth-loading").remove();
 
   } catch (err) {
     console.error("Auth error:", err);
