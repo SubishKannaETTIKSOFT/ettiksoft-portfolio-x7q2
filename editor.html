@@ -3562,13 +3562,11 @@ body { background: var(--base-bg) !important; }
 .app-toolbar .primary, .app-toolbar button.primary, .app-toolbar a.primary,
 .btn.primary:hover, button.btn.primary:hover, a.btn.primary:hover,
 .topbar .btn.primary:hover, .topbar button.btn.primary:hover, .topbar a.btn.primary:hover {
-  background: linear-gradient(135deg, var(--brand-primary) 0%, #2C4A52 100%) !important;
+  background: var(--brand-primary) !important;
   border-color: var(--brand-primary) !important;
   color: #fff !important;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.20) inset,
-    0 4px 12px -4px rgba(232,51,74,0.45),
-    0 8px 24px -8px rgba(44,74,82,0.35) !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(232, 51, 74, 0.35) !important;
 }
 .sec, .card, .bet, .product, .panel, .risk-card, .kpi, .empty, .masthead, .foot {
   background: var(--glass-bg-t) !important;

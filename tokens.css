@@ -38,24 +38,6 @@
   color-scheme: light;
 }
 
-[data-theme="dark"] {
-  --bg-page: #0A0A0A;
-  --bg-canvas: #111113;
-  --bg-subtle: #1A1A1C;
-  --bg-elevated: #1A1A1C;
-  --bg-hover: rgba(255, 255, 255, 0.06);
-  --fg-primary: #FAFAFA;
-  --fg-secondary: #A1A1AA;
-  --fg-tertiary: #71717A;
-  --fg-muted: #52525B;
-  --border-default: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.04);
-  --brand-primary-subtle: rgba(232, 51, 74, 0.15);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
-  color-scheme: dark;
-}
 
 * { box-sizing: border-box; }
 
@@ -72,23 +54,55 @@ code, pre, .mono {
   font-family: 'Geist Mono', 'SF Mono', Menlo, monospace;
 }
 
-html,
-html[data-theme="light"],
-html[data-theme="dark"] {
+html {
   min-height: 100%;
-}
-
-html[data-theme="light"],
-html:not([data-theme]) {
   background-color: #FAFAFA;
-}
-
-html[data-theme="dark"] {
-  background-color: #0A0A0A;
 }
 
 body {
   background-color: var(--bg-page);
   min-height: 100vh;
   margin: 0;
+}
+
+/* ── Unified button system ── */
+.btn, button, [role="button"],
+input[type="button"], input[type="submit"] {
+  font-family: 'Geist', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+}
+
+.btn-primary,
+.btn.primary,
+button.primary,
+.action-btn,
+.cta-btn {
+  background: var(--brand-primary) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+}
+
+.btn-primary:hover,
+.btn.primary:hover,
+button.primary:hover,
+.action-btn:hover,
+.cta-btn:hover {
+  background: var(--brand-primary) !important;
+  color: #ffffff !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(232, 51, 74, 0.35) !important;
+  opacity: 1 !important;
+}
+
+/* Kill any lingering green or blue on ANY button hover */
+button:hover, .btn:hover, [role="button"]:hover {
+  border-color: var(--brand-primary) !important;
 }
