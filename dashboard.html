@@ -12,9 +12,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio Dashboard · Roadmap Builder</title>
   <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235E8A7B%22/><path d=%22M 18 62 Q 35 52 50 62 T 82 62%22 stroke=%22white%22 stroke-width=%225%22 fill=%22none%22 stroke-linecap=%22round%22/><circle cx=%2230%22 cy=%2258%22 r=%225.5%22 fill=%22white%22/></svg>'>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
@@ -803,38 +800,26 @@ body.read-only #add-product-btn { display: none !important; }
 </div>
 
 <div class="page">
-  <header class="topbar">
-    <span class="topbar-name" id="topbar-name">Portfolio</span>
-    <span class="topbar-meta" id="topbar-meta"></span>
-    <nav class="topbar-actions">
-      <button id="tour-retrigger-btn" title="Restart guided tour">?</button>
-      <a href="index.html" class="btn ghost">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></span>
-        <span>Portfolios</span>
-      </a>
-      <button class="btn" id="snapshot-btn" title="Save a read-only snapshot of this portfolio">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
-        <span>Snapshot</span>
-      </button>
-      <a id="edit-context-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-        <span>Edit Context</span>
-      </a>
-      <a id="view-heatmap-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="6" cy="18" r="2.5"/><circle cx="12" cy="11" r="2.5"/><circle cx="18" cy="6" r="2.5"/></svg></span>
-        <span>View Heatmap</span>
-      </a>
-      <a id="generate-deck-btn" href="#" class="btn">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
-        <span>Generate Deck</span>
-      </a>
-      <a id="view-roadmap-btn" href="#" class="btn primary">
-        <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
-        <span>View Roadmap</span>
-      </a>
-    </nav>
-    <span id="auth-user-badge" style="display:none;font-size:11px;color:var(--text-muted,#6B7280);background:rgba(232,51,74,0.12);padding:4px 10px;border-radius:20px;margin-left:8px;align-items:center;"></span>
-  </header>
+  <header id="app-header" style="height:56px;background:var(--bg-canvas);border-bottom:1px solid var(--border-default);padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);">
+  <div style="display:flex;align-items:center;gap:0;flex-shrink:0;">
+    <span style="font-weight:700;font-size:15px;letter-spacing:0.08em;color:var(--fg-primary);font-family:'Geist',sans-serif;">ETTIKSOFT</span>
+    <span style="color:var(--fg-muted);margin:0 6px;font-weight:300;">&middot;</span>
+    <span style="font-weight:400;font-size:15px;color:var(--fg-secondary);">Portfolio</span>
+  </div>
+  <nav style="display:flex;align-items:center;height:56px;">
+    <a href="dashboard.html" data-tab="overview" style="height:56px;padding:0 16px;font-size:14px;font-weight:500;color:var(--fg-secondary);border-bottom:2px solid transparent;display:inline-flex;align-items:center;text-decoration:none;transition:all 150ms ease;font-family:'Geist',sans-serif;" onmouseover="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-primary)';}" onmouseout="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-secondary)';}">Overview</a>
+    <a href="product.html" data-tab="products" style="height:56px;padding:0 16px;font-size:14px;font-weight:500;color:var(--fg-secondary);border-bottom:2px solid transparent;display:inline-flex;align-items:center;text-decoration:none;transition:all 150ms ease;font-family:'Geist',sans-serif;" onmouseover="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-primary)';}" onmouseout="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-secondary)';}">Products</a>
+    <a href="deck.html" data-tab="deck" style="height:56px;padding:0 16px;font-size:14px;font-weight:500;color:var(--fg-secondary);border-bottom:2px solid transparent;display:inline-flex;align-items:center;text-decoration:none;transition:all 150ms ease;font-family:'Geist',sans-serif;" onmouseover="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-primary)';}" onmouseout="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-secondary)';}">Deck</a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+    <button title="Export data" onclick="if(typeof exportData==='function')exportData();" style="width:32px;height:32px;border-radius:6px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:15px;color:var(--fg-secondary);display:inline-flex;align-items:center;justify-content:center;transition:background 150ms ease,color 150ms ease;flex-shrink:0;">&#8595;</button>
+    <button title="Import data" onclick="if(typeof importData==='function')importData();" style="width:32px;height:32px;border-radius:6px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:15px;color:var(--fg-secondary);display:inline-flex;align-items:center;justify-content:center;transition:background 150ms ease,color 150ms ease;flex-shrink:0;">&#8593;</button>
+    <button title="Help" onclick="if(typeof toggleHelp==='function')toggleHelp();" style="width:32px;height:32px;border-radius:6px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:15px;color:var(--fg-secondary);display:inline-flex;align-items:center;justify-content:center;transition:background 150ms ease,color 150ms ease;flex-shrink:0;">?</button>
+    <div style="width:1px;height:20px;background:var(--border-default);margin:0 4px;"></div>
+    <span id="header-username" style="font-size:13px;color:var(--fg-secondary);font-family:'Geist',sans-serif;"></span>
+    <a id="header-signout" href="#" style="font-size:12px;color:var(--fg-muted);text-decoration:none;font-family:'Geist',sans-serif;" onmouseover="this.style.color='var(--fg-secondary)';" onmouseout="this.style.color='var(--fg-muted)';">Sign out</a>
+  </div>
+</header>
 
   <div id="page-content"></div>
 
@@ -1026,14 +1011,11 @@ if (!portfolio) {
     document.body.classList.add('read-only');
   }
 
-  // Update top bar
-  document.getElementById('topbar-name').textContent = portfolio.name || 'Untitled Portfolio';
-  document.getElementById('topbar-meta').textContent =
-    portfolio.updatedAt ? 'Updated ' + fmtRelative(portfolio.updatedAt) : '';
-  document.getElementById('edit-context-btn').href  = `editor.html?id=${portfolioId}`;
-  document.getElementById('view-heatmap-btn').href    = `heatmap.html?id=${portfolioId}`;
-  document.getElementById('generate-deck-btn').href  = `deck.html?id=${portfolioId}`;
-  document.getElementById('view-roadmap-btn').href   = `output.html?id=${portfolioId}`;
+  // Update top bar (unified header; old topbar-name/topbar-meta IDs removed in Phase 1B)
+  document.getElementById('edit-context-btn') && (document.getElementById('edit-context-btn').href = `editor.html?id=${portfolioId}`);
+  document.getElementById('view-heatmap-btn') && (document.getElementById('view-heatmap-btn').href = `heatmap.html?id=${portfolioId}`);
+  document.getElementById('generate-deck-btn') && (document.getElementById('generate-deck-btn').href = `deck.html?id=${portfolioId}`);
+  document.getElementById('view-roadmap-btn') && (document.getElementById('view-roadmap-btn').href = `output.html?id=${portfolioId}`);
   document.title = (portfolio.name || 'Portfolio') + ' · Dashboard';
 
   // Page title in foot
@@ -1577,6 +1559,54 @@ document.getElementById('snapshot-btn').onclick = () => {
     confirm: (msg, opts) => show(Object.assign({ message: msg, type: 'confirm', duration: 0 }, opts))
   };
 })();
+</script>
+<script>
+/* Phase 1B — active tab highlighting */
+(function(){
+  var path = window.location.pathname.toLowerCase().split('/').pop() || 'index.html';
+  var tab = 'overview';
+  if(path === 'product.html') tab = 'products';
+  else if(path === 'deck.html') tab = 'deck';
+  var hdr = document.getElementById('app-header');
+  if(!hdr) return;
+  var links = hdr.querySelectorAll('[data-tab]');
+  links.forEach(function(a){
+    if(a.getAttribute('data-tab') === tab){
+      a.style.color = 'var(--fg-primary)';
+      a.style.borderBottom = '2px solid var(--brand-primary)';
+      a.style.fontWeight = '600';
+      a.setAttribute('data-active', '1');
+    }
+  });
+})();
+</script>
+<script>
+/* Phase 1B — header utility stubs */
+if(typeof exportData==='undefined'){window.exportData=function(){
+  var d=localStorage.getItem('roadmap-builder.portfolios');
+  if(!d){alert('No portfolio data to export.');return;}
+  var blob=new Blob([d],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='ettiksoft-portfolio-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+};}
+if(typeof importData==='undefined'){window.importData=function(){
+  var inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=function(e){
+    var f=e.target.files[0];if(!f)return;
+    var r=new FileReader();r.onload=function(ev){
+      try{
+        var d=JSON.parse(ev.target.result);
+        if(!Array.isArray(d))throw new Error('Expected array of portfolios');
+        localStorage.setItem('roadmap-builder.portfolios',ev.target.result);
+        location.reload();
+      }catch(err){alert('Import failed: '+err.message);}
+    };r.readAsText(f);
+  };inp.click();
+};}
+if(typeof toggleHelp==='undefined'){window.toggleHelp=function(){
+  window.open('GETTING_STARTED.html','_blank');
+};}
 </script>
 </body>
 </html>

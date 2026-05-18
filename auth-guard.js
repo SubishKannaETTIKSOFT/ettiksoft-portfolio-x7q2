@@ -12,7 +12,7 @@
         '<h2 style="color:#B85450;margin-bottom:16px;font-family:system-ui,sans-serif;">Authentication failed</h2>' +
         '<p style="color:#1F2937;margin-bottom:20px;font-family:system-ui,sans-serif;">' + msg + '</p>' +
         '<button onclick="localStorage.clear();sessionStorage.clear();location.href=\'https://subishkannaettiksoft.github.io/ettiksoft-portfolio-x7q2/\';" ' +
-        'style="background:#5E8A7B;color:white;border:none;padding:10px 20px;' +
+        'style="background:#E8334A;color:white;border:none;padding:10px 20px;' +
         'border-radius:6px;cursor:pointer;font-family:system-ui,sans-serif;">Try Again</button></div>';
     }
   }
@@ -72,6 +72,21 @@
       email: account.username
     };
 
+    // Wire unified header elements (Phase 1B)
+    const usernameEl = document.getElementById("header-username");
+    if (usernameEl) {
+      usernameEl.textContent = account.name.split(" ")[0]; // first name only
+    }
+
+    const signoutEl = document.getElementById("header-signout");
+    if (signoutEl) {
+      signoutEl.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await msalInstance.logoutRedirect();
+      });
+    }
+
+    // Legacy badge IDs kept for backward compatibility during rollout
     const badge = document.getElementById("auth-user-badge");
     if (badge) {
       badge.textContent = account.name;

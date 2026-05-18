@@ -446,18 +446,26 @@ body.read-only .dyn-remove { display: none !important; }
 
 <div class="page">
   <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="topbar-breadcrumb" id="topbar-breadcrumb">
-      <a href="index.html">Portfolios</a>
-      <span class="sep">/</span>
-      <a id="portfolio-link" href="#">Portfolio</a>
-      <span class="sep">/</span>
-      <span class="topbar-product-name" id="topbar-product-name">Product</span>
-    </div>
-    <span class="save-pill" id="save-pill"></span>
-    <button id="tour-retrigger-btn" title="Restart guided tour">?</button>
-    <span id="auth-user-badge" style="display:none;font-size:11px;color:var(--text-muted,#6B7280);background:rgba(232,51,74,0.12);padding:4px 10px;border-radius:20px;margin-left:8px;align-items:center;"></span>
-  </header>
+  <header id="app-header" style="height:56px;background:var(--bg-canvas);border-bottom:1px solid var(--border-default);padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);">
+  <div style="display:flex;align-items:center;gap:0;flex-shrink:0;">
+    <span style="font-weight:700;font-size:15px;letter-spacing:0.08em;color:var(--fg-primary);font-family:'Geist',sans-serif;">ETTIKSOFT</span>
+    <span style="color:var(--fg-muted);margin:0 6px;font-weight:300;">&middot;</span>
+    <span style="font-weight:400;font-size:15px;color:var(--fg-secondary);">Portfolio</span>
+  </div>
+  <nav style="display:flex;align-items:center;height:56px;">
+    <a href="dashboard.html" data-tab="overview" style="height:56px;padding:0 16px;font-size:14px;font-weight:500;color:var(--fg-secondary);border-bottom:2px solid transparent;display:inline-flex;align-items:center;text-decoration:none;transition:all 150ms ease;font-family:'Geist',sans-serif;" onmouseover="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-primary)';}" onmouseout="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-secondary)';}">Overview</a>
+    <a href="product.html" data-tab="products" style="height:56px;padding:0 16px;font-size:14px;font-weight:500;color:var(--fg-secondary);border-bottom:2px solid transparent;display:inline-flex;align-items:center;text-decoration:none;transition:all 150ms ease;font-family:'Geist',sans-serif;" onmouseover="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-primary)';}" onmouseout="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-secondary)';}">Products</a>
+    <a href="deck.html" data-tab="deck" style="height:56px;padding:0 16px;font-size:14px;font-weight:500;color:var(--fg-secondary);border-bottom:2px solid transparent;display:inline-flex;align-items:center;text-decoration:none;transition:all 150ms ease;font-family:'Geist',sans-serif;" onmouseover="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-primary)';}" onmouseout="if(this.getAttribute('data-active')!='1'){this.style.color='var(--fg-secondary)';}">Deck</a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+    <button title="Export data" onclick="if(typeof exportData==='function')exportData();" style="width:32px;height:32px;border-radius:6px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:15px;color:var(--fg-secondary);display:inline-flex;align-items:center;justify-content:center;transition:background 150ms ease,color 150ms ease;flex-shrink:0;">&#8595;</button>
+    <button title="Import data" onclick="if(typeof importData==='function')importData();" style="width:32px;height:32px;border-radius:6px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:15px;color:var(--fg-secondary);display:inline-flex;align-items:center;justify-content:center;transition:background 150ms ease,color 150ms ease;flex-shrink:0;">&#8593;</button>
+    <button title="Help" onclick="if(typeof toggleHelp==='function')toggleHelp();" style="width:32px;height:32px;border-radius:6px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:15px;color:var(--fg-secondary);display:inline-flex;align-items:center;justify-content:center;transition:background 150ms ease,color 150ms ease;flex-shrink:0;">?</button>
+    <div style="width:1px;height:20px;background:var(--border-default);margin:0 4px;"></div>
+    <span id="header-username" style="font-size:13px;color:var(--fg-secondary);font-family:'Geist',sans-serif;"></span>
+    <a id="header-signout" href="#" style="font-size:12px;color:var(--fg-muted);text-decoration:none;font-family:'Geist',sans-serif;" onmouseover="this.style.color='var(--fg-secondary)';" onmouseout="this.style.color='var(--fg-muted)';">Sign out</a>
+  </div>
+</header>
 
   <div id="main-content">
     <!-- Rendered by JS -->
@@ -1731,6 +1739,54 @@ function wireScrollspy() {
     confirm:(msg,opts)=>show(Object.assign({message:msg,type:'confirm',duration:0},opts))
   };
 })();
+</script>
+<script>
+/* Phase 1B — active tab highlighting */
+(function(){
+  var path = window.location.pathname.toLowerCase().split('/').pop() || 'index.html';
+  var tab = 'overview';
+  if(path === 'product.html') tab = 'products';
+  else if(path === 'deck.html') tab = 'deck';
+  var hdr = document.getElementById('app-header');
+  if(!hdr) return;
+  var links = hdr.querySelectorAll('[data-tab]');
+  links.forEach(function(a){
+    if(a.getAttribute('data-tab') === tab){
+      a.style.color = 'var(--fg-primary)';
+      a.style.borderBottom = '2px solid var(--brand-primary)';
+      a.style.fontWeight = '600';
+      a.setAttribute('data-active', '1');
+    }
+  });
+})();
+</script>
+<script>
+/* Phase 1B — header utility stubs */
+if(typeof exportData==='undefined'){window.exportData=function(){
+  var d=localStorage.getItem('roadmap-builder.portfolios');
+  if(!d){alert('No portfolio data to export.');return;}
+  var blob=new Blob([d],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='ettiksoft-portfolio-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+};}
+if(typeof importData==='undefined'){window.importData=function(){
+  var inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=function(e){
+    var f=e.target.files[0];if(!f)return;
+    var r=new FileReader();r.onload=function(ev){
+      try{
+        var d=JSON.parse(ev.target.result);
+        if(!Array.isArray(d))throw new Error('Expected array of portfolios');
+        localStorage.setItem('roadmap-builder.portfolios',ev.target.result);
+        location.reload();
+      }catch(err){alert('Import failed: '+err.message);}
+    };r.readAsText(f);
+  };inp.click();
+};}
+if(typeof toggleHelp==='undefined'){window.toggleHelp=function(){
+  window.open('GETTING_STARTED.html','_blank');
+};}
 </script>
 </body>
 </html>
